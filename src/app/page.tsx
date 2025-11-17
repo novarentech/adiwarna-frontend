@@ -1,65 +1,52 @@
+"use client";
+import Head from "next/head";
 import Image from "next/image";
 
 export default function Home() {
+
+  const handleSignIn = (e: React.FormEvent) => {
+    e.preventDefault();
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <Head>
+        <title>AWP | Login</title>
+        <meta name="description" content="Sign In Page for AWP" />
+        <meta name="robots" content="index, follow" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="font-poppins w-screen h-screen flex flex-col justify-center items-center">
+        {/* start of login container */}
+        <div className="w-[770px] h-[550px] px-8 flex flex-col items-center">
+          {/* title */}
+          <div className="flex flex-row items-center justify-center space-x-6">
+            <Image src={"/icon.png"} alt="adwd" width={94} height={76} className="" />
+            <h1 className="text-5xl text-[#595959]">Adiwarna Pratama</h1>
+          </div>
+
+          <h1 className="text-5xl text-[#595959] mt-2">Sign In</h1>
+
+          {/* start of form */}
+          <form className="w-full flex flex-col mt-8" onSubmit={handleSignIn}>
+            {/* input email */}
+            <label htmlFor="email" className="font-bold text-xl pl-3 mb-2">Email</label>
+            <input type="email" name="email" id="email" className="h-11 border-[#AAAAAA] border-2 rounded-lg placeholder:text-xl px-3" placeholder="Add email" />
+            {/* input password */}
+            <label htmlFor="password" className="font-bold text-xl pl-3 mb-2 mt-8">Password</label>
+            <input type="password" name="password" id="password" className="h-11 border-[#AAAAAA] border-2 rounded-lg placeholder:text-xl px-3" placeholder="Add email" />
+            {/* submit */}
+            <button type="submit" className="mt-12 h-[70px] text-white bg-[#31C6D4] text-3xl rounded-[4px]">Sign In</button>
+
+            <div className="flex mt-6 space-x-4">
+              <input type="checkbox" name="remember" id="remember" className="w-9 h-9" />
+              <label htmlFor="remember" className="text-2xl text-[#595959]">Remember Me</label>
+            </div>
+          </form>
+          {/* end of form */}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        {/* end of login container */}
+      </div>
+    </>
   );
 }
