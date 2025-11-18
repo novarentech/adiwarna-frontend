@@ -241,3 +241,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.sidebar[data-collapsed="true"] .collapsed-hidden {
+  display: hidden;
+}
