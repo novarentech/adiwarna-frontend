@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { FiPlus } from "react-icons/fi";
@@ -15,9 +17,6 @@ import {
 import { MdEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
-
-
-
 
 
 
@@ -45,7 +44,7 @@ export default function QuotationsPage() {
                     <Table className="bg-[#f2f2f2]">
                         <TableHeader>
                             <TableRow className="bg-[#dadada] hover:bg-[#dadada]">
-                                <TableHead className="text-[#212529] font-bold"><input type="checkbox"/></TableHead>
+                                <TableHead className="text-[#212529] font-bold"><input type="checkbox" /></TableHead>
                                 <TableHead className="text-[#212529] font-bold">Product</TableHead>
                                 <TableHead className="text-[#212529] font-bold">Ref</TableHead>
                                 <TableHead className="text-[#212529] font-bold">Date</TableHead>
@@ -58,7 +57,7 @@ export default function QuotationsPage() {
                         <TableBody>
 
                             <TableRow>
-                                <TableCell className="font-medium"><input type="checkbox"/></TableCell>
+                                <TableCell className="font-medium"><input type="checkbox" /></TableCell>
                                 <TableCell className="py-4"><p className="text-sm">order.product</p></TableCell>
                                 <TableCell className="font-medium">order.orderId</TableCell>
                                 <TableCell>order.date</TableCell>

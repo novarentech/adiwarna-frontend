@@ -20,7 +20,7 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
             <Link href={"/admin/dashboard"} className={`w-full flex flex-row justify-center items-center space-x-2 ${collapsed ? "mx-auto" : ""}`}>
                 <Image src={"/icon.png"} alt="icon" width={54} height={44} className={`${collapsed ? 'mx-auto' : ''}`} />
                 <h1 className={`text-xl font-light ${collapsed ? 'hidden' : ''}`}>
-                    Adiwarna Pramata
+                    Adiwarna Pratama
                 </h1>
             </Link>
             <hr className="mt-3.5 bg-[#AAAAAA]" />

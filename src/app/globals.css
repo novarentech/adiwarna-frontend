@@ -29,7 +29,6 @@ body {
 } */
 
 @theme inline {
-
   --radius-sm: calc(var(--radius) - 4px);
 
   --radius-md: calc(var(--radius) - 2px);
@@ -102,7 +101,6 @@ body {
 }
 
 :root {
-
   --radius: 0.625rem;
 
   --background: oklch(1 0 0);
@@ -169,7 +167,6 @@ body {
 }
 
 .dark {
-
   --background: oklch(0.145 0 0);
 
   --foreground: oklch(0.985 0 0);
@@ -244,4 +241,18 @@ body {
 
 .sidebar[data-collapsed="true"] .collapsed-hidden {
   display: hidden;
+}
+
+/*
+Source - https://stackoverflow.com/a
+Posted by Tyron, modified by community. See post 'Timeline' for change history
+Retrieved 2025-11-19, License - CC BY-SA 4.0
+*/
+
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
