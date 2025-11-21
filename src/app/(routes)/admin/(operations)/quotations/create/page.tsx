@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { FaTrash } from "react-icons/fa6";
@@ -79,6 +79,10 @@ export default function CreateQuotationsPage() {
         setRowsClientProvide(rowsClientProvide.filter((_, i) => i !== index));
     };
 
+    const handleCreateQuotations = (e: React.FormEvent) => {
+        e.preventDefault();
+    }
+
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
@@ -90,7 +94,7 @@ export default function CreateQuotationsPage() {
             {/* start of form container */}
             <div className="bg-white border rounded-sm px-5 py-6 shadow-xs my-12 ">
                 {/* start form */}
-                <form action="" className="flex flex-col">
+                <form onClick={handleCreateQuotations} className="flex flex-col">
                     {/* seperate into 2 section */}
                     <div className="grid grid-cols-2 space-x-4">
                         {/* left column */}
@@ -115,7 +119,7 @@ export default function CreateQuotationsPage() {
                                     </select>
                                 </div>
                             </div>
-                            {/* customer */}
+                            {/* subject */}
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="subject" className="font-bold">Subject</label>
                                 <div className="flex">
