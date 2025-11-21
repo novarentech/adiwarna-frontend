@@ -7,6 +7,7 @@ import { FaGear } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaCircle } from "react-icons/fa";
 import { TbReceiptFilled } from "react-icons/tb";
+import { usePathname } from "next/navigation";
 
 
 export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed: boolean; onCollapseChange: () => void }) {
@@ -14,8 +15,19 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
     const [showingCollapsibleOperations, setShowingCollapsibleOperations] = useState(false)
     const [showingCollapsibleData, setShowingCollapsibleData] = useState(false)
 
+    const pathname = usePathname();
+    const hidePrefixes = [
+        "/admin/quotations/print/",
+        "/admin/purchase-order/print/",
+        "/admin/jobsheet/print/",
+    ];
+
+    const hideNavbarRoute = hidePrefixes.some(prefix =>
+        pathname.startsWith(prefix)
+    );
+
     return (
-        <div className={`bg-black text-white ${collapsed ? "w-[100px]" : "w-[330px]"} py-3 h-full flex flex-col transition-width duration-300 ease-in-out overflow-hidden shadow-lg`}>
+        <div className={`${hideNavbarRoute ? "hidden" : ""} bg-black text-white ${collapsed ? "w-[100px]" : "w-[330px]"} py-3 h-full flex flex-col transition-width duration-300 ease-in-out overflow-hidden shadow-lg`}>
             {/* header */}
             <Link href={"/admin/dashboard"} className={`w-full flex flex-row justify-center items-center space-x-2 ${collapsed ? "mx-auto" : ""}`}>
                 <Image src={"/icon.png"} alt="icon" width={54} height={44} className={`${collapsed ? 'mx-auto' : ''}`} />

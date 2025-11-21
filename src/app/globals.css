@@ -256,3 +256,85 @@ Retrieved 2025-11-19, License - CC BY-SA 4.0
     margin: 0;
   }
 }
+
+/* @layer utilities {
+  @media print {
+    .page-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+    }
+    .page-footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    .all-cell-borders,
+    .all-cell-borders th,
+    .all-cell-borders td {
+      border: 1px solid black !important;
+      border-collapse: collapse !important;
+    }
+  }
+} */
+
+/* Atur margin print agar mirip A4 */
+@page {
+  size: A4;
+  margin: 20mm;
+}
+
+/* Fix print layout */
+@media print {
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* HEADER */
+  .page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .page-header-space {
+    height: 130px !important;
+  }
+
+  /* FOOTER */
+  .page-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .page-footer-space {
+    height: 80px !important;
+  }
+
+  /* Table border fix */
+  .all-cell-borders,
+  .all-cell-borders th,
+  .all-cell-borders td {
+    border: 1px solid black !important;
+    border-collapse: collapse !important;
+  }
+
+  /* Hindari konten keluar halaman */
+  .page {
+    page-break-after: always;
+  }
+
+  /* Hapus modal & element tidak perlu */
+  /* .no-print,
+  .print::hidden {
+    display: none !important;
+  } */
+  .no-print {
+    display: none !important;
+  }
+}

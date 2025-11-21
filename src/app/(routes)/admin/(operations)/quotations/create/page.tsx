@@ -403,7 +403,7 @@ export default function CreateQuotationsPage() {
                     </div>
                     <hr className="border-b my-6" />
                     <div className="ml-auto w-1/4 grid grid-cols-2 space-x-4">
-                        <Link href={"/admin/quotation"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm">Cancel</Link>
+                        <Link href={"/admin/quotations"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm">Cancel</Link>
                         <button type="submit" className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
                     </div>
                 </form>
