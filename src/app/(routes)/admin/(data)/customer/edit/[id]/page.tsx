@@ -50,7 +50,7 @@ export default function EditCustomerPage({
             {/* title container */}
             <div className="flex flex-row items-center space-x-2 mt-2">
                 <HiUserAdd className="w-10 h-10" />
-                <h1 className="text-3xl font-normal">Add Data Customer  </h1>
+                <h1 className="text-3xl font-normal">Edit Data Customer  </h1>
             </div>
 
             {/* start of form container */}
