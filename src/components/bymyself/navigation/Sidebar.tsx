@@ -59,6 +59,10 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                         <Image src={"/icons/icon-work-assignment.svg"} className="" alt="icon work assignment" width={23} height={23} />
                         <p className="text-base">Work Assignment</p>
                     </Link>
+                    <Link href={"/admin/document-transmittal"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
+                        <Image src={"/icons/icon-document-transmittal.svg"} className="" alt="icon work assignment" width={23} height={23} />
+                        <p className="text-base">Document Transmittal</p>
+                    </Link>
                     <Link href={"/admin/work-order"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
                         <Image src={"/icons/icon-work-order.svg"} className="" alt="icon work order" width={23} height={23} />
                         <p className="text-base">Work Order</p>
