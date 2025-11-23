@@ -44,7 +44,7 @@ export default function EditPurchaseOrderPage({
     };
 
     const handleCreatePurchaseOrder = (e: React.FormEvent) => {
-        e.preventDefault();
+        
     }
 
 
@@ -60,7 +60,7 @@ export default function EditPurchaseOrderPage({
             {/* start of form container */}
             <div className="bg-white border rounded-sm px-5 py-6 shadow-xs my-12 ">
                 {/* start form */}
-                <form onClick={handleCreatePurchaseOrder} className="flex flex-col">
+                <form onSubmit={handleCreatePurchaseOrder} className="flex flex-col">
                     {/* seperate into 2 section */}
                     <div className="grid grid-cols-2 space-x-4">
                         {/* left column */}

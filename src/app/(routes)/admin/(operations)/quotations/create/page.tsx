@@ -80,7 +80,7 @@ export default function CreateQuotationsPage() {
     };
 
     const handleCreateQuotations = (e: React.FormEvent) => {
-        e.preventDefault();
+        
     }
 
     return (
@@ -94,7 +94,7 @@ export default function CreateQuotationsPage() {
             {/* start of form container */}
             <div className="bg-white border rounded-sm px-5 py-6 shadow-xs my-12 ">
                 {/* start form */}
-                <form onClick={handleCreateQuotations} className="flex flex-col">
+                <form onSubmit={handleCreateQuotations} className="flex flex-col">
                     {/* seperate into 2 section */}
                     <div className="grid grid-cols-2 space-x-4">
                         {/* left column */}

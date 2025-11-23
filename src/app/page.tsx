@@ -9,7 +9,7 @@ export default function Home() {
   const [password, setPassword] = useState("");
 
   const handleSignIn = (e: React.FormEvent) => {
-    e.preventDefault();
+    
   }
 
   return (

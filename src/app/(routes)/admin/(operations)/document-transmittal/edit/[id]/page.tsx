@@ -53,7 +53,7 @@ export default function EditDocTransmittalPage({
     };
 
     const handleEditDocumentTransmittal = (e: React.FormEvent) => {
-        e.preventDefault();
+        
     }
 
     return (
@@ -67,7 +67,7 @@ export default function EditDocTransmittalPage({
             {/* start of form container */}
             <div className="bg-white border rounded-sm px-5 py-6 shadow-xs my-12 ">
                 {/* start form */}
-                <form onClick={handleEditDocumentTransmittal} className="flex flex-col">
+                <form onSubmit={handleEditDocumentTransmittal} className="flex flex-col">
                     <div className="grid grid-cols-1 space-x-4">
                         <div className="flex flex-col space-y-4">
                             {/* Name */}
