@@ -154,7 +154,7 @@ export default function CreateDocTransmittal() {
                         </div>
                     </div>
 
-                    {/* Adiwarna To Provide */}
+                    {/* WO ?? */}
                     <div className="mt-6">
                         <table className="w-full border-separate border-spacing-y-4 border-spacing-x-4">
                             <thead>

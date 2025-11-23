@@ -12,13 +12,13 @@ interface RowDataReport {
     location: string;
 }
 
-type EditdDocumentTransmittalParams = Promise<{ id: string }>;
+    type EditdDocumentTransmittalParams = Promise<{ id: string }>;
 
-export default function EditDocTransmittalPage({
-    params,
-}: {
-    params: EditdDocumentTransmittalParams;
-}) {
+    export default function EditDocTransmittalPage({
+        params,
+    }: {
+        params: EditdDocumentTransmittalParams;
+    }) {
     const actualParams = use(params);
     const id = actualParams.id;
 
