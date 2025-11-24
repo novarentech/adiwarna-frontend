@@ -67,7 +67,7 @@ export default function CustomerPage() {
                                     <p className="font-normal">Ventura Building Lantai 6 Suite 601 - JL. RA Kartini Np.26 Jakarta</p>
                                 </TableCell>
                                 {/* work location */}
-                                <TableCell className="text-center w-[500px] bg-red-50 whitespace-normal wrap-break-words overflow-hidden">	
+                                <TableCell className="text-center w-[500px] whitespace-normal wrap-break-words overflow-hidden">	
                                     <ul>
                                         <li>cihuy</li>
                                     </ul>
