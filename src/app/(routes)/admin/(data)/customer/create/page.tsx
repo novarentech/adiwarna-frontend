@@ -10,7 +10,7 @@ import { HiUserAdd } from "react-icons/hi";
 interface RowDataWorkLocation {
     workLocation: string;
 }
-export default function CreateQuotationsPage() {
+export default function CreateCustomerPage() {
 
     // bagian ADiwarna Provide
     const [rowsWorkLocation, setRowsWorkLocation] = useState<RowDataWorkLocation[]>([
