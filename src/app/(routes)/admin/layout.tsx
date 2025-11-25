@@ -15,11 +15,16 @@ export default function LayoutAdmin({
     const [collapsed, setCollapsed] = useState(false);
 
     // Fungsi untuk mengubah state collapsed
+    // const handleCollapseChange = () => {
+    //     setTimeout(() => {
+    //         setCollapsed(prev => !prev);
+    //     }, 50);
+    // };
     const handleCollapseChange = () => {
-        setTimeout(() => {
-            setCollapsed(prev => !prev);
-        }, 50);
+        setCollapsed(prev => !prev);
     };
+
+
     return (
         <div className="w-full h-full flex">
             {/* <SidebarProvider >
@@ -30,10 +35,10 @@ export default function LayoutAdmin({
                 </main>
             </SidebarProvider> */}
             <CoolSidebar collapsed={collapsed} onCollapseChange={handleCollapseChange} />
-            <div className="w-full overflow-y-auto">
+            <div className="w-full overflow-y-auto overflow-x-clip">
 
                 <CoolNavigationBar>
-                    <button className="cursor-pointer" onClick={handleCollapseChange}><RxHamburgerMenu className="w-6 h-6"/></button>
+                    <button className="cursor-pointer" onClick={handleCollapseChange}><RxHamburgerMenu className="w-6 h-6" /></button>
                 </CoolNavigationBar>
                 {children}
             </div>
