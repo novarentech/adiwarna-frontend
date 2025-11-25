@@ -1,6 +1,8 @@
 "use client";
+import { CreateCustomerBody, createCustomerRequest } from "@/lib/customer";
 // import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 // import { MdEdit } from "react-icons/md";
@@ -11,6 +13,8 @@ interface RowDataWorkLocation {
     workLocation: string;
 }
 export default function CreateCustomerPage() {
+
+    const router = useRouter();
 
     // bagian ADiwarna Provide
     const [rowsWorkLocation, setRowsWorkLocation] = useState<RowDataWorkLocation[]>([
@@ -31,9 +35,39 @@ export default function CreateCustomerPage() {
         setRowsWorkLocation(rowsWorkLocation.filter((_, i) => i !== index));
     };
 
-    const handleCreateCustomer = (e: React.FormEvent) => {
+    const [customerNo, setCustomerNo] = useState("");
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
 
-    }
+    const handleCreateCustomer = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Convert dynamic rows → array locations
+        const customer_locations = rowsWorkLocation
+            .filter(row => row.workLocation.trim() !== "")
+            .map(row => ({
+                location_name: row.workLocation,
+            }));
+
+        const payload: CreateCustomerBody = {
+            customer_no: customerNo,
+            name,
+            phone_number: phone,
+            address,
+            customer_locations,
+        };
+
+        const res = await createCustomerRequest(payload);
+
+        if (!res.success) {
+            alert("Failed to create customer: " + res.message);
+            return;
+        }
+
+        alert("Customer created!");
+        router.push("/admin/customer");
+    };
 
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
@@ -51,14 +85,16 @@ export default function CreateCustomerPage() {
                     <div className="flex flex-col space-y-1">
                         <label htmlFor="customer-num" className="font-bold">No</label>
                         <div className="flex">
-                            <input type="number" id="customer-num" className="flex-1 border rounded-sm h-9 px-2" placeholder="add customer number" />
+                            <input type="number" id="customer-num" className="flex-1 border rounded-sm h-9 px-2" value={customerNo}
+                                onChange={(e) => setCustomerNo(e.target.value)} placeholder="add customer number" />
                         </div>
                     </div>
                     {/* Name */}
                     <div className="flex flex-col space-y-1 mt-4">
                         <label htmlFor="customer-name" className="font-bold">Name</label>
                         <div className="flex">
-                            <input type="text" id="customer-name" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add customer name" />
+                            <input type="text" id="customer-name" className="flex-1 border rounded-sm h-9 px-2" value={name}
+                                onChange={(e) => setName(e.target.value)} placeholder="Add customer name" />
                         </div>
                     </div>
 
@@ -113,14 +149,16 @@ export default function CreateCustomerPage() {
                         <div className="flex flex-col space-y-1">
                             <label htmlFor="telephone" className="font-bold">Telephone</label>
                             <div className="flex">
-                                <input type="text" id="telephone" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add telephone" />
+                                <input type="text" id="telephone" className="flex-1 border rounded-sm h-9 px-2" value={phone}
+                                    onChange={(e) => setPhone(e.target.value)} placeholder="Add telephone" />
                             </div>
                         </div>
                         {/* office address */}
                         <div className="flex flex-col space-y-1">
                             <label htmlFor="office-address" className="font-bold">office address</label>
                             <div className="flex">
-                                <input type="text" id="office-address" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add office address" />
+                                <input type="text" id="office-address" className="flex-1 border rounded-sm h-9 px-2" value={address}
+                                    onChange={(e) => setAddress(e.target.value)} placeholder="Add office address" />
                             </div>
                         </div>
                     </div>

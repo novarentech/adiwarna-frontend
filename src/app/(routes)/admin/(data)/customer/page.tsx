@@ -1,11 +1,14 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FiPlus } from "react-icons/fi";
 import { IoIosSearch } from "react-icons/io";
-
+import { FiPlus } from "react-icons/fi";
 import { FaUser } from "react-icons/fa6";
+import { MdEdit } from "react-icons/md";
+import { FaTrash } from "react-icons/fa";
+// import { IoMdEye } from "react-icons/io";
+
 
 import {
     Table,
@@ -14,77 +17,185 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-
-import { MdEdit } from "react-icons/md";
-import { FaTrash } from "react-icons/fa";
-import { IoMdEye } from "react-icons/io";
-import { IoMdCart } from "react-icons/io";
+} from "@/components/ui/table";
+import { Customer, CustomerLocation, deleteCustomer, getCustomers } from "@/lib/customer";
 
 export default function CustomerPage() {
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [search, setSearch] = useState("");
+    const [page, setPage] = useState(1);
+    const [meta, setMeta] = useState({
+        current_page: 1,
+        last_page: 1,
+        total: 0
+    });
+
+    const fetchData = async (query: string = "", pageNum: number = 1) => {
+        const res = await getCustomers(query, pageNum);
+
+        if (res.success) {
+            setCustomers(res.data);
+            setMeta(res.meta);
+        }
+    };
+
+    useEffect(() => {
+        fetchData(search, page);
+    }, [page]);
+
+    const handleSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setPage(1);       // reset ke page 1 saat search
+        fetchData(search, 1);
+    };
+
+
+    const handleDelete = async (id: number) => {
+        const confirmDelete = confirm("Are you sure you want to delete this customer?");
+        if (!confirmDelete) return;
+
+        const res = await deleteCustomer(id);
+
+        if (!res.success) {
+            alert("Failed to delete: " + res.message);
+            return;
+        }
+
+        alert("Customer deleted successfully!");
+
+        // reload data
+        fetchData(search, page);
+    };
+
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
-            {/* title container */}
+
+            {/* title */}
             <div className="flex flex-row items-center space-x-2 mt-2">
                 <FaUser className="text-black w-10 h-10" />
                 <h1 className="text-3xl font-normal">Customer</h1>
             </div>
 
-            {/* list quotations */}
             <div className="bg-white mt-12">
                 <div className="py-3 px-4 flex justify-between border rounded-t-sm">
-                    {/* create quotations button */}
-                    <Link href={"/admin/customer/create"} className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Customer Data <FiPlus className="w-5 h-5 ml-1" /> </Link>
+
+                    <Link
+                        href={"/admin/customer/create"}
+                        className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm"
+                    >
+                        Add Customer Data <FiPlus className="w-5 h-5 ml-1" />
+                    </Link>
+
                     {/* search bar */}
-                    <form className="flex flex-row">
-                        <input id="search-input" type="text" className="w-[250px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm" placeholder="Search customer .." />
-                        <button className="border-r border-t border-b h-8 w-8 my-auto flex rounded-r-sm" type="submit"><IoIosSearch className="w-5 m-auto" /></button>
+                    <form className="flex flex-row" onSubmit={handleSearch}>
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="w-[250px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm"
+                            placeholder="Search customer .."
+                        />
+                        <button
+                            className="border-r border-t border-b h-8 w-8 my-auto flex rounded-r-sm"
+                            type="submit"
+                        >
+                            <IoIosSearch className="w-5 m-auto" />
+                        </button>
                     </form>
                 </div>
-                <div className="py-5 px-4 flex justify-between border-b border-x rounded-b-sm">
+
+                {/* table */}
+                <div className="py-5 px-4 border-b border-x rounded-b-sm">
                     <Table className="bg-[#f2f2f2]">
                         <TableHeader>
                             <TableRow className="bg-[#dadada] hover:bg-[#dadada]">
-                                <TableHead className="text-[#212529] font-bol text-center"><input type="checkbox" /></TableHead>
-                                <TableHead className="text-[#212529] w-[31px] font-bold text-center">No</TableHead>
-                                <TableHead className="text-[#212529] w-[700px] font-bold text-center">Customer Info</TableHead>
-                                <TableHead className="text-[#212529] w-[500px]font-bold text-center">Work Location</TableHead>
-                                <TableHead className="text-[#212529] font-bold text-center">Action</TableHead>
+                                <TableHead className="text-center"><input type="checkbox" /></TableHead>
+                                <TableHead className="text-center font-bold">No</TableHead>
+                                <TableHead className="text-center font-bold">Customer Info</TableHead>
+                                <TableHead className="text-center font-bold">Work Location</TableHead>
+                                <TableHead className="text-center font-bold">Action</TableHead>
                             </TableRow>
                         </TableHeader>
+
                         <TableBody>
+                            {customers.map((c, index) => (
+                                <TableRow key={c.id}>
+                                    <TableCell className="text-center">
+                                        <input type="checkbox" />
+                                    </TableCell>
 
-                            <TableRow>
-                                <TableCell className="font-medium text-center"><input type="checkbox" /></TableCell>
-                                <TableCell className="py-4"><p className="text-sm">1</p></TableCell>
-                                {/* customer info */}
-                                <TableCell className="font-medium text-center flex flex-col max-w-[700px] whitespace-normal wrap-break-words overflow-hidden">
-                                    {/* name */}
-                                    <p className="font-bold">PT. Advance Offshore Services</p>
-                                    {/* phone number */}
-                                    <p className="font-normal">082122166261</p>
-                                    {/* office */}
-                                    <p className="font-normal">Ventura Building Lantai 6 Suite 601 - JL. RA Kartini Np.26 Jakarta</p>
-                                </TableCell>
-                                {/* work location */}
-                                <TableCell className="text-center w-[500px] whitespace-normal wrap-break-words overflow-hidden">	
-                                    <ul>
-                                        <li>cihuy</li>
-                                    </ul>
-                                </TableCell>
-                                <TableCell className="text-center">
-                                    <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
-                                        <Link href={"/admin/customer/edit/1"}><MdEdit className="w-7 h-7" /></Link>
-                                        <div><FaTrash className="w-5 h-5 text-red-500" /></div>
-                                        <Link href={"/admin/customer/print"}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
+                                    <TableCell className="text-center">
+                                        {(page - 1) * 15 + (index + 1)}
+                                    </TableCell>
 
+                                    <TableCell className="text-left whitespace-normal wrap-break-words">
+                                        <p className="font-bold">{c.name}</p>
+                                        <p>{c.phone_number}</p>
+                                        <p>{c.address}</p>
+                                    </TableCell>
+
+                                    <TableCell className="text-center whitespace-normal wrap-break-words">
+                                        <ul>
+                                            {c.customer_locations.map((loc: CustomerLocation) => (
+                                                <li key={loc.id}>{loc.location_name}</li>
+                                            ))}
+                                        </ul>
+                                    </TableCell>
+
+                                    <TableCell className="text-center">
+                                        <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
+                                            <Link href={`/admin/customer/edit/${c.id}`}>
+                                                <MdEdit className="w-7 h-7" />
+                                            </Link>
+                                            <div>
+                                                <FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(c.id)} />
+                                            </div>
+                                        </div>
+                                    </TableCell>
+
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
+
+                    {/* pagination */}
+                    <div className="flex justify-center items-center space-x-3 mt-4">
+
+                        {/* Prev */}
+                        <button
+                            disabled={page <= 1}
+                            onClick={() => setPage(page - 1)}
+                            className="px-3 py-1 bg-gray-300 rounded disabled:opacity-40"
+                        >
+                            Prev
+                        </button>
+
+                        {/* Page numbers */}
+                        {Array.from({ length: meta.last_page }, (_, i) => i + 1).map(num => (
+                            <button
+                                key={num}
+                                onClick={() => setPage(num)}
+                                className={`px-3 py-1 rounded 
+                                    ${num === page ? "bg-blue-500 text-white" : "bg-gray-200"}
+                                `}
+                            >
+                                {num}
+                            </button>
+                        ))}
+
+                        {/* Next */}
+                        <button
+                            disabled={page >= meta.last_page}
+                            onClick={() => setPage(page + 1)}
+                            className="px-3 py-1 bg-gray-300 rounded disabled:opacity-40"
+                        >
+                            Next
+                        </button>
+
+                    </div>
+
                 </div>
             </div>
-        </div >
-    )
+        </div>
+    );
 }
