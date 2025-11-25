@@ -17,10 +17,39 @@ import {
 import { MdEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
+import { useEffect, useState } from "react";
+import { GetAllQuotation, getAllQuotations } from "@/lib/quotations";
 
 
 
 export default function QuotationsPage() {
+    const [quotations, setQuotations] = useState<GetAllQuotation[]>([]);
+    const [search, setSearch] = useState("");
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = async () => {
+        setLoading(true);
+        const res = await getAllQuotations(page, search);
+
+        if (res.success) {
+            setQuotations(res.data);
+            setLastPage(res.meta.last_page);
+        }
+
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [page]);
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        setPage(1);
+        fetchData();
+    };
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
@@ -35,8 +64,13 @@ export default function QuotationsPage() {
                     {/* create quotations button */}
                     <Link href={"/admin/quotations/create"} className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Data <FiPlus className="w-5 h-5 ml-1" /> </Link>
                     {/* search bar */}
-                    <form className="flex flex-row">
-                        <input id="search-input" type="text" className="w-[200px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm" placeholder="Search Quotations..." />
+                    <form onSubmit={handleSearch} className="flex flex-row">
+                        <input value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            id="search-input"
+                            type="text"
+                            className="w-[200px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm"
+                            placeholder="Search Quotations..." />
                         <button className="border-r border-t border-b h-8 w-8 my-auto flex rounded-r-sm" type="submit"><IoIosSearch className="w-5 m-auto" /></button>
                     </form>
                 </div>
@@ -54,27 +88,66 @@ export default function QuotationsPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-
-                            <TableRow>
-                                <TableCell className="font-medium py-4"><input type="checkbox" /></TableCell>
-                                <TableCell className="font-medium">order.orderId</TableCell>
-                                <TableCell>order.date</TableCell>
-                                <TableCell>order.customerName</TableCell>
-                                <TableCell className="">order.status</TableCell>
-                                <TableCell className="">
-                                    order.amount
-                                </TableCell>
-                                <TableCell className="text-center">
-                                    <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
-                                        <Link href={"/admin/quotations/edit/1"}><MdEdit className="w-7 h-7" /></Link>
-                                        <div><FaTrash className="w-5 h-5 text-red-500" /></div>
-                                        <Link href={"/admin//quotations/print"}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center py-10">
+                                        Loading...
+                                    </TableCell>
+                                </TableRow>
+                            ) : quotations.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center py-10">
+                                        No data found.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                quotations.map((q) => (
+                                    <TableRow key={q.id}>
+                                        <TableCell><input type="checkbox" /></TableCell>
+                                        <TableCell>{q.ref_no}</TableCell>
+                                        <TableCell>{new Date(q.date).toLocaleDateString()}</TableCell>
+                                        <TableCell>{q.customer}</TableCell>
+                                        <TableCell>{q.pic_name}</TableCell>
+                                        <TableCell>{q.subject}</TableCell>
+                                        <TableCell className="text-center">
+                                            <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
+                                                <Link href={`/admin/quotations/edit/${q.id}`}>
+                                                    <MdEdit className="w-7 h-7" />
+                                                </Link>
+                                                <button>
+                                                    <FaTrash className="w-5 h-5 text-red-500" />
+                                                </button>
+                                                <Link href={`/admin/quotations/print/${q.id}`}>
+                                                    <IoMdEye className="w-7 h-7 text-[#31C6D4]" />
+                                                </Link>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
                         </TableBody>
                     </Table>
+                </div>
+
+                {/* Pagination */}
+                <div className="flex justify-center py-4 space-x-4">
+                    <button
+                        disabled={page <= 1}
+                        onClick={() => setPage((p) => p - 1)}
+                        className="px-3 py-1 border rounded disabled:opacity-40"
+                    >
+                        Prev
+                    </button>
+
+                    <span>Page {page} of {lastPage}</span>
+
+                    <button
+                        disabled={page >= lastPage}
+                        onClick={() => setPage((p) => p + 1)}
+                        className="px-3 py-1 border rounded disabled:opacity-40"
+                    >
+                        Next
+                    </button>
                 </div>
             </div>
         </div >

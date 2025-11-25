@@ -117,7 +117,7 @@ export default function EmployeePage() {
                     </Table>
 
                     {/* PAGINATION */}
-                    <div className="flex justify-between mt-4">
+                    <div className="flex justify-center items-center space-x-2 mt-4">
                         <button
                             disabled={page <= 1}
                             onClick={() => setPage(page - 1)}

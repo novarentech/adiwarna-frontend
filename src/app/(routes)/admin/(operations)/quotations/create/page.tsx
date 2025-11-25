@@ -1,7 +1,15 @@
 "use client";
-// import Image from "next/image";
+import { Customer, getCustomers } from "@/lib/customer";
+import {
+    AdiwarnaPayload,
+    ClientPayload,
+    createQuotation,
+    CreateQuotationPayload,
+    QuotationItemPayload
+} from "@/lib/quotations";
+
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 
@@ -22,161 +30,285 @@ interface RowDataClientProvide {
 
 export default function CreateQuotationsPage() {
 
-    // bagian SCOPE
-    const [rowsSCope, setRowsScope] = useState<RowDataScope[]>([
+    // CUSTOMER DATA
+    const [customers, setCustomers] = useState<Customer[]>([]);
+
+    const [loading, setLoading] = useState(false);
+
+    // FORM DATA
+    const [formData, setFormData] = useState({
+        ref_no: "",
+        ref_year: "",
+        customer_id: "",
+        subject: "",
+        date: "",
+        pic_name: "",
+        pic_phone: "",
+        top: "",
+        valid_until: "",
+        clause: "",
+        workday: "",
+        auth_name: "",
+        auth_position: "",
+        discount: "",
+    });
+
+    // Fetch customers
+    useEffect(() => {
+        const fetchCustomers = async () => {
+            const result = await getCustomers();
+            if (result.success && result.data) {
+                setCustomers(result.data.rows || result.data);
+            }
+        };
+        fetchCustomers();
+    }, []);
+
+    // Form handler
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
+    };
+
+    // -----------------------------
+    // TABLE: SCOPE OF WORK
+    // -----------------------------
+    const [rowsScope, setRowsScope] = useState<RowDataScope[]>([
         { qty: "", unit: "", description: "", unitRate: "" },
     ]);
 
-    const addRowScope = () => {
-        setRowsScope([...rowsSCope, { qty: "", unit: "", description: "", unitRate: "" }]);
+    const addRowScope = () =>
+        setRowsScope(prev => [...prev, { qty: "", unit: "", description: "", unitRate: "" }]);
+
+    const updateRowScope = (i: number, field: keyof RowDataScope, value: string) => {
+        const copy = [...rowsScope];
+        copy[i][field] = value;
+        setRowsScope(copy);
     };
 
-    const updateRowScope = (index: number, field: keyof RowDataScope, value: string) => {
-        const updated = [...rowsSCope];
-        updated[index][field] = value;
-        setRowsScope(updated);
-    };
+    const deleteRowScope = (i: number) =>
+        setRowsScope(prev => prev.filter((_, idx) => idx !== i));
 
-    const deleteRowSCope = (index: number) => {
-        setRowsScope(rowsSCope.filter((_, i) => i !== index));
-    };
-
-    // bagian ADiwarna Provide
-    const [rowsAdiwarnaProvide, setRowsAdiwarnaProvide] = useState<RowDataAdiwarnaProvide[]>([
+    // -----------------------------
+    // TABLE: ADIWARNA PROVIDE
+    // -----------------------------
+    const [rowsAdiwarna, setRowsAdiwarna] = useState<RowDataAdiwarnaProvide[]>([
         { details: "" },
     ]);
 
-    const addRowAdiwarnaProvide = () => {
-        setRowsAdiwarnaProvide([...rowsAdiwarnaProvide, { details: "" }]);
+    const addRowAdiwarna = () =>
+        setRowsAdiwarna(prev => [...prev, { details: "" }]);
+
+    const updateRowAdiwarna = (i: number, field: keyof RowDataAdiwarnaProvide, value: string) => {
+        const copy = [...rowsAdiwarna];
+        copy[i][field] = value;
+        setRowsAdiwarna(copy);
     };
 
-    const updateRowAdiwarnaProvide = (index: number, field: keyof RowDataAdiwarnaProvide, value: string) => {
-        const updated = [...rowsAdiwarnaProvide];
-        updated[index][field] = value;
-        setRowsAdiwarnaProvide(updated);
-    };
+    const deleteRowAdiwarna = (i: number) =>
+        setRowsAdiwarna(prev => prev.filter((_, idx) => idx !== i));
 
-    const deleteRowAdiwarnaProvide = (index: number) => {
-        setRowsAdiwarnaProvide(rowsAdiwarnaProvide.filter((_, i) => i !== index));
-    };
-
-    // bagian client Provide
-    const [rowsClientProvide, setRowsClientProvide] = useState<RowDataClientProvide[]>([
+    // -----------------------------
+    // TABLE: CLIENT PROVIDE
+    // -----------------------------
+    const [rowsClient, setRowsClient] = useState<RowDataClientProvide[]>([
         { details: "" },
     ]);
 
-    const addRowClientProvide = () => {
-        setRowsClientProvide([...rowsClientProvide, { details: "" }]);
+    const addRowClient = () =>
+        setRowsClient(prev => [...prev, { details: "" }]);
+
+    const updateRowClient = (i: number, field: keyof RowDataClientProvide, value: string) => {
+        const copy = [...rowsClient];
+        copy[i][field] = value;
+        setRowsClient(copy);
     };
 
-    const updateRowClientProvide = (index: number, field: keyof RowDataClientProvide, value: string) => {
-        const updated = [...rowsClientProvide];
-        updated[index][field] = value;
-        setRowsClientProvide(updated);
-    };
+    const deleteRowClient = (i: number) =>
+        setRowsClient(prev => prev.filter((_, idx) => idx !== i));
 
-    const deleteRowClientProvide = (index: number) => {
-        setRowsClientProvide(rowsClientProvide.filter((_, i) => i !== index));
-    };
+    // -----------------------------
+    // SUBMIT HANDLER
+    // -----------------------------
+    const handleCreateQuotations = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-    const handleCreateQuotations = (e: React.FormEvent) => {
-        
-    }
+        // Items
+        const items: QuotationItemPayload[] = rowsScope
+            .filter(r => r.qty && r.unitRate)
+            .map(r => ({
+                description: r.description || "N/A",
+                quantity: parseFloat(r.qty),
+                unit: r.unit,
+                rate: parseFloat(r.unitRate),
+            }));
+
+        // Adiwarna Provide
+        const adiwarnas: AdiwarnaPayload[] = rowsAdiwarna
+            .filter(r => r.details)
+            .map(r => ({ adiwarna_description: r.details }));
+
+        // Client Provide
+        const clients: ClientPayload[] = rowsClient
+            .filter(r => r.details)
+            .map(r => ({ client_description: r.details }));
+
+        const payload: CreateQuotationPayload = {
+            date: formData.date,
+            ref_no: formData.ref_no,
+            ref_year: parseInt(formData.ref_year),
+            customer_id: parseInt(formData.customer_id),
+            pic_name: formData.pic_name,
+            pic_phone: formData.pic_phone,
+            subject: formData.subject,
+            top: formData.top,
+            valid_until: formData.valid_until,
+            clause: formData.clause,
+            workday: formData.workday,
+            auth_name: formData.auth_name,
+            auth_position: formData.auth_position,
+            discount: parseFloat(formData.discount) || 0,
+            items,
+            adiwarnas,
+            clients,
+        };
+
+        console.log("PAYLOAD:", payload);
+
+        const result = await createQuotation(payload);
+
+        if (result.success) {
+            alert("Quotation berhasil dibuat!");
+        } else {
+            alert(`Gagal: ${result.message}`);
+        }
+    };
 
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
-            {/* title container */}
             <div className="flex flex-row items-center space-x-2 mt-2">
                 <MdEdit className="w-10 h-10" />
-                <h1 className="text-3xl font-normal">Add Quotations  </h1>
+                <h1 className="text-3xl font-normal">Add Quotations</h1>
             </div>
 
-            {/* start of form container */}
-            <div className="bg-white border rounded-sm px-5 py-6 shadow-xs my-12 ">
-                {/* start form */}
+            <div className="bg-white border rounded-sm px-5 py-6 shadow-xs my-12">
                 <form onSubmit={handleCreateQuotations} className="flex flex-col">
-                    {/* seperate into 2 section */}
+
                     <div className="grid grid-cols-2 space-x-4">
-                        {/* left column */}
                         <div className="flex flex-col space-y-4">
-                            {/* REF */}
-                            <div className="flex flex-col space-y-1">
-                                <label htmlFor="ref" className="font-bold">Ref.</label>
-                                <div className="flex items-center">
-                                    <input type="text" id="ref" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add number" />
+                            <div>
+                                <label className="font-bold">Ref.</label>
+                                <div className="flex items-center mt-1">
+                                    <input
+                                        type="text"
+                                        id="ref_no"
+                                        value={formData.ref_no}
+                                        onChange={handleFormChange}
+                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        placeholder="Add Number"
+                                    />
                                     <p className="mx-4 font-bold">/AWS-INS/</p>
-                                    <input type="text" id="year" className="flex-1 border rounded-sm h-9 px-2" placeholder="year" />
+                                    <input
+                                        type="text"
+                                        id="ref_year"
+                                        value={formData.ref_year}
+                                        onChange={handleFormChange}
+                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        placeholder="Year"
+                                    />
                                 </div>
                             </div>
-                            {/* customer */}
-                            <div className="flex flex-col space-y-1">
-                                <label htmlFor="customer" className="font-bold">Customer</label>
-                                <div className="flex">
-                                    <select className="flex-1 border rounded-sm h-9 px-2">
-                                        <option value="" className="font-light" hidden>---Choose Customer's Name---</option>
-                                        <option value="" className="font-light">Test</option>
-                                        {/* ini nanti fetch customer trs di loop di option*/}
-                                    </select>
-                                </div>
+
+                            <div className="flex flex-col">
+                                <label className="font-bold">Customer</label>
+                                <select
+                                    id="customer_id"
+                                    value={formData.customer_id}
+                                    onChange={handleFormChange}
+                                    className="flex-1 border rounded-sm h-9 px-2 mt-1 block "
+                                >
+                                    <option value="" hidden>---Choose Customer---</option>
+                                    {customers.map(customer => (
+                                        <option key={customer.id} value={customer.id}>
+                                            {customer.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-                            {/* subject */}
-                            <div className="flex flex-col space-y-1">
-                                <label htmlFor="subject" className="font-bold">Subject</label>
-                                <div className="flex">
-                                    <input type="text" id="subject" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add Subject" />
-                                </div>
+
+                            <div>
+                                <label className="font-bold">Subject</label>
+                                <input
+                                    id="subject"
+                                    value={formData.subject}
+                                    onChange={handleFormChange}
+                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    placeholder="Add Subject"
+                                />
                             </div>
                         </div>
-                        {/* right column */}
+
                         <div className="flex flex-col space-y-4">
-                            {/* Date */}
-                            <div className="flex flex-col space-y-1">
-                                <label htmlFor="date" className="font-bold">Date</label>
-                                <div className="flex">
-                                    <input type="date" id="date" className="flex-1 border rounded-sm h-9 px-2" />
-                                </div>
+                            <div>
+                                <label className="font-bold">Date</label>
+                                <input
+                                    type="date"
+                                    id="date"
+                                    value={formData.date}
+                                    onChange={handleFormChange}
+                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                />
                             </div>
-                            {/* PIC */}
-                            <div className="flex flex-col space-y-1">
-                                <label htmlFor="pic" className="font-bold">Person in Charge (PIC)</label>
-                                <div className="flex">
-                                    <input type="text" id="pic" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add PIC'S name" />
-                                </div>
+
+                            <div>
+                                <label className="font-bold">Person in Charge (PIC)</label>
+                                <input
+                                    type="text"
+                                    id="pic_name"
+                                    value={formData.pic_name}
+                                    onChange={handleFormChange}
+                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    placeholder="Add PIC's name"
+                                />
                             </div>
-                            {/* PIC phone */}
-                            <div className="flex flex-col space-y-1">
-                                <label htmlFor="pic-phone" className="font-bold">PIC's Phone number</label>
-                                <div className="flex">
-                                    <input type="text" id="pic-phone" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add PIC'S telephone number" />
-                                </div>
+
+                            <div>
+                                <label className="font-bold">PIC's Phone Number</label>
+                                <input
+                                    type="text"
+                                    id="pic_phone"
+                                    value={formData.pic_phone}
+                                    onChange={handleFormChange}
+                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    placeholder="Add Phone Number"
+                                />
                             </div>
                         </div>
                     </div>
 
-                    {/* scope of works */}
                     <div className="mt-12">
-                        <table className="w-full border-separate border-spacing-y-6 border-spacing-x-4">
+                        <table className="w-full border-separate border-spacing-y-4 border-spacing-x-4">
                             <thead>
-                                <tr className="space-x-1">
-                                    <th className="w-[5%]">No</th>
-                                    <th className="w-[10%]">Qty</th>
-                                    <th className="w-[10%]">Unit</th>
-                                    <th>Descsription</th>
-                                    <th className="w-[15%]">Unit Rate</th>
-                                    <th className="w-[5%]"></th>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Qty</th>
+                                    <th>Unit</th>
+                                    <th>Description</th>
+                                    <th>Unit Rate</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {rowsSCope.map((row, index) => (
-                                    <tr key={index} className="">
+                                {rowsScope.map((row, index) => (
+                                    <tr key={index}>
                                         <td className="text-center">{index + 1}</td>
+
                                         <td>
                                             <input
                                                 type="number"
                                                 value={row.qty}
                                                 onChange={(e) => updateRowScope(index, "qty", e.target.value)}
-                                                className="border rounded-sm h-9 px-2 w-full mx-auto appearance-none"
-                                                placeholder="0"
+                                                className="border rounded-sm h-9 px-2 w-full"
                                             />
                                         </td>
 
@@ -185,7 +317,6 @@ export default function CreateQuotationsPage() {
                                                 value={row.unit}
                                                 onChange={(e) => updateRowScope(index, "unit", e.target.value)}
                                                 className="border rounded-sm h-9 px-2 w-full"
-                                                placeholder="Unit"
                                             />
                                         </td>
 
@@ -197,7 +328,6 @@ export default function CreateQuotationsPage() {
                                                     updateRowScope(index, "description", e.target.value)
                                                 }
                                                 className="border rounded-sm h-9 px-2 w-full"
-                                                placeholder="Add Description"
                                             />
                                         </td>
 
@@ -205,18 +335,20 @@ export default function CreateQuotationsPage() {
                                             <input
                                                 type="number"
                                                 value={row.unitRate}
-                                                onChange={(e) => updateRowScope(index, "unitRate", e.target.value)}
+                                                onChange={(e) =>
+                                                    updateRowScope(index, "unitRate", e.target.value)
+                                                }
                                                 className="border rounded-sm h-9 px-2 w-full"
-                                                placeholder="0"
                                             />
                                         </td>
 
                                         <td className="text-center">
                                             <button
-                                                className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center cursor-pointer"
-                                                onClick={() => deleteRowSCope(index)}
+                                                type="button"
+                                                onClick={() => deleteRowScope(index)}
+                                                className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center"
                                             >
-                                                <FaTrash className="w-5 h-5 text-white" />
+                                                <FaTrash className="text-white" />
                                             </button>
                                         </td>
                                     </tr>
@@ -224,198 +356,217 @@ export default function CreateQuotationsPage() {
                             </tbody>
                         </table>
 
-                        {/* Button Add Row */}
-                        <div
-                            onClick={addRowScope}
-                            className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
-                        >
-                            + Add Row
-                        </div>
                     </div>
+                    <button
+                        type="button"
+                        onClick={addRowScope}
+                        className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded"
+                    >
+                        + Add Row
+                    </button>
 
-                    {/* section ADiwarna to provide */}
-                    <h2 className="mt-12 font-bold">PT Adiwarna To Provide</h2>
-                    {/* Adiwarna To Provide */}
-                    <div className="mt-6">
-                        <table className="w-full border-separate border-spacing-y-4 border-spacing-x-4">
-                            <thead>
-                                <tr className="space-x-1">
-                                    <th className="w-[5%]">No</th>
-                                    <th className="w-[90%] text-left">Details</th>
-                                    <th className="w-[5%]"></th>
+                    <h2 className="mt-10 font-bold">PT Adiwarna To Provide</h2>
+
+                    <table className="w-full border-separate border-spacing-y-4 mt-4">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Details</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rowsAdiwarna.map((row, index) => (
+                                <tr key={index}>
+                                    <td className="text-center">{index + 1}</td>
+
+                                    <td>
+                                        <textarea
+                                            value={row.details}
+                                            onChange={(e) =>
+                                                updateRowAdiwarna(index, "details", e.target.value)
+                                            }
+                                            className="border rounded-sm p-2 w-full min-h-16"
+                                        />
+                                    </td>
+
+                                    <td className="text-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => deleteRowAdiwarna(index)}
+                                            className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center mx-auto"
+                                        >
+                                            <FaTrash className="text-white" />
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {rowsAdiwarnaProvide.map((row, index) => (
-                                    <tr key={index} className="">
-                                        <td className="text-center">{index + 1}</td>
+                            ))}
+                        </tbody>
+                    </table>
 
-                                        <td>
-                                            <textarea
-                                                value={row.details}
-                                                onChange={(e) =>
-                                                    updateRowAdiwarnaProvide(index, "details", e.target.value)
-                                                }
-                                                className="border rounded-sm min-h-16 px-2 w-full p-2"
-                                                placeholder="Masukkan sesuai kebutuhan"
-                                            />
-                                        </td>
+                    <button
+                        type="button"
+                        onClick={addRowAdiwarna}
+                        className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded"
+                    >
+                        + Add Row
+                    </button>
 
-                                        <td className="text-center">
-                                            <button
-                                                className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center cursor-pointer"
-                                                onClick={() => deleteRowAdiwarnaProvide(index)}
-                                            >
-                                                <FaTrash className="w-5 h-5 text-white" />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <h2 className="mt-10 font-bold">Client To Provide</h2>
 
-                        {/* Button Add Row */}
-                        <div
-                            onClick={addRowAdiwarnaProvide}
-                            className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
-                        >
-                            + Add Row
-                        </div>
+                    <table className="w-full border-separate border-spacing-y-4 mt-4">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Details</th>
+                                <th></th>
+                            </tr>
+                        </thead>
 
+                        <tbody>
+                            {rowsClient.map((row, index) => (
+                                <tr key={index}>
+                                    <td className="text-center">{index + 1}</td>
 
+                                    <td>
+                                        <textarea
+                                            value={row.details}
+                                            onChange={(e) =>
+                                                updateRowClient(index, "details", e.target.value)
+                                            }
+                                            className="border rounded-sm p-2 w-full min-h-16"
+                                        />
+                                    </td>
 
-                    </div>
-
-                    {/* section ADiwarna to provide */}
-                    <h2 className="mt-12 font-bold">Client To Provide</h2>
-                    {/* Adiwarna To Provide */}
-                    <div className="mt-6">
-                        <table className="w-full border-separate border-spacing-y-4 border-spacing-x-4">
-                            <thead>
-                                <tr className="space-x-1">
-                                    <th className="w-[5%]">No</th>
-                                    <th className="w-[90%] text-left">Details</th>
-                                    <th className="w-[5%]"></th>
+                                    <td className="text-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => deleteRowClient(index)}
+                                            className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center mx-auto"
+                                        >
+                                            <FaTrash className="text-white" />
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {rowsClientProvide.map((row, index) => (
-                                    <tr key={index} className="">
-                                        <td className="text-center">{index + 1}</td>
+                            ))}
+                        </tbody>
+                    </table>
 
-                                        <td>
-                                            <textarea
-                                                value={row.details}
-                                                onChange={(e) =>
-                                                    updateRowClientProvide(index, "details", e.target.value)
-                                                }
-                                                className="border rounded-sm min-h-16 px-2 w-full p-2"
-                                                placeholder="Masukkan sesuai kebutuhan"
-                                            />
-                                        </td>
+                    <button
+                        type="button"
+                        onClick={addRowClient}
+                        className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded"
+                    >
+                        + Add Row
+                    </button>
 
-                                        <td className="text-center">
-                                            <button
-                                                className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center cursor-pointer"
-                                                onClick={() => deleteRowClientProvide(index)}
-                                            >
-                                                <FaTrash className="w-5 h-5 text-white" />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-
-                        {/* Button Add Row */}
-                        <div
-                            onClick={addRowClientProvide}
-                            className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
-                        >
-                            + Add Row
-                        </div>
-                    </div>
-
-                    <div className="mt-12 flex-col space-y-4">
-                        {/* Terms of payment and quotation valid*/}
+                    <div className="mt-10 space-y-4">
                         <div className="grid grid-cols-2">
-                            <div className="flex flex-col space-y-4">
-                                {/* terms of payment */}
-                                <div className="flex flex-col space-y-1">
-                                    <label htmlFor="terms-of-payment" className="font-bold">Terms of Payment</label>
-                                    <div className="flex items-center">
-                                        <input type="text" id="terms-of-payment" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add Terms Of Payment" />
-                                        <p className="mx-4 font-bold">Days</p>
-                                    </div>
+                            <div className="flex flex-col">
+                                <label className="font-bold">Terms of Payment</label>
+                                <div className="flex flex-row mt-1 items-center">
+                                    <input
+                                        id="top"
+                                        className="border rounded-sm h-9 px-2 flex-1"
+                                        type="text"
+                                        value={formData.top}
+                                        onChange={handleFormChange}
+                                    />
+                                    <p className="mx-3 font-bold">Days</p>
                                 </div>
                             </div>
-                            {/* right column */}
-                            <div className="flex flex-col space-y-4">
-                                {/* quotations valid */}
-                                <div className="flex flex-col space-y-1">
-                                    <label htmlFor="quotations-valid" className="font-bold">Quotations Valid</label>
-                                    <div className="flex items-center">
-                                        <input type="text" id="quotations-valid" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add number" />
-                                        <p className="mx-4 font-bold">Days</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* clause */}
-                        <div className="flex flex-col space-y-1">
-                            <label htmlFor="clause" className="font-bold">Clause</label>
-                            <div className="flex">
-                                <input type="text" id="clause" className="flex-1 border rounded-sm h-9 px-2" />
-                            </div>
-                        </div>
-                        {/* workday */}
-                        <div className="flex flex-col space-y-1">
-                            <label htmlFor="workday" className="font-bold">Workday</label>
-                            <div className="flex">
-                                <input type="text" id="workday" className="flex-1 border rounded-sm h-9 px-2" />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 space-x-4">
-                            <div className="flex flex-col space-y-4">
-                                {/* Author */}
-                                <div className="flex flex-col space-y-1">
-                                    <label htmlFor="author" className="font-bold">Authorized By</label>
-                                    <div className="flex items-center">
-                                        <input type="text" id="author" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add Name" />
-                                    </div>
-                                </div>
-                            </div>
-                            {/* right column */}
-                            <div className="flex flex-col space-y-4">
-                                {/* Position */}
-                                <div className="flex flex-col space-y-1">
-                                    <label htmlFor="position" className="font-bold">Position</label>
-                                    <div className="flex items-center">
-                                        <input type="text" id="positions" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add Position" />
-                                    </div>
+
+                            <div className="flex flex-col">
+                                <label className="font-bold">Quotation Valid</label>
+                                <div className="flex flex-row mt-1 items-center">
+                                    <input
+                                        id="valid_until"
+                                        className="border rounded-sm h-9 px-2 flex-1"
+                                        type="date"
+                                        value={formData.valid_until}
+                                        onChange={handleFormChange}
+                                    />
+                                    <p className="ml-3 font-bold">Days</p>
                                 </div>
                             </div>
                         </div>
-                        {/* Dicount */}
-                        <div className="flex flex-col space-y-1">
-                            <label htmlFor="dicscount" className="font-bold">Dicscount</label>
-                            <div className="flex">
-                                <input type="text" id="dicscount" className="w-2/6 border rounded-sm h-9 px-2" />
-                                <p className="my-auto ml-2">{"(%)"}</p>
+
+                        <div>
+                            <label className="font-bold">Clause</label>
+                            <input
+                                id="clause"
+                                className="border rounded-sm h-9 px-2 w-full mt-1"
+                                value={formData.clause}
+                                onChange={handleFormChange}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="font-bold">Workday</label>
+                            <input
+                                id="workday"
+                                className="border rounded-sm h-9 px-2 w-full mt-1"
+                                value={formData.workday}
+                                onChange={handleFormChange}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="font-bold">Authorized By</label>
+                                <input
+                                    id="auth_name"
+                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    value={formData.auth_name}
+                                    onChange={handleFormChange}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="font-bold">Position</label>
+                                <input
+                                    id="auth_position"
+                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    value={formData.auth_position}
+                                    onChange={handleFormChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col">
+                            <label className="font-bold">Discount</label>
+                            <div className="flex flex-row items-center space-x-2">
+                                <input
+                                    id="discount"
+                                    className="border rounded-sm h-9 px-2 w-1/4 mt-1"
+                                    value={formData.discount}
+                                    onChange={handleFormChange}
+                                />
+                                <p>{"(%)"}</p>
                             </div>
                         </div>
                     </div>
+
                     <hr className="border-b my-6" />
-                    <div className="ml-auto w-1/4 grid grid-cols-2 space-x-4">
-                        <Link href={"/admin/quotations"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm">Cancel</Link>
-                        <button type="submit" className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
+
+                    <div className="ml-auto w-1/3 grid grid-cols-2 gap-4">
+                        <Link
+                            href={"/admin/quotations"}
+                            className="bg-red-500 text-white h-10 rounded-sm flex items-center justify-center"
+                        >
+                            Cancel
+                        </Link>
+
+                        <button
+                            type="submit"
+                            className="bg-[#17a2b8] text-white h-10 rounded-sm"
+                        >
+                            Save
+                        </button>
                     </div>
                 </form>
-                {/* end form */}
             </div>
-            {/* end of form container */}
-
-            <div className="h-20 text-transparent">.</div>
         </div>
-    )
+
+    );
 }
