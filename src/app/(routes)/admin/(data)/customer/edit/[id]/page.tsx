@@ -126,7 +126,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                         <label htmlFor="customer-num" className="font-bold">No</label>
                         <div className="flex">
                             <input
-                                type="number"
+                                type="text"
                                 id="customer-num"
                                 value={customerNo}
                                 onChange={(e) => setCustomerNo(e.target.value)}

@@ -85,7 +85,7 @@ export default function CreateCustomerPage() {
                     <div className="flex flex-col space-y-1">
                         <label htmlFor="customer-num" className="font-bold">No</label>
                         <div className="flex">
-                            <input type="number" id="customer-num" className="flex-1 border rounded-sm h-9 px-2" value={customerNo}
+                            <input type="text" id="customer-num" className="flex-1 border rounded-sm h-9 px-2" value={customerNo}
                                 onChange={(e) => setCustomerNo(e.target.value)} placeholder="add customer number" />
                         </div>
                     </div>

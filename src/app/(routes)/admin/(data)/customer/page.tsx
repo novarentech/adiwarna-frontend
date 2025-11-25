@@ -125,7 +125,8 @@ export default function CustomerPage() {
                                     </TableCell>
 
                                     <TableCell className="text-center">
-                                        {(page - 1) * 15 + (index + 1)}
+                                        {/* {(page - 1) * 15 + (index + 1)} */}
+                                        {c.customer_no}
                                     </TableCell>
 
                                     <TableCell className="text-left whitespace-normal wrap-break-words">

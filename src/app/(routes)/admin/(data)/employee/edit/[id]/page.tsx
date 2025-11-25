@@ -1,7 +1,9 @@
 "use client";
+import { getEmployeeById, updateEmployee } from "@/lib/employee";
 // import Image from "next/image";
 import Link from "next/link";
-import { use, useState } from "react";
+import { useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 
 import { FaAddressCard } from "react-icons/fa6";
@@ -16,8 +18,52 @@ export default function EditEmployeePage({
     const actualParams = use(params);
     const id = actualParams.id;
 
-    const handleEditEmployee = (e: React.FormEvent) => {
+    const router = useRouter();
 
+    // state form
+    const [employeeNo, setEmployeeNo] = useState("");
+    const [employeeName, setEmployeeName] = useState("");
+    const [employeePosition, setEmployeePosition] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    // load existing data
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await getEmployeeById(id);
+
+            if (res.success) {
+                const emp = res.data;
+                setEmployeeNo(emp.employee_no);
+                setEmployeeName(emp.name);
+                setEmployeePosition(emp.position);
+            }
+
+            setLoading(false);
+        };
+
+        fetchData();
+    }, [id]);
+
+    const handleEditEmployee = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const payload = {
+            employee_no: employeeNo,
+            name: employeeName,
+            position: employeePosition,
+        };
+
+        const res = await updateEmployee(id, payload);
+
+        if (res.success) {
+            router.push("/admin/employee");
+        } else {
+            alert(res.message || "Failed to update employee");
+        }
+    };
+
+    if (loading) {
+        return <p className="p-4">Loading...</p>;
     }
 
     return (
@@ -36,21 +82,24 @@ export default function EditEmployeePage({
                     <div className="flex flex-col space-y-1">
                         <label htmlFor="customer-num" className="font-bold">No</label>
                         <div className="flex">
-                            <input type="number" id="customer-num" className="flex-1 border rounded-sm h-9 px-2" placeholder="add employee number" />
+                            <input value={employeeNo}
+                                onChange={(e) => setEmployeeNo(e.target.value)} type="text" id="customer-num" className="flex-1 border rounded-sm h-9 px-2" placeholder="add employee number" />
                         </div>
                     </div>
                     {/* Name */}
                     <div className="flex flex-col space-y-1 mt-4">
                         <label htmlFor="employee-name" className="font-bold">Name</label>
                         <div className="flex">
-                            <input type="text" id="employee-name" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add employee name" />
+                            <input value={employeeName}
+                                onChange={(e) => setEmployeeName(e.target.value)} type="text" id="employee-name" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add employee name" />
                         </div>
                     </div>
                     {/* Position */}
                     <div className="flex flex-col space-y-1 mt-4">
                         <label htmlFor="employee-position" className="font-bold">Position</label>
                         <div className="flex">
-                            <input type="text" id="employee-position" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add employee position" />
+                            <input value={employeePosition}
+                                onChange={(e) => setEmployeePosition(e.target.value)} type="text" id="employee-position" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add employee position" />
                         </div>
                     </div>
                     <hr className="border-b my-6" />
