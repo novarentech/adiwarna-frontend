@@ -9,6 +9,7 @@ import {
 } from "@/lib/quotations";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
@@ -29,6 +30,8 @@ interface RowDataClientProvide {
 }
 
 export default function CreateQuotationsPage() {
+
+    const router = useRouter();
 
     // CUSTOMER DATA
     const [customers, setCustomers] = useState<Customer[]>([]);
@@ -132,6 +135,7 @@ export default function CreateQuotationsPage() {
     // -----------------------------
     const handleCreateQuotations = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
 
         // Items
         const items: QuotationItemPayload[] = rowsScope
@@ -179,6 +183,8 @@ export default function CreateQuotationsPage() {
 
         if (result.success) {
             alert("Quotation berhasil dibuat!");
+            setLoading(false);
+            router.push("/admin/quotations");
         } else {
             alert(`Gagal: ${result.message}`);
         }
@@ -561,7 +567,7 @@ export default function CreateQuotationsPage() {
                             type="submit"
                             className="bg-[#17a2b8] text-white h-10 rounded-sm"
                         >
-                            Save
+                            {loading ? "loading..." : "Save"}
                         </button>
                     </div>
                 </form>

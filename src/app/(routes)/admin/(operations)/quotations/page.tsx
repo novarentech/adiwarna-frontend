@@ -18,7 +18,7 @@ import { MdEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
 import { useEffect, useState } from "react";
-import { GetAllQuotation, getAllQuotations } from "@/lib/quotations";
+import { deleteQuotations, GetAllQuotation, getAllQuotations } from "@/lib/quotations";
 
 
 
@@ -50,6 +50,21 @@ export default function QuotationsPage() {
         setPage(1);
         fetchData();
     };
+
+    const handleDelete = async (id: number) => {
+        if (!confirm("Are you sure you want to delete this Quotation?")) return;
+
+        const res = await deleteQuotations(id);
+
+        if (!res.success) {
+            alert("Failed to delete: " + res.message);
+            return;
+        }
+
+        alert("Employee deleted successfully!");
+        fetchData();
+    };
+
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
@@ -115,7 +130,7 @@ export default function QuotationsPage() {
                                                     <MdEdit className="w-7 h-7" />
                                                 </Link>
                                                 <button>
-                                                    <FaTrash className="w-5 h-5 text-red-500" />
+                                                    <FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(q.id)} />
                                                 </button>
                                                 <Link href={`/admin/quotations/print/${q.id}`}>
                                                     <IoMdEye className="w-7 h-7 text-[#31C6D4]" />
