@@ -28,6 +28,21 @@ export async function getEmployees(page: number = 1, search: string = ""): Promi
     return res.json();
 }
 
+export async function getEmployeesAllForDropdown(search: string = "", page: number = 1) {
+    try {
+        const query = `?search=${search}&page=${page}`;
+
+        const res = await fetch(`/api/employees/all${query}`, {
+            method: "GET",
+            cache: "no-store",
+        });
+
+        return await res.json();
+    } catch (error) {
+        return { success: false, message: "Failed to fetch customers" };
+    }
+}
+
 export async function createEmployee(payload: {
     employee_no: string;
     name: string;
