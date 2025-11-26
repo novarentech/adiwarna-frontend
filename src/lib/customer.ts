@@ -95,6 +95,21 @@ export async function getCustomers(search: string = "", page: number = 1) {
     }
 }
 
+export async function getCustomersAllForDropdown(search: string = "", page: number = 1) {
+    try {
+        const query = `?search=${search}&page=${page}`;
+
+        const res = await fetch(`/api/customers/all${query}`, {
+            method: "GET",
+            cache: "no-store",
+        });
+
+        return await res.json();
+    } catch (error) {
+        return { success: false, message: "Failed to fetch customers" };
+    }
+}
+
 
 
 export async function createCustomerRequest(

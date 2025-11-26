@@ -61,7 +61,7 @@ export default function QuotationsPage() {
             return;
         }
 
-        alert("Employee deleted successfully!");
+        alert("Quotations deleted successfully!");
         fetchData();
     };
 
@@ -119,7 +119,7 @@ export default function QuotationsPage() {
                                 quotations.map((q) => (
                                     <TableRow key={q.id}>
                                         <TableCell><input type="checkbox" /></TableCell>
-                                        <TableCell>{q.ref_no}</TableCell>
+                                        <TableCell className="py-6">{q.ref_no}/AWP-INS/{q.ref_year}</TableCell>
                                         <TableCell>{new Date(q.date).toLocaleDateString()}</TableCell>
                                         <TableCell>{q.customer}</TableCell>
                                         <TableCell>{q.pic_name}</TableCell>
@@ -145,7 +145,7 @@ export default function QuotationsPage() {
                 </div>
 
                 {/* Pagination */}
-                <div className="flex justify-center py-4 space-x-4">
+                <div className="flex justify-center items-center py-4 space-x-4">
                     <button
                         disabled={page <= 1}
                         onClick={() => setPage((p) => p - 1)}

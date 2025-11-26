@@ -1,5 +1,5 @@
 "use client";
-import { Customer, getCustomers } from "@/lib/customer";
+import { Customer, getCustomers, getCustomersAllForDropdown } from "@/lib/customer";
 import {
     getQuotationsById,
     Quotation,
@@ -122,7 +122,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
     // Fetch customers
     useEffect(() => {
         const fetchCustomers = async () => {
-            const result = await getCustomers();
+            const result = await getCustomersAllForDropdown();
             if (result.success && result.data) {
                 setCustomers(result.data.rows || result.data);
             }

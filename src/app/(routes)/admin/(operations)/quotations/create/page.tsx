@@ -1,5 +1,5 @@
 "use client";
-import { Customer, getCustomers } from "@/lib/customer";
+import { Customer, getCustomers, getCustomersAllForDropdown } from "@/lib/customer";
 import {
     AdiwarnaPayload,
     ClientPayload,
@@ -57,9 +57,10 @@ export default function CreateQuotationsPage() {
     });
 
     // Fetch customers
+    // Fetch customers
     useEffect(() => {
         const fetchCustomers = async () => {
-            const result = await getCustomers();
+            const result = await getCustomersAllForDropdown();
             if (result.success && result.data) {
                 setCustomers(result.data.rows || result.data);
             }
