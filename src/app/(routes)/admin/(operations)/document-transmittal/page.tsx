@@ -19,8 +19,51 @@ import {
 import { MdEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
+import { useEffect, useState } from "react";
+import { deleteDocTrans, getAllDocTrans, GetAllDocTransmittalData } from "@/lib/document-transmittals";
 
 export default function DocumentTransmittalPage() {
+    const [docTrans, setDocTrans] = useState<GetAllDocTransmittalData[]>([]);
+    const [search, setSearch] = useState("");
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = async () => {
+        setLoading(true);
+        const res = await getAllDocTrans(page, search);
+
+        if (res.success) {
+            setDocTrans(res.data);
+            setLastPage(res.meta.last_page);
+        }
+
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [page]);
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        setPage(1);
+        fetchData();
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!confirm("Are you sure you want to delete this Quotation?")) return;
+
+        const res = await deleteDocTrans(id);
+
+        if (!res.success) {
+            alert("Failed to delete: " + res.message);
+            return;
+        }
+
+        alert("Quotations deleted successfully!");
+        fetchData();
+    };
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
@@ -35,8 +78,9 @@ export default function DocumentTransmittalPage() {
                     {/* create quotations button */}
                     <Link href={"/admin/document-transmittal/create"} className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Document Transmittal<FiPlus className="w-5 h-5 ml-1" /> </Link>
                     {/* search bar */}
-                    <form className="flex flex-row">
-                        <input id="search-input" type="text" className="w-[250px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm" placeholder="Search Document Transmittal .." />
+                    <form onSubmit={handleSearch} className="flex flex-row">
+                        <input value={search}
+                            onChange={(e) => setSearch(e.target.value)} id="search-input" type="text" className="w-[250px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm" placeholder="Search Document Transmittal .." />
                         <button className="border-r border-t border-b h-8 w-8 my-auto flex rounded-r-sm" type="submit"><IoIosSearch className="w-5 m-auto" /></button>
                     </form>
                 </div>
@@ -54,23 +98,58 @@ export default function DocumentTransmittalPage() {
                         </TableHeader>
                         <TableBody>
                             {/* list documenet transmittal */}
-                            <TableRow>
-                                <TableCell className="font-medium"><input type="checkbox" /></TableCell>
-                                <TableCell className="py-4"><p className="text-sm">	000/vi/2025</p></TableCell>
-                                <TableCell>	21 November 2025</TableCell>
-                                <TableCell>PT. MHI</TableCell>
-                                <TableCell className="text-center">MHI Workshop - Daan Mogot</TableCell>
-                                <TableCell className="text-center">
-                                    <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
-                                        <Link href={"/admin/document-transmittal/edit/1"}><MdEdit className="w-7 h-7" /></Link>
-                                        <div><FaTrash className="w-5 h-5 text-red-500" /></div>
-                                        <Link href={"/admin/document-transmittal/print"}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center py-10">
+                                        Loading...
+                                    </TableCell>
+                                </TableRow>
+                            ) : docTrans.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center py-10">
+                                        No data found.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                docTrans.map((doc) => (
+                                    <TableRow key={doc.id}>
+                                        <TableCell className="font-medium"><input type="checkbox" /></TableCell>
+                                        <TableCell className="py-4"><p className="text-sm">	{doc.ta_no}</p></TableCell>
+                                        <TableCell>{doc.date}</TableCell>
+                                        <TableCell>{doc.customer}</TableCell>
+                                        <TableCell className="text-center">{doc.pic}</TableCell>
+                                        <TableCell className="text-center">
+                                            <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
+                                                <Link href={`/admin/document-transmittal/edit/${doc.id}`}><MdEdit className="w-7 h-7" /></Link>
+                                                <div><FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(doc.id)} /></div>
+                                                <Link href={"/admin/document-transmittal/print"}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
                         </TableBody>
                     </Table>
+                </div>
+                {/* Pagination */}
+                <div className="flex justify-center items-center py-4 space-x-4">
+                    <button
+                        disabled={page <= 1}
+                        onClick={() => setPage((p) => p - 1)}
+                        className="px-3 py-1 border rounded disabled:opacity-40"
+                    >
+                        Prev
+                    </button>
+
+                    <span>Page {page} of {lastPage}</span>
+
+                    <button
+                        disabled={page >= lastPage}
+                        onClick={() => setPage((p) => p + 1)}
+                        className="px-3 py-1 border rounded disabled:opacity-40"
+                    >
+                        Next
+                    </button>
                 </div>
             </div>
         </div >
