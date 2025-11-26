@@ -3,11 +3,15 @@
 import { MdAddShoppingCart } from "react-icons/md";
 
 import Link from "next/link";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
+import { getPurchaseOrderById, updatePurchaseOrder, UpdatePurchaseOrderItemPayload, UpdatePurchaseOrderPayload } from "@/lib/purchase-order";
+import { Customer, getCustomerById, getCustomersAllForDropdown } from "@/lib/customer";
+import { useRouter } from "next/navigation";
 
 interface RowDataScope {
+    id?: string | number;
     qty: string;
     unit: string;
     description: string;
@@ -24,28 +28,188 @@ export default function EditPurchaseOrderPage({
     const actualParams = use(params);
     const id = actualParams.id;
 
-    // bagian SCOPE
-    const [rowsSCope, setRowsScope] = useState<RowDataScope[]>([
-        { qty: "", unit: "", description: "", unitRate: "" },
-    ]);
+    const router = useRouter();
 
-    const addRowScope = () => {
-        setRowsScope([...rowsSCope, { qty: "", unit: "", description: "", unitRate: "" }]);
+    const [loading, setLoading] = useState(false);
+
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [customerAddress, setCustomerAddress] = useState("");
+    const [customerPhoneNumber, setCustomerPhoneNumber] = useState("");
+
+    const [formData, setFormData] = useState({
+        po_no: "",
+        po_year: "",
+        date: "",
+        customer_id: 0,
+        pic_name: "",
+        pic_phone: "",
+        required_date: "",
+        top_dp: "",
+        top_cod: "",
+        quotation_ref: "",
+        purchase_requisition_no: "",
+        purchase_requisition_year: "",
+        discount: "",
+        req_name: "",
+        req_pos: "",
+        app_name: "",
+        app_pos: "",
+        auth_name: "",
+        auth_pos: "",
+    });
+
+    const [rowsScope, setRowsScope] = useState<RowDataScope[]>([]);
+
+    // LOAD CUSTOMER DROPDOWN
+    useEffect(() => {
+        const fetchCustomers = async () => {
+            const res = await getCustomersAllForDropdown();
+            if (res.success) {
+                setCustomers(res.data.rows || res.data);
+            }
+        };
+        fetchCustomers();
+    }, []);
+
+    // LOAD DETAIL PO
+    useEffect(() => {
+        const loadPurchaseOrderDetail = async () => {
+            const result = await getPurchaseOrderById(id);
+            if (!result.success) {
+                alert("Gagal mengambil data");
+                return;
+            }
+
+            const po = result.data;
+
+            // SET FORM
+            setFormData({
+                po_no: po.po_no,
+                po_year: po.po_year,
+                date: po.date.substring(0, 10),
+                customer_id: po.customer.id,
+                pic_name: po.pic_name,
+                pic_phone: po.pic_phone,
+                required_date: po.required_date.substring(0, 10),
+                top_dp: po.top_dp || "",
+                top_cod: po.top_cod || "",
+                quotation_ref: po.quotation_ref,
+                purchase_requisition_no: po.purchase_requisition_no || "",
+                purchase_requisition_year: po.purchase_requisition_year?.toString() || "",
+                discount: po.discount?.toString() || "",
+                req_name: po.req_name || "",
+                req_pos: po.req_pos || "",
+                app_name: po.app_name,
+                app_pos: po.app_pos,
+                auth_name: po.auth_name,
+                auth_pos: po.auth_pos
+            });
+
+            // SET CUSTOMER DETAIL
+            setCustomerAddress(po.customer.address);
+            setCustomerPhoneNumber(po.customer.phone_number);
+
+            // SET ITEMS
+            setRowsScope(
+                po.items.map(item => ({
+                    id: item.id,
+                    qty: item.quantity.toString(),
+                    description: item.description,
+                    unit: item.unit,
+                    unitRate: item.rate.toString(),
+                }))
+            );
+        };
+
+        loadPurchaseOrderDetail();
+    }, [id]);
+
+    // HANDLE CHANGE FORM INPUTS
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
     };
 
-    const updateRowScope = (index: number, field: keyof RowDataScope, value: string) => {
-        const updated = [...rowsSCope];
-        updated[index][field] = value;
-        setRowsScope(updated);
+    // SCOPE TABLE ACTIONS
+    const addRowScope = () =>
+        setRowsScope(prev => [
+            ...prev,
+            { qty: "", unit: "", description: "", unitRate: "" },
+        ]);
+
+    const updateRowScope = (i: number, field: keyof RowDataScope, value: string) => {
+        const copy = [...rowsScope];
+        copy[i][field] = value;
+        setRowsScope(copy);
     };
 
-    const deleteRowSCope = (index: number) => {
-        setRowsScope(rowsSCope.filter((_, i) => i !== index));
+    const deleteRowScope = (i: number) => {
+        setRowsScope(prev => prev.filter((_, idx) => idx !== i));
     };
 
-    const handleCreatePurchaseOrder = (e: React.FormEvent) => {
-        
-    }
+    // SUBMIT EDIT
+    const handleUpdatePurchaseOrder = async (e: any) => {
+        e.preventDefault();
+        setLoading(true);
+
+        const items: UpdatePurchaseOrderItemPayload[] = rowsScope.map(row => ({
+            id: row.id !== undefined ? Number(row.id) : undefined, // jika item lama → ada id
+            description: row.description || "N/A",
+            quantity: parseFloat(row.qty),
+            unit: row.unit,
+            rate: parseFloat(row.unitRate),
+        }));
+
+        const payload: UpdatePurchaseOrderPayload = {
+            po_no: formData.po_no,
+            po_year: Number(formData.po_year),
+            date: formData.date,
+            customer_id: Number(formData.customer_id),
+            pic_name: formData.pic_name,
+            pic_phone: formData.pic_phone,
+            required_date: formData.required_date,
+            top_dp: formData.top_dp,
+            top_cod: formData.top_cod,
+            quotation_ref: formData.quotation_ref,
+            purchase_requisition_no: formData.purchase_requisition_no,
+            purchase_requisition_year: Number(formData.purchase_requisition_year),
+            discount: parseFloat(formData.discount) || 0,
+            req_name: formData.req_name,
+            req_pos: formData.req_pos,
+            app_name: formData.app_name,
+            app_pos: formData.app_pos,
+            auth_name: formData.auth_name,
+            auth_pos: formData.auth_pos,
+            items,
+        };
+
+        const result = await updatePurchaseOrder(id, payload);
+        if (result.success) {
+            alert("Purchase Order updated!");
+            router.push("/admin/purchase-order");
+        } else {
+            alert(result.message || "Gagal update PO");
+        }
+
+        setLoading(false);
+    };
+
+    // LOAD CUSTOMER DETAILS WHEN ID CHANGED
+    useEffect(() => {
+        const fetchCustomerDetail = async () => {
+            if (!formData.customer_id) return;
+
+            const result = await getCustomerById(formData.customer_id);
+
+            if (result && result.data) {
+                const cust = result.data;
+                setCustomerAddress(cust.address || "");
+                setCustomerPhoneNumber(cust.phone_number || "");
+            }
+        };
+
+        fetchCustomerDetail();
+    }, [formData.customer_id]);
 
 
 
@@ -53,14 +217,14 @@ export default function EditPurchaseOrderPage({
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
             <div className="flex flex-row items-center space-x-2 mt-2">
-                <MdEdit className="w-10 h-10" />
-                <h1 className="text-3xl font-normal">Edit Purchase Order  </h1>
+                <MdAddShoppingCart className="w-10 h-10" />
+                <h1 className="text-3xl font-normal">Add Purchase Order  </h1>
             </div>
 
             {/* start of form container */}
             <div className="bg-white border rounded-sm px-5 py-6 shadow-xs my-12 ">
                 {/* start form */}
-                <form onSubmit={handleCreatePurchaseOrder} className="flex flex-col">
+                <form onSubmit={handleUpdatePurchaseOrder} className="flex flex-col">
                     {/* seperate into 2 section */}
                     <div className="grid grid-cols-2 space-x-4">
                         {/* left column */}
@@ -69,9 +233,11 @@ export default function EditPurchaseOrderPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="po-no" className="font-bold">PO No.</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="po-no" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add number" />
+                                    <input type="text" id="po_no" value={formData.po_no}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add number" />
                                     <p className="mx-4 font-bold">/PO/AWS-INS/</p>
-                                    <input type="text" id="year" className="flex-1 border rounded-sm h-9 px-2" placeholder="year" />
+                                    <input type="text" id="po_year" value={formData.po_year}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="year" />
                                 </div>
                             </div>
                         </div>
@@ -81,7 +247,8 @@ export default function EditPurchaseOrderPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="date" className="font-bold">Date</label>
                                 <div className="flex">
-                                    <input type="date" id="date" className="flex-1 border rounded-sm h-9 px-2" />
+                                    <input type="date" id="date" value={formData.date}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
                                 </div>
                             </div>
                         </div>
@@ -96,10 +263,14 @@ export default function EditPurchaseOrderPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="customer" className="font-bold">Customer</label>
                                 <div className="flex">
-                                    <select className="flex-1 border rounded-sm h-9 px-2">
+                                    <select id="customer_id" value={formData.customer_id}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2">
                                         <option value="" className="font-light" hidden>---Choose Customer's Name---</option>
-                                        <option value="" className="font-light">Test</option>
-                                        {/* ini nanti fetch customer trs di loop di option*/}
+                                        {customers.map(customer => (
+                                            <option key={customer.id} value={customer.id}>
+                                                {customer.name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -107,14 +278,14 @@ export default function EditPurchaseOrderPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="customer-address" className="font-bold">Customer's Address</label>
                                 <div className="flex">
-                                    <input type="text" id="customer-address" className="flex-1 border rounded-sm h-9 px-2 bg-[#e9ecef]" placeholder="Add Subject" disabled />
+                                    <input type="text" value={customerAddress} id="customer-address" className="flex-1 border rounded-sm h-9 px-2 bg-[#e9ecef]" placeholder="" disabled />
                                 </div>
                             </div>
                             {/* customer address */}
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="customer-phone" className="font-bold">Customer's Phone Number</label>
                                 <div className="flex">
-                                    <input type="text" id="customer-phone" className="flex-1 border rounded-sm h-9 px-2 bg-[#e9ecef]" placeholder="Add Subject" disabled />
+                                    <input type="text" id="customer-phone" value={customerPhoneNumber} className="flex-1 border rounded-sm h-9 px-2 bg-[#e9ecef]" placeholder="" disabled />
                                 </div>
                             </div>
                         </div>
@@ -122,16 +293,18 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* PIC */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="pic" className="font-bold">Person in Charge (PIC)</label>
+                                <label htmlFor="pic_name" className="font-bold">Person in Charge (PIC)</label>
                                 <div className="flex">
-                                    <input type="text" id="pic" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add PIC'S name" />
+                                    <input type="text" id="pic_name" value={formData.pic_name}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add PIC'S name" />
                                 </div>
                             </div>
                             {/* PIC phone */}
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="pic-phone" className="font-bold">PIC's Phone number</label>
                                 <div className="flex">
-                                    <input type="text" id="pic-phone" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add PIC'S telephone number" />
+                                    <input type="text" id="pic_phone" value={formData.pic_phone}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add PIC'S telephone number" />
                                 </div>
                             </div>
                         </div>
@@ -143,19 +316,21 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* required delivery date */}
-                                <label htmlFor="req-deli-date" className="font-bold">Required Delivery Date</label>
+                                <label htmlFor="required_date" className="font-bold">Required Delivery Date</label>
                                 <div className="flex items-center">
-                                    <input type="date" id="req-deli-date" className="flex-1 border rounded-sm h-9 px-2" />
+                                    <input type="date" id="required_date" value={formData.required_date}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
                                 </div>
                             </div>
                         </div>
                         <div className="flex flex-col space-y-4">
-                            {/* quotations valid */}
+                            {/* quotation */}
                             <div className="flex flex-col space-y-1">
                                 {/* terms of payment */}
                                 <label htmlFor="term-of-payment" className="font-bold">Terms of Payment</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="term-of-payment" className="flex-1 border rounded-sm h-9 px-2" placeholder="50" />
+                                    <input type="text" id="top_dp" value={formData.top_dp}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="50" />
                                     <p className="mx-2 font-bold">% DP;</p>
                                 </div>
                             </div>
@@ -165,7 +340,8 @@ export default function EditPurchaseOrderPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="quotations-valid" className="font-bold text-transparent">.</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="quotations-valid" className="flex-1 border rounded-sm h-9 px-2" placeholder="50" />
+                                    <input type="text" id="top_cod" value={formData.top_cod}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="50" />
                                     <p className="mx-4 font-bold">% COD</p>
                                 </div>
                             </div>
@@ -178,7 +354,8 @@ export default function EditPurchaseOrderPage({
                                 {/* Quotation Ref. */}
                                 <label htmlFor="quotation-ref" className="font-bold">Quotation Ref.</label>
                                 <div className="flex items-center">
-                                    <input type="date" id="quotation-ref" className="flex-1 border rounded-sm h-9 px-2" />
+                                    <input type="text" id="quotation_ref" value={formData.quotation_ref}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
                                 </div>
                             </div>
                         </div>
@@ -187,7 +364,8 @@ export default function EditPurchaseOrderPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="pr-no" className="font-bold">PR No.</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="pr-no" className="flex-1 border rounded-sm h-9 px-2" placeholder="50" />
+                                    <input type="text" id="purchase_requisition_no" value={formData.purchase_requisition_no}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="50" />
                                     <p className="mx-2 font-bold">/PR/</p>
                                 </div>
                             </div>
@@ -195,9 +373,10 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* year */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="quotations-year" className="font-bold text-transparent">.</label>
+                                <label htmlFor="purchase_requisition_year" className="font-bold text-transparent">.</label>
                                 <div className="flex items-center">
-                                    <input type="number" id="quotations-year" className="flex-1 border rounded-sm h-9 px-2" placeholder="Year" />
+                                    <input type="number" id="purchase_requisition_year" value={formData.purchase_requisition_year}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Year" />
                                 </div>
                             </div>
                         </div>
@@ -219,7 +398,7 @@ export default function EditPurchaseOrderPage({
                                 </tr>
                             </thead>
                             <tbody>
-                                {rowsSCope.map((row, index) => (
+                                {rowsScope.map((row, index) => (
                                     <tr key={index} className="">
                                         <td className="text-center">{index + 1}</td>
                                         <td>
@@ -266,7 +445,7 @@ export default function EditPurchaseOrderPage({
                                         <td className="text-center">
                                             <button
                                                 className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center cursor-pointer"
-                                                onClick={() => deleteRowSCope(index)}
+                                                onClick={() => deleteRowScope(index)}
                                             >
                                                 <FaTrash className="w-5 h-5 text-white" />
                                             </button>
@@ -292,23 +471,26 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* REQ BY */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="requested-by" className="font-bold">Requested By</label>
+                                <label htmlFor="req_name" className="font-bold">Requested By</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="requested-by" className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama anda" />
+                                    <input type="text" id="req_name" value={formData.req_name}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama anda" />
                                 </div>
                             </div>
                             {/* approved */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="approved-by" className="font-bold">Approved By</label>
+                                <label htmlFor="app_name" className="font-bold">Approved By</label>
                                 <div className="flex">
-                                    <input type="text" id="approved-by" className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama" />
+                                    <input type="text" id="app_name" value={formData.app_name}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama" />
                                 </div>
                             </div>
                             {/* author */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="authorized-by" className="font-bold">Authorized By</label>
+                                <label htmlFor="auth_name" className="font-bold">Authorized By</label>
                                 <div className="flex">
-                                    <input type="text" id="authorized-by" className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama" />
+                                    <input type="text" id="auth_name" value={formData.auth_name}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama" />
                                 </div>
                             </div>
                         </div>
@@ -316,23 +498,26 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* Position request by */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="req-position" className="font-bold">Position</label>
+                                <label htmlFor="req_pos" className="font-bold">Position</label>
                                 <div className="flex">
-                                    <input type="req-position" id="text" className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi Anda" />
+                                    <input type="text" id="req_pos" value={formData.req_pos}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi Anda" />
                                 </div>
                             </div>
                             {/* position approved by */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="approve-position" className="font-bold">Person in Charge (PIC)</label>
+                                <label htmlFor="app_pos" className="font-bold">Person in Charge (PIC)</label>
                                 <div className="flex">
-                                    <input type="text" id="approve-position" className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
+                                    <input type="text" id="app_pos" value={formData.app_pos}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
                                 </div>
                             </div>
                             {/* position authorized by */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="author-position" className="font-bold">Position</label>
+                                <label htmlFor="auth_pos" className="font-bold">Position</label>
                                 <div className="flex">
-                                    <input type="text" id="author-position" className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
+                                    <input type="text" id="auth_pos" value={formData.auth_pos}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
                                 </div>
                             </div>
                         </div>
@@ -343,9 +528,10 @@ export default function EditPurchaseOrderPage({
                     <div className=" flex-col space-y-4">
                         {/* Dicount */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="dicscount" className="font-bold">Dicscount</label>
+                            <label htmlFor="discount" className="font-bold">Discount</label>
                             <div className="flex">
-                                <input type="text" id="dicscount" className="w-2/6 border rounded-sm h-9 px-2" />
+                                <input type="text" id="discount" value={formData.discount}
+                                    onChange={handleFormChange} className="w-2/6 border rounded-sm h-9 px-2" />
                                 <p className="my-auto ml-2">{"(%)"}</p>
                             </div>
                         </div>

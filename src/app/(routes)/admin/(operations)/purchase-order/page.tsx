@@ -18,8 +18,52 @@ import { MdEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
 import { IoMdCart } from "react-icons/io";
+import { useEffect, useState } from "react";
+import { deletePurchaseOrders, getAllPurchaseOrders, PurchaseOrder } from "@/lib/purchase-order";
 
 export default function PurchaseOrderPage() {
+    const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrder[]>([]);
+    const [search, setSearch] = useState("");
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = async () => {
+        setLoading(true);
+        const res = await getAllPurchaseOrders(page, search);
+
+        if (res.success) {
+            setPurchaseOrder(res.data);
+            setLastPage(res.meta.last_page);
+        }
+
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [page]);
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        setPage(1);
+        fetchData();
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!confirm("Are you sure you want to delete this Purchase Order?")) return;
+
+        const res = await deletePurchaseOrders(id);
+
+        if (!res.success) {
+            alert("Failed to delete: " + res.message);
+            return;
+        }
+
+        alert(`Purchase Order (${id}) deleted successfully!`);
+        fetchData();
+    };
+
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
@@ -28,14 +72,20 @@ export default function PurchaseOrderPage() {
                 <h1 className="text-3xl font-normal">Purchase Order  </h1>
             </div>
 
-            {/* list quotations */}
+            {/* list purchaseOrder */}
             <div className="bg-white mt-12">
                 <div className="py-3 px-4 flex justify-between border rounded-t-sm">
-                    {/* create quotations button */}
+                    {/* create purchaseOrder button */}
                     <Link href={"/admin/purchase-order/create"} className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Order Data <FiPlus className="w-5 h-5 ml-1" /> </Link>
                     {/* search bar */}
-                    <form className="flex flex-row">
-                        <input id="search-input" type="text" className="w-[200px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm" placeholder="Search PO" />
+                    <form onSubmit={handleSearch} className="flex flex-row">
+                        <input
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            id="search-input"
+                            type="text"
+                            className="w-[200px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm"
+                            placeholder="Search PO" />
                         <button className="border-r border-t border-b h-8 w-8 my-auto flex rounded-r-sm" type="submit"><IoIosSearch className="w-5 m-auto" /></button>
                     </form>
                 </div>
@@ -53,29 +103,65 @@ export default function PurchaseOrderPage() {
                                 <TableHead className="text-[#212529] font-bold text-center">Action</TableHead>
                             </TableRow>
                         </TableHeader>
+
+
                         <TableBody>
-
-                            <TableRow>
-                                <TableCell className="font-medium"><input type="checkbox" /></TableCell>
-                                <TableCell className="py-4"><p className="text-sm">order.product</p></TableCell>
-                                <TableCell className="font-medium">order.orderId</TableCell>
-                                <TableCell>order.date</TableCell>
-                                <TableCell>order.customerName</TableCell>
-                                <TableCell className="">order.status</TableCell>
-                                <TableCell className="">
-                                    order.amount
-                                </TableCell>
-                                <TableCell className="text-center">
-                                    <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
-                                        <Link href={"/admin/purchase-order/edit/1"}><MdEdit className="w-7 h-7" /></Link>
-                                        <div><FaTrash className="w-5 h-5 text-red-500" /></div>
-                                        <Link href={"/admin//purchase-order/print"}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center py-10">
+                                        Loading...
+                                    </TableCell>
+                                </TableRow>
+                            ) : purchaseOrder.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center py-10">
+                                        No data found.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                purchaseOrder.map((po) => (
+                                    <TableRow key={po.id}>
+                                        <TableCell className="font-medium"><input type="checkbox" /></TableCell>
+                                        <TableCell className="py-4"><p className="text-sm">{po.po_no}/PO/AWP-INS/{po.po_year}</p></TableCell>
+                                        <TableCell className="font-medium">{po.date}</TableCell>
+                                        <TableCell>{po.customer}</TableCell>
+                                        <TableCell>{po.pic_name}</TableCell>
+                                        <TableCell className="">{po.pic_phone}</TableCell>
+                                        <TableCell className="">
+                                            {po.required_date}
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
+                                                <Link href={`/admin/purchase-order/edit/${po.id}`}><MdEdit className="w-7 h-7" /></Link>
+                                                <div><FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(po.id)} /></div>
+                                                <Link href={"/admin//purchase-order/print"}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
                         </TableBody>
                     </Table>
+                </div>
+                {/* Pagination */}
+                <div className="flex justify-center items-center py-4 space-x-4">
+                    <button
+                        disabled={page <= 1}
+                        onClick={() => setPage((p) => p - 1)}
+                        className="px-3 py-1 border rounded disabled:opacity-40"
+                    >
+                        Prev
+                    </button>
+
+                    <span>Page {page} of {lastPage}</span>
+
+                    <button
+                        disabled={page >= lastPage}
+                        onClick={() => setPage((p) => p + 1)}
+                        className="px-3 py-1 border rounded disabled:opacity-40"
+                    >
+                        Next
+                    </button>
                 </div>
             </div>
         </div >

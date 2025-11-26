@@ -33,7 +33,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
     // -------------------------------
     useEffect(() => {
         const fetchData = async () => {
-            const res = await getCustomerById(id);
+            const res = await getCustomerById(Number(id));
 
             if (res.success) {
                 const c: CustomerById = res.data;
@@ -96,7 +96,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
             })),
         };
 
-        const res = await updateCustomerRequest(id, payload);
+        const res = await updateCustomerRequest(Number(id), payload);
 
         if (!res.success) {
             alert("Update failed: " + res.message);

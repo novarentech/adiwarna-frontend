@@ -14,7 +14,7 @@ export async function GET(req: Request) {
         const page = searchParams.get("page") || "1";
         const search = searchParams.get("search") || "";
 
-        const res = await fetch(`${apiBaseUrl}/customers?per_page=25&page=${page}&search=${search}`, {
+        const res = await fetch(`${apiBaseUrl}/customers?per_page=99999&page=${page}&search=${search}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

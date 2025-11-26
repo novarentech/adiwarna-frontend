@@ -124,7 +124,7 @@ export async function createCustomerRequest(
 }
 
 
-export async function getCustomerById(id: string) {
+export async function getCustomerById(id: Number) {
     const res = await fetch(`/api/customers/${id}`, {
         method: "GET",
         cache: "no-store"
@@ -132,7 +132,7 @@ export async function getCustomerById(id: string) {
     return res.json();
 }
 
-export async function updateCustomerRequest(id: string, body: EditCustomerBody) {
+export async function updateCustomerRequest(id: Number, body: EditCustomerBody) {
     const res = await fetch(`/api/customers/${id}`, {
         method: "PUT",
         body: JSON.stringify(body),

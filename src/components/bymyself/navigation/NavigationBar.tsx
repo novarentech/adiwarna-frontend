@@ -58,12 +58,12 @@ export default function CoolNavigationBar({
               w-full h-[60px] shadow-md flex justify-between items-center px-6`}
         >
             {children}
-            <div className="flex space-x-3 cursor-pointer relative" onClick={togglePopover}>
-                <FaUser className="w-6 h-6 text-[#555555]" />
+            <div className="min-w-[100px] flex justify-start items-center space-x-2 cursor-pointer relative hover:contrast-50" onClick={togglePopover}>
+                <FaUser className="w-4 h-4 text-[rgba(0,0,0,.5)]" />
 
                 {/* Popover Trigger */}
                 <div
-                    className={`text-[#555555] text-xl w-fit inline-block cursor-pointer ${!user ? "opacity-50 pointer-events-none" : ""
+                    className={`text-[rgba(0,0,0,.5)] text-base w-fit inline-block cursor-pointer ${!user ? "opacity-50 pointer-events-none" : ""
                         }`}
                 >
                     {user?.name ?? "Loading..."}

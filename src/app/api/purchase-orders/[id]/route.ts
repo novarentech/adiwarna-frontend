@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { DeletePurchaseOrderResponse } from "@/lib/purchase-order";
 
 const apiBaseUrl = process.env.BASE_URL;
 
-// GET /api/customers/:id
+
+// GET /api/purchase-orders/:id
 export async function GET(_req: Request, context: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await context.params; // <-- WAJIB await karena Promise
@@ -13,7 +15,7 @@ export async function GET(_req: Request, context: { params: Promise<{ id: string
             return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
         }
 
-        const res = await fetch(`${apiBaseUrl}/quotations/${id}`, {
+        const res = await fetch(`${apiBaseUrl}/purchase-orders/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -27,7 +29,7 @@ export async function GET(_req: Request, context: { params: Promise<{ id: string
     }
 }
 
-// PUT /api/customers/:id
+// PUT /api/purchase-orders/:id
 export async function PUT(req: Request, context: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await context.params; // <-- WAJIB await
@@ -39,7 +41,7 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
 
         const body = await req.json();
 
-        const res = await fetch(`${apiBaseUrl}/quotations/${id}`, {
+        const res = await fetch(`${apiBaseUrl}/purchase-orders/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -58,8 +60,7 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
     }
 }
 
-
-// DELETE /api/customers/:id
+// DELETE /api/purchase-orders/:id
 export async function DELETE(_req: Request, context: { params: Promise<{ id: string }> }) {
     try {
         const token = (await cookies()).get("token")?.value;
@@ -70,17 +71,17 @@ export async function DELETE(_req: Request, context: { params: Promise<{ id: str
             return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
         }
 
-        const res = await fetch(`${apiBaseUrl}/quotations/${id}`, {
+        const res = await fetch(`${apiBaseUrl}/purchase-orders/${id}`, {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },
         });
 
-        const data = await res.json();
+        const data: DeletePurchaseOrderResponse = await res.json();
         return NextResponse.json(data, { status: res.status });
 
     } catch (err: any) {
         return NextResponse.json(
-            { success: false, message: err.message || "Error deleting quotations" },
+            { success: false, message: err.message || "Error deleting purchase orders" },
             { status: 500 }
         );
     }

@@ -182,7 +182,7 @@ export default function DataEquipmentGeneral() {
                                     <TableCell className="text-center">External</TableCell>
                                 )}
                                 {columns.kondisi && (
-                                    <TableCell className="text-center"><span className="bg-green-500 text-white">OK (Fit for Use)</span></TableCell>
+                                    <TableCell className="text-center"><span className="bg-green-500 p-1 rounded font-semibold text-white">OK (Fit for Use)</span></TableCell>
                                 )}
                                 {columns.action && (
                                     <TableCell className="text-center">
