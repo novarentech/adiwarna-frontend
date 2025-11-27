@@ -272,7 +272,7 @@ export default function TrackRecordPage() {
                         <Table className="bg-[#f2f2f2] z-10">
                             <TableHeader>
                                 <TableRow className="bg-[#dadada] hover:bg-[#dadada]">
-                                    <TableHead className="text-[#212529] font-bold py-6 w-1/12"><input type="checkbox" /></TableHead>
+                                    <TableHead className="text-[#212529] font-bold py-6"><input type="checkbox" /></TableHead>
                                     {columns.noWorkOrder && (
                                         <TableHead className="text-[#212529] font-bold text-center w-20">No. Work <br /> Order</TableHead>
                                     )}
@@ -291,9 +291,9 @@ export default function TrackRecordPage() {
                                     {columns.workLocation && (
                                         <TableHead className="text-[#212529] font-bold text-center">Work Location</TableHead>
                                     )}
-                                    {columns.action && (
+                                    {/* {columns.action && (
                                         <TableHead className="text-[#212529] font-bold text-center">Action</TableHead>
-                                    )}
+                                    )} */}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -337,13 +337,13 @@ export default function TrackRecordPage() {
                                                     {item.work_location}
                                                 </TableCell>
                                             )}
-                                            {columns.action && (
+                                            {/* {columns.action && (
                                                 <TableCell className="text-center">
                                                     <Link href={`/admin/track-record/view/${item.work_order_no}`} title="View Detail">
                                                         <IoMdEye className="w-6 h-6 text-blue-500 mx-auto" />
                                                     </Link>
                                                 </TableCell>
-                                            )}
+                                            )} */}
                                         </TableRow>
                                     ))
                                 )}
