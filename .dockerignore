@@ -17,12 +17,4 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 Thumbs.db
-public/
-src/
-eslint.config.mjs
-next.config.ts
-tsconfig.json
-postcss.config.mjs
-components.json
 README.md
-package-lock.json
