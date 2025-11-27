@@ -311,7 +311,6 @@ export default function DataEquipmentGeneral() {
                                             {columns.action && (
                                                 <TableCell className="text-center w-1/12">
                                                     <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
-                                                        <Link href={`/admin/equipment-general/view/${item.id}`} title="View Detail"><IoMdEye className="w-7 h-7 text-blue-500" /></Link>
                                                         <Link href={`/admin/equipment-general/edit/${item.id}`} title="Edit"><MdEdit className="w-7 h-7 text-green-500" /></Link>
                                                         {/* Tambahkan logic delete nanti, saat ini hanya tampilan */}
                                                         <div title="Delete"><FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(item.id)} /></div>
@@ -329,14 +328,15 @@ export default function DataEquipmentGeneral() {
 
                 {/* PAGINATION FOOTER */}
                 <div className="flex justify-between border-b border-x rounded-b-sm py-3 px-4">
-                    {/* nampilin jumlah list yang diperlihatkan */}
+                    {/* Display total entries */}
                     <div>
-                        Showing
-                        {/* {meta.from} to {meta.to} */}
-                        {""} of {meta.total} entries
+                        Showing {meta.total > 0 ? `${(meta.current_page - 1) * perPage + 1} to ${Math.min(meta.current_page * perPage, meta.total)}` : "0"} of {meta.total} entries
                     </div>
+
+                    {/* Pagination Controls */}
                     <div className="border flex flex-row h-9 items-center rounded-sm overflow-hidden text-white font-semibold text-sm">
-                        {/* button previous pagination */}
+
+                        {/* Previous Button */}
                         <button
                             className={`h-full flex justify-center items-center px-3 transition-colors ${meta.current_page === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                             onClick={() => handlePageChange(meta.current_page - 1)}
@@ -345,13 +345,18 @@ export default function DataEquipmentGeneral() {
                             Previous
                         </button>
 
-                        {/* page pagination */}
-                        {/* Hanya tampilkan halaman saat ini */}
-                        <div className="w-10 flex justify-center items-center h-full bg-blue-700 text-white border-x border-blue-400">
-                            {meta.current_page}
-                        </div>
+                        {/* Page Number Buttons */}
+                        {Array.from({ length: meta.last_page }, (_, index) => index + 1).map((pageNum) => (
+                            <button
+                                key={pageNum}
+                                className={`w-10 flex justify-center items-center h-full ${meta.current_page === pageNum ? 'bg-blue-700 text-white' : 'bg-white text-blue-500 hover:bg-blue-100'}`}
+                                onClick={() => handlePageChange(pageNum)}
+                            >
+                                {pageNum}
+                            </button>
+                        ))}
 
-                        {/* button next pagination */}
+                        {/* Next Button */}
                         <button
                             className={`h-full flex justify-center items-center px-3 transition-colors ${meta.current_page === meta.last_page || meta.total === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                             onClick={() => handlePageChange(meta.current_page + 1)}
