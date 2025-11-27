@@ -1,21 +1,33 @@
 "use client";
 
-import { MdWorkHistory } from "react-icons/md";
+"use client";
 
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
-import { use, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { FaTrash } from "react-icons/fa6";
 
+import { Customer, getCustomersAllForDropdown } from "@/lib/customer";
+import { Employee, getEmployeesAllForDropdown } from "@/lib/employee";
 
-interface RowDataTeamMember {
-    details: string;
-    position: string
+import {
+    updateDailyActivity,
+    getDailyActivityById,
+    UpdateDailyActivityPayload,
+} from "@/lib/daily-activities";
+
+interface EditTeamRow {
+    id?: number;
+    employee_id: string;
 }
 
-interface RowDataWork {
-    workDescription: string;
-    equipmentNo: string;
+interface EditWorkRow {
+    id?: number;
+    description: string;
+    equipment_no: string;
 }
+
+type EditableWorkFields = "description" | "equipment_no";
 
 type EditDailyActivityParams = Promise<{ id: string }>;
 
@@ -29,52 +41,190 @@ export default function EditDailyActivityReport(
     const actualParams = use(params);
     const id = actualParams.id;
 
-    // bagianTeamMember
-    const [rowsDataTeamMember, setRowsDataTeamMember] = useState<RowDataTeamMember[]>([
-        { details: "", position: "" },
-    ]);
+    const router = useRouter();;
 
-    const addRowDataTeamMember = () => {
-        setRowsDataTeamMember([...rowsDataTeamMember, { details: "", position: "" }]);
+    const [loading, setLoading] = useState(false);
+
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [employees, setEmployees] = useState<Employee[]>([]);
+
+    // FORM DATA (general info)
+    const [formData, setFormData] = useState({
+        po_no: "",
+        po_year: "",
+        ref_no: "",
+        customer_id: "",
+        date: "",
+        location: "",
+        time_from: "",
+        time_to: "",
+        prepared_name: "",
+        prepared_pos: "",
+        acknowledge_name: "",
+        acknowledge_pos: "",
+    });
+
+    // TEAM MEMBERS
+    const [members, setMembers] = useState<EditTeamRow[]>([]);
+
+    // WORK DESCRIPTIONS
+    const [descriptions, setDescriptions] = useState<EditWorkRow[]>([]);
+
+    // ===========================
+    // LOAD INITIAL DATA
+    // ===========================
+    useEffect(() => {
+        const load = async () => {
+            const custRes = await getCustomersAllForDropdown();
+            if (custRes.success) setCustomers(custRes.data.rows || custRes.data);
+
+            const empRes = await getEmployeesAllForDropdown();
+            if (empRes.success) setEmployees(empRes.data.data || empRes.data);
+
+            // Load existing daily activity
+            const daily = await getDailyActivityById(Number(id));
+            if (daily.success && daily.data) {
+                const d = daily.data;
+
+                console.log(d);
+
+                setFormData({
+                    po_no: d.po_no,
+                    po_year: d.po_year,
+                    ref_no: d.ref_no,
+                    customer_id: d.customer.id.toString(),
+                    date: d.date,
+                    location: d.location,
+                    time_from: d.time_from.slice(0, 5), // "08:00:00" → "08:00"
+                    time_to: d.time_to.slice(0, 5),     // "17:30:00" → "17:30"
+                    prepared_name: d.prepared_name,
+                    prepared_pos: d.prepared_pos,
+                    acknowledge_name: d.acknowledge_name,
+                    acknowledge_pos: d.acknowledge_pos,
+                });
+
+                setMembers(
+                    d.members.map(m => ({
+                        id: m.id,
+                        employee_id: m.employee_id.toString(),
+                    }))
+                );
+
+                setDescriptions(
+                    d.descriptions.map(desc => ({
+                        id: desc.id,
+                        description: desc.description,
+                        equipment_no: desc.equipment_no,
+                    }))
+                );
+            }
+        };
+
+        load();
+    }, [id]);
+
+    // ===========================
+    // FORM HANDLERS
+    // ===========================
+    const handleFormChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
     };
 
-    const updateRowDataTeamMember = (index: number, field: keyof RowDataTeamMember, value: string) => {
-        const updated = [...rowsDataTeamMember];
+    // TEAM MEMBER ROWS
+    const addMemberRow = () => {
+        setMembers([...members, { employee_id: "" }]);
+    };
+
+    const updateMemberRow = (index: number, value: string) => {
+        const updated = [...members];
+        updated[index].employee_id = value;
+        setMembers(updated);
+    };
+
+    const deleteMemberRow = (index: number) => {
+        setMembers(members.filter((_, i) => i !== index));
+    };
+
+    // WORK DESCRIPTION ROWS
+    const addWorkRow = () => {
+        setDescriptions([...descriptions, { description: "", equipment_no: "" }]);
+    };
+
+    // const updateWorkRow = (index: number, field: keyof EditWorkRow, value: string) => {
+    //     const updated = [...descriptions];
+    //     updated[index][field] = value;
+    //     setDescriptions(updated);
+    // };
+
+    const updateWorkRow = (
+        index: number,
+        field: EditableWorkFields,
+        value: string
+    ) => {
+        const updated = [...descriptions];
         updated[index][field] = value;
-        setRowsDataTeamMember(updated);
+        setDescriptions(updated);
     };
 
-    const deleteRowDataTeamMember = (index: number) => {
-        setRowsDataTeamMember(rowsDataTeamMember.filter((_, i) => i !== index));
+    const deleteWorkRow = (index: number) => {
+        setDescriptions(descriptions.filter((_, i) => i !== index));
     };
 
-    // 
+    // ===========================
+    // SUBMIT UPDATE
+    // ===========================
+    const handleUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
 
-    // 
-    // bagian worker (di dropdown nanti fetch data employee)
-    const [rowsDataWork, setRowsDataWork] = useState<RowDataWork[]>([
-        { workDescription: "", equipmentNo: "" },
-    ]);
+        const payload: UpdateDailyActivityPayload = {
+            po_no: formData.po_no,
+            po_year: parseInt(formData.po_year),
+            ref_no: formData.ref_no,
+            customer_id: Number(formData.customer_id),
+            date: formData.date,
+            location: formData.location,
+            time_from: formData.time_from,
+            time_to: formData.time_to,
 
-    const addRowDataReport = () => {
-        setRowsDataWork([...rowsDataWork, { workDescription: "", equipmentNo: '' }]);
+            members: members.map(m => ({
+                ...(m.id ? { id: m.id } : {}),
+                employee_id: Number(m.employee_id),
+            })),
+
+
+            descriptions: descriptions.map(d => ({
+                ...(d.id ? { id: d.id } : {}),
+                description: d.description,
+                equipment_no: d.equipment_no,
+            })),
+
+            prepared_name: formData.prepared_name,
+            prepared_pos: formData.prepared_pos,
+            acknowledge_name: formData.acknowledge_name,
+            acknowledge_pos: formData.acknowledge_pos,
+        };
+
+        console.log(payload)
+
+        const result = await updateDailyActivity(Number(id), payload);
+
+        if (result.success) {
+            alert("Daily Activity updated successfully!");
+            router.push("/admin/daily-activity-report");
+        } else {
+            alert("Failed: " + result.message);
+        }
+
+        setLoading(false);
     };
-
-    const updateRowDataReport = (index: number, field: keyof RowDataWork, value: string) => {
-        const updated = [...rowsDataWork];
-        updated[index][field] = value;
-        setRowsDataWork(updated);
-    };
-
-    const deleteRowDataReport = (index: number) => {
-        setRowsDataWork(rowsDataWork.filter((_, i) => i !== index));
-    };
-
-    // 
-
-    const handleEditDailyActivityReport = (e: React.FormEvent) => {
-
-    }
+    // ==========================
+    // LOADING STATE
+    // ==========================
+    if (loading) return <p className="p-6">Loading...</p>;
 
 
 
@@ -82,43 +232,50 @@ export default function EditDailyActivityReport(
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
             <div className="flex flex-row items-center space-x-2 mt-2">
-                <h1 className="text-3xl font-normal">Add Daily Activity  </h1>
+                <h1 className="text-3xl font-normal">Edit Daily Activity  </h1>
             </div>
 
             {/* start of form container */}
             <div className="bg-white border rounded-sm px-5 py-6 shadow-xs my-12 ">
                 {/* start form */}
-                <form onSubmit={handleEditDailyActivityReport} className="flex flex-col">
+                <form onSubmit={handleUpdate} className="flex flex-col">
                     {/* seperate into 2 section */}
                     <div className="grid grid-cols-2 space-x-4">
                         {/* left column */}
                         <div className="flex flex-col space-y-4">
                             {/* Ref. AWP W.O. No. */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="ref-awp-wo-no" className="font-bold">Ref. AWP W.O. No.</label>
+                                <label htmlFor="po_no" className="font-bold">Ref. AWP W.O. No.</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="ref-awp-wo-no" className="flex-1 border rounded-sm h-9 px-2" placeholder="Number" />
+                                    <input type="text" id="po_no" value={formData.po_no}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Number" />
                                     <p className="mx-4 font-bold">/AWP-INS/</p>
-                                    <input type="text" id="year" className="flex-1 border rounded-sm h-9 px-2" placeholder="year" />
+                                    <input type="text" id="po_year" value={formData.po_year}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="year" />
                                 </div>
                             </div>
                             {/* customer */}
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="customer" className="font-bold">Customer</label>
                                 <div className="flex">
-                                    <select className="flex-1 border rounded-sm h-9 px-2">
+                                    <select id="customer_id" value={formData.customer_id}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2">
                                         <option value="" className="font-light" hidden>---Choose Customer's Name---</option>
-                                        <option value="" className="font-light">Test</option>
-                                        {/* ini nanti fetch customer trs di loop di option*/}
+                                        {customers.map(customer => (
+                                            <option key={customer.id} value={customer.id}>
+                                                {customer.name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
                             {/* customer address */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="location-jobsite" className="font-bold">Location / Jobsite</label>
+                                <label htmlFor="location" className="font-bold">Location / Jobsite</label>
                                 <div className="flex">
                                     {/* ini nanti value nya otomatis ambil dari customer */}
-                                    <input type="text" id="location-jobsite" className="flex-1 border rounded-sm h-9 px-2 " />
+                                    <input type="text" id="location" value={formData.location}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2 " />
                                 </div>
                             </div>
                         </div>
@@ -126,9 +283,10 @@ export default function EditDailyActivityReport(
                         <div className="flex flex-col space-y-4">
                             {/* Service Contract No./ PO No. */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="Service Contract No./ PO No." className="font-bold">Service Contract No./ PO No.</label>
+                                <label htmlFor="ref_no" className="font-bold">Service Contract No./ PO No.</label>
                                 <div className="flex">
-                                    <input type="text" id="Service Contract No./ PO No." className="flex-1 border rounded-sm h-9 px-2" />
+                                    <input type="text" id="ref_no" value={formData.ref_no}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
                                 </div>
                             </div>
                             <div className="flex flex-col space-y-4">
@@ -137,7 +295,8 @@ export default function EditDailyActivityReport(
                                     {/* year */}
                                     <label htmlFor="date" className="font-bold">Date</label>
                                     <div className="flex items-center">
-                                        <input type="date" id="date" className="flex-1 border rounded-sm h-9 px-2" />
+                                        <input type="date" id="date" value={formData.date}
+                                            onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
                                     </div>
                                 </div>
                             </div>
@@ -155,24 +314,31 @@ export default function EditDailyActivityReport(
                                 </tr>
                             </thead>
                             <tbody>
-                                {rowsDataTeamMember.map((row, index) => (
+                                {members.map((m, index) => (
                                     <tr key={index} className="">
                                         <td className="text-center">{index + 1}</td>
                                         <td>
                                             <select
-                                                name="team-member"
-                                                id="team-member"
+                                                name="employee_id"
+                                                id="employee_id"
+                                                value={m.employee_id}
+                                                onChange={(e) =>
+                                                    updateMemberRow(index, e.target.value)
+                                                }
                                                 className="border rounded-sm min-h-12 px-2 w-full p-2">
                                                 <option value="" className="">---Choose team member---</option>
-                                                {/* ini nanti fetch workers nya (data employee) */}
-                                                <option value="test">test</option>
+                                                {employees.map(e => (
+                                                    <option key={e.id} value={e.id}>
+                                                        {e.name}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </td>
 
                                         <td className="text-center">
                                             <button
                                                 className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center cursor-pointer"
-                                                onClick={() => deleteRowDataTeamMember(index)}
+                                                onClick={() => deleteMemberRow(index)}
                                             >
                                                 <FaTrash className="w-5 h-5 text-white" />
                                             </button>
@@ -183,7 +349,7 @@ export default function EditDailyActivityReport(
                         </table>
                         {/* Button Add Row */}
                         <div
-                            onClick={addRowDataTeamMember}
+                            onClick={addMemberRow}
                             className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
                         >
                             + Add row
@@ -195,17 +361,19 @@ export default function EditDailyActivityReport(
                     <div className="flex flex-col space-y-4 mt-6 w-4/6 mx-auto">
                         {/* ffrom */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="from-duration" className="font-bold">From</label>
+                            <label htmlFor="time_from" className="font-bold">From</label>
                             <div className="flex">
-                                <input type="time" name="from-duration" id="from-duration" className="flex-1 border rounded-sm h-9 px-2" placeholder="hh:mm" />
+                                <input type="time" name="from-duration" id="time_from" value={formData.time_from}
+                                    onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="hh:mm" />
                             </div>
                         </div>
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* to */}
-                                <label htmlFor="to-duration" className="font-bold">to</label>
+                                <label htmlFor="time_to" className="font-bold">to</label>
                                 <div className="flex items-center">
-                                    <input type="time" id="to-duration" className="flex-1 border rounded-sm h-9 px-2" />
+                                    <input type="time" id="time_to" value={formData.time_to}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
                                 </div>
                             </div>
                         </div>
@@ -224,7 +392,7 @@ export default function EditDailyActivityReport(
                                 </tr>
                             </thead>
                             <tbody>
-                                {rowsDataWork.map((row, index) => (
+                                {descriptions.map((d, index) => (
                                     <tr key={index} className="">
                                         <td className="text-center">{index + 1}</td>
 
@@ -232,9 +400,9 @@ export default function EditDailyActivityReport(
 
                                             <input
                                                 type="type"
-                                                value={row.workDescription}
+                                                value={d.description}
                                                 onChange={(e) =>
-                                                    updateRowDataReport(index, "workDescription", e.target.value)
+                                                    updateWorkRow(index, "description", e.target.value)
                                                 }
                                                 className="border rounded-sm h-12 px-2 w-full p-2 flex-1"
                                                 id="wo-year"
@@ -245,9 +413,9 @@ export default function EditDailyActivityReport(
                                         <td>
                                             <input
                                                 type="text"
-                                                value={row.equipmentNo}
+                                                value={d.equipment_no}
                                                 onChange={(e) =>
-                                                    updateRowDataReport(index, "equipmentNo", e.target.value)
+                                                    updateWorkRow(index, "equipment_no", e.target.value)
                                                 }
                                                 className="border rounded-sm h-12 px-2 w-full p-2 flex-1"
                                                 id="wo-number"
@@ -258,7 +426,7 @@ export default function EditDailyActivityReport(
                                         <td className="text-center">
                                             <button
                                                 className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center cursor-pointer"
-                                                onClick={() => deleteRowDataReport(index)}
+                                                onClick={() => deleteWorkRow(index)}
                                             >
                                                 <FaTrash className="w-5 h-5 text-white" />
                                             </button>
@@ -270,7 +438,7 @@ export default function EditDailyActivityReport(
 
                         {/* Button Add Row */}
                         <div
-                            onClick={addRowDataReport}
+                            onClick={addWorkRow}
                             className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
                         >
                             + Add Row
@@ -284,16 +452,18 @@ export default function EditDailyActivityReport(
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* TA No. */}
-                                <label htmlFor="prepared-by" className="font-bold">Prepared By</label>
+                                <label htmlFor="prepared_name" className="font-bold">Prepared By</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="prepared-by" className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter name" />
+                                    <input type="text" id="prepared_name" value={formData.prepared_name}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter name" />
                                 </div>
                             </div>
                             <div className="flex flex-col space-y-1">
                                 {/* TA No. */}
-                                <label htmlFor="acknowledged-by" className="font-bold">Acknowledged By</label>
+                                <label htmlFor="acknowledge_name" className="font-bold">Acknowledged By</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="acknowledged-by" className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter name" />
+                                    <input type="text" id="acknowledge_name" value={formData.acknowledge_name}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter name" />
                                 </div>
                             </div>
                         </div>
@@ -302,16 +472,18 @@ export default function EditDailyActivityReport(
                             {/* position */}
                             <div className="flex flex-col space-y-1">
                                 {/* position prepared by */}
-                                <label htmlFor="prepared-by-position" className="font-bold">Position</label>
+                                <label htmlFor="prepared_pos" className="font-bold">Position</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="prepared-by-position" className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter position" />
+                                    <input type="text" id="prepared_pos" value={formData.prepared_pos}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter position" />
                                 </div>
                             </div>
                             <div className="flex flex-col space-y-1">
                                 {/* position aknowledge by */}
-                                <label htmlFor="aknowledge-by-position" className="font-bold">Position</label>
+                                <label htmlFor="acknowledge_pos" className="font-bold">Position</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="aknowledge-by-position" className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter position" />
+                                    <input type="text" id="acknowledge_pos" value={formData.acknowledge_pos}
+                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter position" />
                                 </div>
                             </div>
                         </div>

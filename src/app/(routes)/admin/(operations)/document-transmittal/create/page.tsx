@@ -1,27 +1,82 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 import { MdDocumentScanner } from "react-icons/md";
+import { useRouter } from "next/navigation";
+
+// Asumsi path import library
+import { getCustomersAllForDropdown, Customer } from "@/lib/customer";
+import { createDocumentTransmittal, CreateDocTransmittalPayload, DocumentPayload } from "@/lib/document-transmittals";
+
 
 interface RowDataReport {
-    wo: number;
-    year: number;
+    wo: number | string; // Ganti number menjadi string/number agar mudah dihandle
+    year: number | string; // Ganti number menjadi string/number agar mudah dihandle
     location: string;
 }
 
 export default function CreateDocTransmittal() {
+    const router = useRouter();
 
-    // bagian worker order
+    // --- STATE DATA MASTER ---
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // --- STATE FORM UTAMA ---
+    const [formData, setFormData] = useState({
+        name: "",
+        ta_no: "",
+        date: new Date().toISOString().split('T')[0], // Default hari ini (YYYY-MM-DD)
+        customer_id: "",
+        customer_district: "",
+        pic_name: "",
+        report_type: "",
+    });
+
+    // --- STATE LOGIC CUSTOMER ---
+    const [selectedCustomerAddress, setSelectedCustomerAddress] = useState("");
+
+    // --- STATE BARIS WO ---
     const [rowsDataWorkerOrder, setRowsDataWorkerOrder] = useState<RowDataReport[]>([
-        { wo: 0, year: 0, location: "" },
+        { wo: "", year: new Date().getFullYear(), location: "" }, // Default year
     ]);
 
-    const addRowDataReport = () => {
-        setRowsDataWorkerOrder([...rowsDataWorkerOrder, { wo: 0, year: 0, location: "" }]);
+    // --- LOAD INITIAL DATA (CUSTOMERS) ---
+    useEffect(() => {
+        const loadCustomers = async () => {
+            setIsLoading(true);
+            const res = await getCustomersAllForDropdown();
+            if (res.success) {
+                setCustomers(res.data);
+            }
+            setIsLoading(false);
+        };
+        loadCustomers();
+    }, []);
+
+    // --- HANDLERS: FORM UTAMA ---
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { id, value } = e.target;
+        setFormData({ ...formData, [id]: value });
     };
 
+    // Handler Customer
+    const handleCustomerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const custId = e.target.value;
+        const cust = customers.find(c => c.id.toString() === custId);
+
+        setFormData({ ...formData, customer_id: custId });
+        setSelectedCustomerAddress(cust ? cust.address : "");
+    };
+
+    // --- HANDLERS: BARIS WO ---
+    const addRowDataReport = () => {
+        setRowsDataWorkerOrder([...rowsDataWorkerOrder, { wo: "", year: new Date().getFullYear(), location: "" }]);
+    };
+
+    // Handler update baris WO
     const updateRowDataReport = <K extends keyof RowDataReport>(
         index: number,
         field: K,
@@ -32,29 +87,73 @@ export default function CreateDocTransmittal() {
         setRowsDataWorkerOrder(updated);
     };
 
-
-    // const updateRowDataReport = (index: number, field: keyof RowDataReport, value: string) => {
-    //     const updated = [...rowsDataWorkerOrder];
-    //     updated[index][field] = value;
-    //     setRowsDataWorkerOrder(updated);
-    // };
-
     const deleteRowDataReport = (index: number) => {
         setRowsDataWorkerOrder(rowsDataWorkerOrder.filter((_, i) => i !== index));
     };
 
-    const handleCreateDocumentTransmittal = (e: React.FormEvent) => {
-        
+    // --- HANDLER SUBMIT ---
+    const handleCreateDocumentTransmittal = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // 1. Validasi Dasar
+        if (!formData.name || !formData.ta_no || !formData.customer_id) {
+            alert("Harap lengkapi field Nama, TA No., dan Customer.");
+            return;
+        }
+
+        // 2. Siapkan Payload Dokumen (WO List)
+        const finalDocuments: DocumentPayload[] = rowsDataWorkerOrder
+            // Filter baris yang terisi lengkap
+            .filter(row => row.wo && row.year && row.location.trim() !== "")
+            .map(row => ({
+                wo_number: row.wo.toString(), // Pastikan dikirim sebagai string
+                wo_year: Number(row.year),
+                location: row.location,
+            }));
+
+        if (finalDocuments.length === 0) {
+            alert("Harap masukkan setidaknya satu Work Order yang lengkap.");
+            return;
+        }
+
+        // 3. Construct Final Body
+        const body: CreateDocTransmittalPayload = {
+            name: formData.name,
+            ta_no: formData.ta_no,
+            date: formData.date,
+            customer_id: Number(formData.customer_id),
+            customer_district: formData.customer_district,
+            pic_name: formData.pic_name,
+            report_type: formData.report_type,
+            documents: finalDocuments,
+        };
+
+        // 4. Call API
+        try {
+            const res = await createDocumentTransmittal(body);
+            if (res.success) {
+                alert("Document Transmittal berhasil dibuat!");
+                router.push("/admin/document-transmittal");
+            } else {
+                alert("Gagal membuat Document Transmittal: " + res.message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Terjadi kesalahan saat memproses Document Transmittal.");
+        }
     }
 
 
+    if (isLoading) {
+        return <div className="p-4">Loading Master Data...</div>;
+    }
 
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
             <div className="flex flex-row items-center space-x-2 mt-2">
                 <MdDocumentScanner className="w-10 h-10" />
-                <h1 className="text-3xl font-normal">Add Document Transmittal  </h1>
+                <h1 className="text-3xl font-normal">Add Document Transmittal</h1>
             </div>
 
             {/* start of form container */}
@@ -67,7 +166,15 @@ export default function CreateDocTransmittal() {
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="name" className="font-bold">Name</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="name" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add your name" />
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        placeholder="Add your name"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -77,19 +184,34 @@ export default function CreateDocTransmittal() {
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* TA No. */}
-                                <label htmlFor="TA-No" className="font-bold">TA No.</label>
+                                <label htmlFor="ta_no" className="font-bold">TA No.</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="TA-No" className="flex-1 border rounded-sm h-9 px-2" placeholder="Number/month/year, ex: 000/VII/2024" />
+                                    <input
+                                        type="text"
+                                        id="ta_no"
+                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        placeholder="Number/month/year, ex: 000/VII/2024"
+                                        value={formData.ta_no}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                             </div>
                         </div>
                         <div className="flex flex-col space-y-4">
                             {/* date */}
                             <div className="flex flex-col space-y-1">
-                                {/* year */}
-                                <label htmlFor="date" className="font-bold text-transparent">Date</label>
+                                {/* date */}
+                                <label htmlFor="date" className="font-bold">Date</label>
                                 <div className="flex items-center">
-                                    <input type="date" id="date" className="flex-1 border rounded-sm h-9 px-2" />
+                                    <input
+                                        type="date"
+                                        id="date"
+                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        value={formData.date}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -104,12 +226,19 @@ export default function CreateDocTransmittal() {
                         <div className="flex flex-col space-y-4">
                             {/* customer */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="customer" className="font-bold">Customer</label>
+                                <label htmlFor="customer_id" className="font-bold">Customer</label>
                                 <div className="flex">
-                                    <select className="flex-1 border rounded-sm h-9 px-2">
-                                        <option value="" className="font-light" hidden>---Choose Customer's Name---</option>
-                                        <option value="" className="font-light">Test</option>
-                                        {/* ini nanti fetch customer trs di loop di option*/}
+                                    <select
+                                        id="customer_id"
+                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        value={formData.customer_id}
+                                        onChange={handleCustomerChange}
+                                        required
+                                    >
+                                        <option value="" hidden>---Choose Customer's Name---</option>
+                                        {customers.map(c => (
+                                            <option key={c.id} value={c.id}>{c.name}</option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -117,8 +246,14 @@ export default function CreateDocTransmittal() {
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="customer-address" className="font-bold">Customer's Address</label>
                                 <div className="flex">
-                                    {/* ini nanti value nya otomatis ambil dari customer */}
-                                    <input type="text" id="customer-address" className="flex-1 border rounded-sm h-9 px-2 bg-[#e9ecef]" disabled />
+                                    <input
+                                        type="text"
+                                        id="customer-address"
+                                        className="flex-1 border rounded-sm h-9 px-2 bg-[#e9ecef]"
+                                        disabled
+                                        value={selectedCustomerAddress}
+                                        placeholder="Address will appear here..."
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -126,17 +261,33 @@ export default function CreateDocTransmittal() {
                         <div className="flex flex-col space-y-4">
                             {/* PIC */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="pic" className="font-bold">Person in Charge (PIC)</label>
+                                <label htmlFor="pic_name" className="font-bold">Person in Charge (PIC)</label>
                                 <div className="flex">
-                                    <input type="text" id="pic" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add PIC'S name" />
+                                    <input
+                                        type="text"
+                                        id="pic_name"
+                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        placeholder="Add PIC'S name"
+                                        value={formData.pic_name}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                             </div>
 
                             {/* Customer's District */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="customer-district" className="font-bold">Customer's District</label>
+                                <label htmlFor="customer_district" className="font-bold">Customer's District</label>
                                 <div className="flex">
-                                    <input type="text" id="customer-district" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add Customer's District" />
+                                    <input
+                                        type="text"
+                                        id="customer_district"
+                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        placeholder="Add Customer's District"
+                                        value={formData.customer_district}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -145,41 +296,49 @@ export default function CreateDocTransmittal() {
                     <hr className="border-b my-6" />
 
                     <div className="flex flex-col space-y-4">
-                        {/* Name */}
+                        {/* Report Type */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="report-type" className="font-bold">Report Type</label>
+                            <label htmlFor="report_type" className="font-bold">Report Type</label>
                             <div className="flex items-center">
-                                <input type="text" id="report-type" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add report type" />
+                                <input
+                                    type="text"
+                                    id="report_type"
+                                    className="flex-1 border rounded-sm h-9 px-2"
+                                    placeholder="Add report type"
+                                    value={formData.report_type}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                         </div>
                     </div>
 
-                    {/* WO ?? */}
+                    {/* WO LIST */}
                     <div className="mt-6">
                         <table className="w-full border-separate border-spacing-y-4 border-spacing-x-4">
                             <thead>
                                 <tr className="space-x-1">
                                     <th className="w-[5%]">No</th>
                                     <th className="w-[60%] text-left">WO</th>
-                                    <th className="w-[30%] text-left">location</th>
+                                    <th className="w-[30%] text-left">Location</th>
                                     <th className="w-[5%]"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {rowsDataWorkerOrder.map((row, index) => (
-                                    <tr key={index} className="">
+                                    <tr key={index}>
                                         <td className="text-center">{index + 1}</td>
 
                                         <td className="flex flex-row items-center">
                                             <input
-                                                type="number"
+                                                type="text" // Diubah ke text karena mungkin ada leading zeros
                                                 value={row.wo}
                                                 onChange={(e) =>
-                                                    updateRowDataReport(index, "wo", Number(e.target.value))
+                                                    updateRowDataReport(index, "wo", e.target.value)
                                                 }
                                                 className="border rounded-sm h-12 px-2 w-full p-2 flex-1"
-                                                id="wo-number"
-                                                placeholder="Add number"
+                                                placeholder="Number"
+                                                required
                                             />
                                             <p className="mx-7 font-bold">/AWP-INS/</p>
                                             <input
@@ -189,8 +348,8 @@ export default function CreateDocTransmittal() {
                                                     updateRowDataReport(index, "year", Number(e.target.value))
                                                 }
                                                 className="border rounded-sm h-12 px-2 w-full p-2 flex-1"
-                                                id="wo-year"
-                                                placeholder="year"
+                                                placeholder="Year"
+                                                required
                                             />
                                         </td>
 
@@ -202,18 +361,21 @@ export default function CreateDocTransmittal() {
                                                     updateRowDataReport(index, "location", e.target.value)
                                                 }
                                                 className="border rounded-sm min-h-12 px-2 w-full p-2"
-                                                id="work-location"
                                                 placeholder="Add work location"
+                                                required
                                             />
                                         </td>
 
                                         <td className="text-center">
-                                            <button
-                                                className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center cursor-pointer"
-                                                onClick={() => deleteRowDataReport(index)}
-                                            >
-                                                <FaTrash className="w-5 h-5 text-white" />
-                                            </button>
+                                            {rowsDataWorkerOrder.length > 1 && (
+                                                <button
+                                                    type="button"
+                                                    className="bg-red-600 w-8 h-8 rounded-sm flex justify-center items-center cursor-pointer"
+                                                    onClick={() => deleteRowDataReport(index)}
+                                                >
+                                                    <FaTrash className="w-5 h-5 text-white" />
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
@@ -227,9 +389,6 @@ export default function CreateDocTransmittal() {
                         >
                             + Add Row
                         </div>
-
-
-
                     </div>
 
                     <hr className="border-b my-6" />
@@ -241,7 +400,6 @@ export default function CreateDocTransmittal() {
                 </form>
                 {/* end form */}
             </div >
-            {/* end of form container */}
 
             <div className="h-20 text-transparent" >.</div>
         </div >
