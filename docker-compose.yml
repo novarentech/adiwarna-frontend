@@ -1,0 +1,9 @@
+services:
+  frontend:
+    image: dzuura/adiwarna-app:latest
+    container_name: adiwarna-app
+    restart: unless-stopped
+    ports:
+      - "8007:3000"
+    env_file:
+      - .env.local
