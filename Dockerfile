@@ -29,9 +29,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
-# Switch to non-root user
-USER nextjs
-
 EXPOSE 3000
 
 # Use dumb-init to properly handle signals
