@@ -67,10 +67,11 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                         <Image src={"/icons/icon-work-order.svg"} className="" alt="icon work order" width={23} height={23} />
                         <p className="text-base">Work Order</p>
                     </Link>
-                    <Link href={"/admin/daily-activity-report"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
+                    {/* daily activity report wont be used (for now) */}
+                    {/* <Link href={"/admin/daily-activity-report"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
                         <Image src={"/icons/icon-daily-activity.svg"} className="" alt="icon daily activity" width={23} height={23} />
                         <p className="text-base">Daily Activity Report</p>
-                    </Link>
+                    </Link> */}
                     <Link href={"/admin/equipment-project"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
                         <FaCircle className="w-[23px] h-[23px]" />
                         <p className="text-base">Equipment Project</p>
