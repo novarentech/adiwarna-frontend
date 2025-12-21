@@ -20,6 +20,7 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
         "/admin/quotations/print/",
         "/admin/purchase-order/print/",
         "/admin/work-assignment/print/",
+        "/admin/document-transmittal/print/",
     ];
 
     const hideNavbarRoute = hidePrefixes.some(prefix =>

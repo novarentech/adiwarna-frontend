@@ -53,6 +53,30 @@ export interface CreateDocTransmittalPayload { // Digunakan juga untuk Update
 // Ganti nama ini agar lebih konsisten dengan payload di atas
 export type UpdateDocTransmittalPayload = CreateDocTransmittalPayload;
 
+export interface GetbyidDocumentTransmittal {
+    id: number;
+    name: string;
+    ta_no: string;
+    date: string;
+    customer: {
+        id: number;
+        name: string;
+        address: string;
+        district: string;
+    };
+    pic_name: string;
+    report_type: string;
+    documents: {
+        id: number;
+        wo_number: string;
+        wo_year: number;
+        location: string;
+    }[];
+    created_at: string;
+    updated_at: string;
+}
+
+
 
 export async function getAllDocTrans(page = 1, search = "") {
     try {
