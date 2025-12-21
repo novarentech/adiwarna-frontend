@@ -75,10 +75,10 @@ export default function QuotationPrintPage({ params }: { params: Promise<{ id: s
             {/* Modal Menu */}
             <div id="printModal" className="fixed top-5 right-5 w-72 z-50 no-print">
                 <div className="bg-white shadow-xl border rounded-lg p-4 text-sm">
-                    <h5 className="font-bold mb-2 text-blue-600 font-sans">Print Menu</h5>
-                    <p className="mb-4 font-sans">Gunakan "Save as PDF" dengan scale 100%.</p>
+                    <h5 className="font-bold mb-2 text-blue-600 font-sans">Print</h5>
+                    <p className="mb-4 font-sans">Back to the top first before printing!</p>
                     <div className="flex gap-2">
-                        <button onClick={() => window.history.back()} className="flex-1 bg-gray-200 py-1 rounded">Back</button>
+                        <button onClick={() => window.history.back()} className="flex-1 bg-red-500 text-white py-1 rounded">Back</button>
                         <button onClick={() => window.print()} className="flex-1 bg-blue-600 text-white py-1 rounded font-bold">Print</button>
                     </div>
                 </div>

@@ -150,7 +150,7 @@ export default function PurchaseOrderPage() {
                                             <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
                                                 <Link href={`/admin/purchase-order/edit/${po.id}`}><MdEdit className="w-7 h-7" /></Link>
                                                 <div><FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(po.id)} /></div>
-                                                <Link href={"/admin//purchase-order/print"}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
+                                                <Link href={`/admin//purchase-order/print/${po.id}`}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
                                             </div>
                                         </TableCell>
                                     </TableRow>
