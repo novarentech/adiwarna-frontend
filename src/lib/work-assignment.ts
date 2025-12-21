@@ -67,13 +67,13 @@ export interface CreateWorkAssignmentPayload {
 
 // GET BY ID
 // Types
-interface Worker {
+export interface Worker {
     id?: number;
     worker_name: string;
     position: string;
 }
 
-interface WorkAssignment {
+export interface WorkAssignment {
     id: number;
     assignment_no: string;
     assignment_year: string | number;

@@ -21,7 +21,7 @@ export default function CoolNavigationBar({
     const hidePrefixes = [
         "/admin/quotations/print/",
         "/admin/purchase-order/print/",
-        "/admin/jobsheet/print/",
+        "/admin/work-assignment/print/",
     ];
 
     useEffect(() => {
