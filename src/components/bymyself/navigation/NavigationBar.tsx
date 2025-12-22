@@ -23,6 +23,7 @@ export default function CoolNavigationBar({
         "/admin/purchase-order/print/",
         "/admin/work-assignment/print/",
         "/admin/document-transmittal/print/",
+        "/admin/equipment-project/print/",
     ];
 
     useEffect(() => {

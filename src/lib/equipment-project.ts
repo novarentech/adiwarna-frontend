@@ -82,6 +82,22 @@ export interface GetEquipmentProjectByIdResponse {
     message?: string;
 }
 
+export interface GetEquipmentProjectById {
+    id: number;
+    project_date: string;
+    customer: string;
+    location: string;
+    prepared_by: string;
+    verified_by: string;
+    equipments: {
+        id: number;
+        description: string;
+        merk_type: string;
+        serial_number: string;
+        calibration_date: string;
+    }[];
+};
+
 export async function getAllEquipmentproject(page = 1, perPage = 15, search = ""): Promise<GetAllEquipmentProjectResponse> {
     try {
         // Request ke API dengan page, perPage, dan search
