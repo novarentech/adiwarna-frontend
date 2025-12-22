@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { IoMdEye } from "react-icons/io"; // Ditambahkan untuk ikon View
 // Import interface dan fungsi API yang diperlukan
 import { getAllTrackRecords, TrackRecordItem, TrackRecordMeta, TrackRecordResponse } from "@/lib/track-records";
+import { getAll999EquipmentGeneral } from "@/lib/equipment-general";
 
 
 export default function TrackRecordPage() {
