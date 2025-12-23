@@ -90,14 +90,14 @@ export default function QuotationPrintPage({ params }: { params: Promise<{ id: s
                 {/* --- BAGIAN KONTEN (ATAS) --- */}
                 <div className="flex-grow">
                     {/* Header Section */}
-                    <header className="mb-4 all-cell-borders">
+                    <header className="mb-4">
                         <table className="w-full">
                             <tbody>
                                 <tr>
-                                    <td className="w-[20%] text-center">
+                                    <td className="w-[20%] text-center border border-black">
                                         <img src="/icon.png" alt="Logo" className="w-20 mx-auto" />
                                     </td>
-                                    <td className="text-center">
+                                    <td className="text-center border border-black  ">
                                         <h1 className="text-xl font-bold">PT. ADIWARNA PRATAMA</h1>
                                         <h2 className="text-lg font-semibold uppercase">Quotation</h2>
                                     </td>
@@ -107,24 +107,24 @@ export default function QuotationPrintPage({ params }: { params: Promise<{ id: s
                     </header>
 
                     {/* Info Table */}
-                    <div className="all-cell-borders mb-2 text-[8pt]">
+                    <div className="mb-2 text-[8pt]">
                         <table className="w-full">
                             <tbody>
                                 <tr>
-                                    <td className="w-24 font-bold">Date</td>
-                                    <td>{data.date}</td>
-                                    <td className="w-1/2 font-semibold text-right text-[10pt]">Ref. : {data.ref_no}/AWP-INS/{data.ref_year}</td>
+                                    <td className="p-0.5 w-24 font-bold border border-black">Date</td>
+                                    <td className="p-0.5 border border-black font-bold">{data.date}</td>
+                                    <td className="p-0.5 w-1/3 font-semibold text-left text-[10pt] border border-black">Ref. : {data.ref_no}/AWP-INS/{data.ref_year}</td>
                                 </tr>
                                 <tr>
-                                    <td className="align-top font-bold text-sm text-[8pt]">TO: <br /> Attn:</td>
-                                    <td colSpan={2}>
-                                        <span className="font-bold">{data.customer.name}</span> <br />
+                                    <td className="p-0.5 align-top font-bold text-sm text-[8pt] border border-black">TO: <br /> Attn:</td>
+                                    <td colSpan={2} className="p-0.5 border border-black">
+                                        <span className="p-0.5 font-bold">{data.customer.name}</span> <br />
                                         {data.pic_name}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="font-bold">Subject</td>
-                                    <td colSpan={2}>{data.subject}</td>
+                                    <td className="p-0.5 font-bold border border-black">Subject</td>
+                                    <td className="p-0.5 border border-black" colSpan={2}>{data.subject}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -136,51 +136,51 @@ export default function QuotationPrintPage({ params }: { params: Promise<{ id: s
                     </div>
 
                     {/* Section A - Tabel Scope */}
-                    <h3 className="font-bold underline mb-2 italic text-[8pt]">A. Scope of works and Price:</h3>
-                    <div className="all-cell-borders mb-4 text-[10pt]">
+                    <h3 className="font-bold mb-2 text-[8pt]">A. Scope of works and Price:</h3>
+                    <div className="mb-4 text-[10pt]">
                         <table className="w-full">
                             <thead className="text-center font-bold bg-gray-50 uppercase text-[8pt]">
                                 <tr>
-                                    <th className="w-10">No</th>
-                                    <th className="text-left">Scope / Description</th>
-                                    <th className="w-12">Qty</th>
-                                    <th className="w-16">Unit</th>
-                                    <th className="w-24">Rate</th>
-                                    <th className="w-28">Total</th>
+                                    <th className="w-10 p-0.5 border border-black">No</th>
+                                    <th className="text-left p-0.5 border border-black">Scope / Description</th>
+                                    <th className="w-12 p-0.5 border border-black">Qty</th>
+                                    <th className="w-16 p-0.5 border border-black">Unit</th>
+                                    <th className="w-24 p-0.5 border border-black">Rate</th>
+                                    <th className="w-28 p-0.5 border border-black">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {data.items.map((item: any, i: number) => (
                                     <tr key={item.id} className="text-[8pt]">
-                                        <td className="text-center">{i + 1}</td>
-                                        <td className="text-left">{item.description}</td>
-                                        <td className="text-center">{item.quantity}</td>
-                                        <td className="text-center">{item.unit}</td>
-                                        <td className="text-right">{formatIDR(Number(item.rate))}</td>
-                                        <td className="text-right">{formatIDR(Number(item.quantity) * Number(item.rate))}</td>
+                                        <td className="text-center p-0.5 border border-black">{i + 1}</td>
+                                        <td className="text-left p-0.5 border border-black">{item.description}</td>
+                                        <td className="text-center p-0.5 border border-black">{item.quantity}</td>
+                                        <td className="text-center p-0.5 border border-black">{item.unit}</td>
+                                        <td className="text-right p-0.5 border border-black">{formatIDR(Number(item.rate))}</td>
+                                        <td className="text-right p-0.5 border border-black">{formatIDR(Number(item.quantity) * Number(item.rate))}</td>
                                     </tr>
                                 ))}
                             </tbody>
-                            <tfoot className="font-bold text-[8pt]">
+                            <tfoot className="font-semibold text-[8pt]">
                                 <tr>
-                                    <td colSpan={5} className="text-right">Sub Total</td>
-                                    <td className="text-right">{formatIDR(subtotal)}</td>
+                                    <td colSpan={5} className="text-right p-0.5 border border-black">Sub Total</td>
+                                    <td className="text-right p-0.5 border border-black">{formatIDR(subtotal)}</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={5} className="text-right">Discount {data.discount}%</td>
-                                    <td className="text-right">{formatIDR(discountAmount)}</td>
+                                    <td colSpan={5} className="text-right p-0.5 border border-black">Discount {data.discount}%</td>
+                                    <td className="text-right p-0.5 border border-black">{formatIDR(discountAmount)}</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={5} className="text-right font-black">NET TOTAL</td>
-                                    <td className="text-right">{formatIDR(netTotal)}</td>
+                                    <td colSpan={5} className="text-right p-0.5 border border-black">NET TOTAL</td>
+                                    <td className="text-right p-0.5 border border-black">{formatIDR(netTotal)}</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={5} className="text-right">VAT 11%</td>
-                                    <td className="text-right">{formatIDR(vat)}</td>
+                                    <td colSpan={5} className="text-right p-0.5 border border-black">VAT 11%</td>
+                                    <td className="text-right p-0.5 border border-black">{formatIDR(vat)}</td>
                                 </tr>
-                                <tr className="bg-gray-100 uppercase font-black text-[9pt]">
-                                    <td colSpan={5} className="text-right">Grand Total</td>
-                                    <td className="text-right">{formatIDR(grandTotal)}</td>
+                                <tr className="bg-gray-100 uppercase font-bold text-[9pt]">
+                                    <td colSpan={5} className="text-right p-0.5 border border-black">Grand Total</td>
+                                    <td className="text-right p-0.5 border border-black">{formatIDR(grandTotal)}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -216,8 +216,8 @@ export default function QuotationPrintPage({ params }: { params: Promise<{ id: s
                     {/* Signature */}
                     <div className="w-64 leading-tight text-[8pt] avoid-break">
                         <p>Yours Faithfully,</p>
-                        <p className="font-bold mb-16 uppercase">PT. Adiwarna Pratama</p>
-                        <p className="font-bold underline uppercase">{data.auth_name}</p>
+                        <p className="font-medium mb-16">PT. Adiwarna Pratama</p>
+                        <p className="font-medium capitalize">{data.auth_name}</p>
                         <p className="italic">{data.auth_position}</p>
                     </div>
                 </div>
