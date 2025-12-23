@@ -1,5 +1,7 @@
 export interface EquipmentProjectData {
     id: number;
+    customer_id: number;
+    customer_location_id: number;
     project_date: string; // Format YYYY-MM-DD
     customer: string;
     location: string;
@@ -16,9 +18,7 @@ export interface EquipmentProjectMeta {
 
 export interface GetAllEquipmentProjectResponse {
     success: boolean;
-    data: {
-        data: EquipmentProjectData[];
-    };
+    data: EquipmentProjectData[];
     meta: EquipmentProjectMeta;
 }
 
@@ -85,6 +85,8 @@ export interface GetEquipmentProjectByIdResponse {
 export interface GetEquipmentProjectById {
     id: number;
     project_date: string;
+    customer_id: number;
+    customer_location_id: number;
     customer: string;
     location: string;
     prepared_by: string;
@@ -106,7 +108,7 @@ export async function getAllEquipmentproject(page = 1, perPage = 15, search = ""
         return await res.json() as GetAllEquipmentProjectResponse;
     } catch (err: any) {
         // Return tipe yang sesuai dengan response yang diharapkan
-        return { success: false, data: { data: [] }, meta: { current_page: 1, last_page: 1, per_page: 15, total: 0 } };
+        return { success: false, data: [], meta: { current_page: 1, last_page: 1, per_page: 15, total: 0 } };
     }
 }
 

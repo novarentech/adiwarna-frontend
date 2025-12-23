@@ -140,7 +140,7 @@ export default function EquipmentProjectPrintPage({ params }: { params: Promise<
                             </thead>
                             <tbody className="text-center">
                                 {equipmentDetails.map((item: any, idx: number) => (
-                                    <tr key={item.id + idx}>
+                                    <tr key={idx}>
                                         <td className="border border-black p-1">{idx + 1}</td>
                                         <td className="text-left font-medium border border-black p-1">{item.description}</td>
                                         <td className="border border-black p-1">{item.merk_type}</td>

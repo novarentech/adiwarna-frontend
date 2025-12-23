@@ -39,7 +39,7 @@ export default function EquipmentProjectPage() {
 
         if (res.success) {
             // Ganti state yang diset
-            setEquipmentProjects(res.data.data);
+            setEquipmentProjects(res.data);
             setLastPage(res.meta.last_page);
         } else {
             console.error("Failed to fetch equipment projects:");
