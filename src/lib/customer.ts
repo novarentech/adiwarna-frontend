@@ -70,12 +70,17 @@ export interface CreateCustomerResponse {
 }
 
 
+export interface EditCustomerLocation {
+    id?: number; // Opsional karena record baru tidak punya ID
+    location_name: string;
+}
+
 export interface EditCustomerBody {
     customer_no: string;
     name: string;
     phone_number: string;
     address: string;
-    locations: CustomerLocation[];
+    customer_locations: EditCustomerLocation[]; // Ubah dari locations ke customer_locations
 }
 
 
