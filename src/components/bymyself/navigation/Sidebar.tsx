@@ -8,6 +8,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { FaCircle } from "react-icons/fa";
 import { TbReceiptFilled } from "react-icons/tb";
 import { usePathname } from "next/navigation";
+import { MdSupervisorAccount } from "react-icons/md";
 
 
 export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed: boolean; onCollapseChange: () => void }) {
@@ -116,6 +117,10 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                     <TbReceiptFilled className={`w-5 h-5 text-white ${collapsed ? 'mx-auto' : ''}`} />
 
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Payroll Managements</h1>
+                </Link>
+                <Link href={"/admin/surat-jalan"} className="flex flex-row items-center cursor-pointer">
+                    <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                    <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Surat Jalan</h1>
                 </Link>
                 <Link href={"/admin/accounts"} className="flex flex-row items-center cursor-pointer">
                     <Image src={"/icons/icon-accounts.svg"} className={`${collapsed ? 'mx-auto' : ''}`} alt="icon accounts" width={23} height={23} />
