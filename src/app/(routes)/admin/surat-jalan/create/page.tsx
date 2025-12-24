@@ -14,7 +14,7 @@ import Link from "next/link";
 
 export default function SuratJalanCreatePage() {
     return (
-        <div className="w-full h-fit px-8 pt-4 pb-16 bg-[#f4f6f9]">
+        <div className="w-full h-fit px-16 pt-4 pb-16 bg-[#f4f6f9]">
             <h1 className="text-4xl mt-8">Tambah Surat Jalan</h1>
             {/* form container */}
             <div className="bg-white mt-6 w-full h-fit rounded-[10px] p-6">
