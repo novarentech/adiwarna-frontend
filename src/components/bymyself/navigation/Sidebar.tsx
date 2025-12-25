@@ -122,6 +122,10 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                     <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Surat Jalan</h1>
                 </Link>
+                <Link href={"/admin/material-receiving"} className="flex flex-row items-center cursor-pointer">
+                    <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                    <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Material Receiving</h1>
+                </Link>
                 <Link href={"/admin/purchase-requisition"} className="flex flex-row items-center cursor-pointer">
                     <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Purchase Requisition</h1>
