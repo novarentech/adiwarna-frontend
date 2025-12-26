@@ -303,9 +303,9 @@ export default function PurchaseRequisitionPage() {
                                             <Link href={`/admin/purchase-requisition/edit/${pr.id}`} title="Edit">
                                                 <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>
-                                            <button title="Print">
+                                            <Link href={`/admin/purchase-requisition/print/${pr.id}`} title="Print">
                                                 <LuPrinter className="w-5 h-5 text-[#4A5565] hover:opacity-70" />
-                                            </button>
+                                            </Link>
                                             <button title="Delete" onClick={() => handleDelete(pr.id)}>
                                                 <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
                                             </button>

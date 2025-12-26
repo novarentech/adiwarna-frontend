@@ -58,6 +58,9 @@ export default function EquipmentProjectPrintPage({ params }: { params: Promise<
             <style>
                 {`
                 @page { size: landscape; margin: 10mm; }
+                ::-webkit-scrollbar {
+                display: none;
+                }
                 @media print {
                     html, body { background: white !important; overflow: hidden !important; }
                     .no-print { display: none !important; }
@@ -183,8 +186,8 @@ export default function EquipmentProjectPrintPage({ params }: { params: Promise<
 
 
                 <footer className="w-full pt-2 border-t-2 border-black text-center text-[7.5pt] leading-tight absolute bottom-[10%] right-0">
-                    <strong>Graha Mas Fatmawati Blok B 15, Jl. RS. Fatmawati Kav. 71</strong><br/>
-                        <small>Cipete Utara Kebayoran Baru, Jakarta 12150 - Phone (62-21)72800322, 7210761, 7210852 Fax. (62-21) 7255428, Email: ptawp@cbn.net.id</small>
+                    <strong>Graha Mas Fatmawati Blok B 15, Jl. RS. Fatmawati Kav. 71</strong><br />
+                    <small>Cipete Utara Kebayoran Baru, Jakarta 12150 - Phone (62-21)72800322, 7210761, 7210852 Fax. (62-21) 7255428, Email: ptawp@cbn.net.id</small>
                 </footer>
             </div>
         </div>

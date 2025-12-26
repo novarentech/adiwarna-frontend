@@ -77,6 +77,21 @@ export interface GetMaterialReceivingReportResponseById {
     };
 }
 
+export interface GetMaterialRecevingResponseByIDForPrint {
+    id: number;
+    po_inv_pr_no: string;
+    supplier: string;
+    receiving_date: string;  // format: YYYY-MM-DD
+    order_by: "online" | "offline";
+    received_by: string;
+    acknowledge_by: string;
+    status: "partial" | "complete";
+    notes: string;
+    items: GetByIDMaterialReceivingReportItem[];
+    received_position: string;
+    acknowledge_position: string;
+};
+
 
 // EDIT
 // Item detail pada receiving yang digunakan untuk update
