@@ -28,7 +28,9 @@ export default function CreateMaterialReceivingPage() {
         received_by: "",
         acknowledge_by: "",
         status: "complete" as "partial" | "complete",
-        notes: ""
+        notes: "",
+        received_position : "",
+        acknowledge_position: "",
     });
 
     // 2. State untuk list item material
@@ -198,11 +200,11 @@ export default function CreateMaterialReceivingPage() {
                         </div>
                         {/* receivedbyposition */}
                         <div className="flex flex-col space-y-4">
-                            <input id="receivedbyposition" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="position" />
+                            <input id="received_position" required value={formData.received_position} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="position" />
                         </div>
                         {/* acknowledgebyposition */}
                         <div className="flex flex-col space-y-4">
-                            <input id="acknowledgebyposition" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="position" />
+                            <input id="acknowledge_position" required value={formData.acknowledge_position} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="position" />
                         </div>
                     </div>
 

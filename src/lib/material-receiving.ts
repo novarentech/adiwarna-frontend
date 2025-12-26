@@ -43,6 +43,8 @@ export interface MaterialReceivingReportRequestBody {
     status: "partial" | "complete";
     notes?: string;
     items: MaterialReceivingReportItemRequest[];
+    received_position: string;
+    acknowledge_position: string;
 }
 
 
@@ -70,6 +72,8 @@ export interface GetMaterialReceivingReportResponseById {
         status: "partial" | "complete";
         notes: string;
         items: GetByIDMaterialReceivingReportItem[];
+        received_position: string;
+        acknowledge_position: string;
     };
 }
 

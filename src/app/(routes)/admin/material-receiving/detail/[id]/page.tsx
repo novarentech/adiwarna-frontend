@@ -151,6 +151,15 @@ export default function DetailMaterialReceivingPage({ params }: { params: Promis
                         <p className="text-xl mt-1">{data.acknowledge_by}</p>
                     </div>
                 </div>
+                {/* Personnel Section POSITION*/}
+                <div className="grid grid-cols-2 gap-12">
+                    <div className="border-l-4 border-[#31C6D4] pl-4">
+                        <p className="text-xl mt-1">{data.received_position}</p>
+                    </div>
+                    <div className="border-l-4 border-gray-300 pl-4">
+                        <p className="text-xl mt-1">{data.acknowledge_position}</p>
+                    </div>
+                </div>
             </div>
 
             <div className="mt-8 flex justify-end">
