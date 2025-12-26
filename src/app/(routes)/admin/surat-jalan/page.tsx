@@ -306,9 +306,9 @@ export default function SuratJalanPage() {
                                             <Link href={`/admin/surat-jalan/edit/${sj.id}`}>
                                                 <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>
-                                            <button>
+                                            <Link href={`/admin/surat-jalan/print/${sj.id}`}>
                                                 <LuPrinter className="w-5 h-5 text-[#4A5565] hover:opacity-70" />
-                                            </button>
+                                            </Link>
                                             <button onClick={() => handleDelete(sj.id)}>
                                                 <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
                                             </button>

@@ -24,6 +24,7 @@ export default function CoolNavigationBar({
         "/admin/work-assignment/print/",
         "/admin/document-transmittal/print/",
         "/admin/equipment-project/print/",
+        "/admin/surat-jalan/print/",
     ];
 
     useEffect(() => {

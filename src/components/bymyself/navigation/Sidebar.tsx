@@ -23,6 +23,7 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
         "/admin/work-assignment/print/",
         "/admin/document-transmittal/print/",
         "/admin/equipment-project/print/",
+        "/admin/surat-jalan/print/",
     ];
 
     const hideNavbarRoute = hidePrefixes.some(prefix =>
