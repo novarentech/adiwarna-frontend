@@ -142,7 +142,7 @@ export async function getMaterialReceivinById(id: number) {
 }
 
 
-export async function updateEquipmentGeneral(id: number, payload: MaterialReceivingUpdateRequestBody) {
+export async function updateMaterialReceiving(id: number, payload: MaterialReceivingUpdateRequestBody) {
     try {
         const res = await fetch(`/api/material-receiving-reports/${id}`, {
             method: "PUT", // Gunakan method PUT atau PATCH

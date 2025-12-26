@@ -13,7 +13,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import Link from "next/link";
 import {
     getMaterialReceivinById,
-    updateEquipmentGeneral,
+    updateMaterialReceiving,
     ReceivingItemUpdateRequest,
     MaterialReceivingUpdateRequestBody,
     GetMaterialReceivingReportResponseById,
@@ -121,7 +121,7 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
             items: items
         };
 
-        const res = await updateEquipmentGeneral(id, payload);
+        const res = await updateMaterialReceiving(id, payload);
 
         if (res.success) {
             alert("Record updated successfully!");

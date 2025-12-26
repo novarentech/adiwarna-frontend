@@ -11,10 +11,135 @@ import {
 } from "@/components/ui/table"
 import { RiDeleteBinLine } from "react-icons/ri";
 import Link from "next/link";
-import { use } from "react";
+import { use, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getPurchaseRequisitionById, PurchaseRequisitionGetByIdResponse, PurchaseRequisitionItemUpdate, PurchaseRequisitionUpdateRequest, updatePurchaseRequisition } from "@/lib/purchase-requisitions";
 
-export default function EditPurchaseRequisitionPage({ params }: { params: Promise<{ id: string }> }) {
+export default function EditPurchaseRequisitionPage({ params }: { params: Promise<{ id: number }> }) {
     const { id } = use(params);
+    const router = useRouter();
+
+    const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
+
+    // 1. State Header & Metadata
+    const [formData, setFormData] = useState({
+        pr_no: "",
+        rev_no: "",
+        date: "",
+        required_delivery: "",
+        po_no_cash: "",
+        supplier: "",
+        place_of_delivery: "",
+        routing: "offline" as "online" | "offline",
+        vat_percentage: 10,
+        requested_by: "",
+        approved_by: "",
+        authorized_by: "",
+        status: "draft" as "draft" | "pending" | "approved" | "rejected",
+        notes: ""
+    });
+
+    // 2. State Items
+    const [items, setItems] = useState<PurchaseRequisitionItemUpdate[]>([]);
+
+    // 3. Fetch Initial Data
+    useEffect(() => {
+        const fetchPR = async () => {
+            try {
+                const res: PurchaseRequisitionGetByIdResponse = await getPurchaseRequisitionById(id);
+                if (res.success && res.data) {
+                    const d = res.data;
+                    setFormData({
+                        pr_no: d.pr_no,
+                        rev_no: d.rev_no || "",
+                        date: d.date,
+                        required_delivery: d.required_delivery,
+                        po_no_cash: d.po_no_cash,
+                        supplier: d.supplier,
+                        place_of_delivery: d.place_of_delivery,
+                        routing: d.routing,
+                        vat_percentage: Number(d.vat_percentage),
+                        requested_by: d.requested_by,
+                        approved_by: d.approved_by,
+                        authorized_by: d.authorized_by,
+                        status: d.status,
+                        notes: d.notes || ""
+                    });
+
+                    // Map items string to number
+                    const mappedItems = d.items.map(item => ({
+                        id: item.id,
+                        qty: Number(item.qty),
+                        unit: item.unit,
+                        description: item.description,
+                        unit_price: Number(item.unit_price)
+                    }));
+                    setItems(mappedItems);
+                } else {
+                    alert("Data PR tidak ditemukan");
+                    router.push("/admin/purchase-requisition");
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setFetching(false);
+            }
+        };
+
+        if (id) fetchPR();
+    }, [id, router]);
+
+    // 4. Perhitungan Otomatis
+    const totals = useMemo(() => {
+        const subTotal = items.reduce((acc, item) => acc + (item.qty * item.unit_price), 0);
+        const vatAmount = (subTotal * formData.vat_percentage) / 100;
+        const grandTotal = subTotal + vatAmount;
+        return { subTotal, vatAmount, grandTotal };
+    }, [items, formData.vat_percentage]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: id === "vat_percentage" ? Number(value) : value }));
+    };
+
+    const handleItemChange = (index: number, field: keyof PurchaseRequisitionItemUpdate, value: string | number) => {
+        const newItems = [...items];
+        newItems[index] = { ...newItems[index], [field]: value };
+        setItems(newItems);
+    };
+
+    const addItem = () => {
+        setItems([...items, { qty: 0, unit: "", description: "", unit_price: 0 }]);
+    };
+
+    const removeItem = (index: number) => {
+        if (items.length > 1) {
+            setItems(items.filter((_, i) => i !== index));
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+
+        const payload: PurchaseRequisitionUpdateRequest = {
+            ...formData,
+            items: items
+        };
+
+        const res = await updatePurchaseRequisition(id, payload);
+
+        if (res.success) {
+            alert("Purchase Requisition updated successfully!");
+            router.push("/admin/purchase-requisition");
+        } else {
+            alert("Update failed: " + res.message);
+        }
+        setLoading(false);
+    };
+
+    if (fetching) return <div className="p-16 text-center">Loading PR Data...</div>;
 
     return (
         <div className="w-full h-fit px-16 pt-4 pb-16 bg-[#f4f6f9]">
@@ -38,42 +163,59 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
 
                 <hr className="border-b border-[#e6e6e6] my-6" />
 
-                <form action="" className="flex flex-col w-full h-fit">
+                <form onSubmit={handleSubmit} className="flex flex-col w-full h-fit">
                     <div className="w-full grid grid-cols-2 gap-x-8">
                         {/* left side */}
                         <div className="space-y-4">
                             <div className="flex flex-row space-x-4">
                                 <div className="flex-1 flex flex-col space-y-4">
-                                    <label htmlFor="prnumber" className="text-sm">P.R. No.</label>
-                                    <input id="prnumber" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="037/PU/AWP/01/2018" />
+                                    <label htmlFor="pr_no" className="text-sm">P.R. No.</label>
+                                    <input id="pr_no" type="text" required value={formData.pr_no} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="037/PU/AWP/01/2018" />
                                 </div>
                                 <div className="flex-1 flex flex-col space-y-4">
-                                    <label htmlFor="revno" className="text-sm">Rev. No./Date</label>
-                                    <input id="revno" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="01/02.01.2018" />
+                                    <label htmlFor="rev_no" className="text-sm">Rev. No./Date</label>
+                                    <input id="rev_no" type="text" required value={formData.rev_no} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="01/02.01.2018" />
                                 </div>
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="reqdev" className="text-sm">Required Delivery</label>
-                                <input id="reqdev" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <label htmlFor="required_delivery" className="text-sm">Required Delivery</label>
+                                <input id="required_delivery" type="date" required value={formData.required_delivery} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="pod" className="text-sm">Place of Delivery</label>
-                                <input id="pod" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="AWP HO" />
+                                <label htmlFor="place_of_delivery" className="text-sm">Place of Delivery</label>
+                                <input id="place_of_delivery" type="text" required value={formData.place_of_delivery} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="AWP HO" />
+                            </div>
+                            <div className="flex flex-col space-y-4">
+                                <label htmlFor="date" className="text-sm">Date</label>
+                                <input id="date" required value={formData.date} onChange={handleInputChange} type="date" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
                             </div>
                         </div>
                         {/* right side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="ponumber" className="text-sm">P.O. No. / Cash</label>
-                                <input id="ponumber" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Fill in -> Null" />
+                                <label htmlFor="po_no_cash" className="text-sm">P.O. No. / Cash</label>
+                                <input id="po_no_cash" type="text" required value={formData.po_no_cash} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Fill in -> Null" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="supplier" className="text-sm">Supplier</label>
-                                <input id="supplier" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="online" />
+                                <input id="supplier" required value={formData.supplier} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="online" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="routing" className="text-sm">Routing / Offline</label>
-                                <input id="routing" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <select id="routing" value={formData.routing} onChange={handleInputChange} className="h-10 border px-3 rounded-sm border-[#D1D5DC]">
+                                    <option value="offline">Offline</option>
+                                    <option value="online">Online</option>
+                                </select>
+                            </div>
+                            <div className="flex flex-col space-y-4">
+                                <label htmlFor="status" className="text-smm">Status</label>
+                                <select id="status" value={formData.status} onChange={handleInputChange} className="h-10 border px-3 rounded-sm border-[#D1D5DC]">
+                                    {/* "draft" | "pending" | "approved" | "rejected" */}
+                                    <option value="draft">draft</option>
+                                    <option value="pending">pending</option>
+                                    <option value="approved">approved</option>
+                                    <option value="rejected">rejected</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -84,9 +226,9 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
                         <div className="w-full flex flex-row justify-between">
                             <h1>Items Details</h1>
                             {/* button nambah item */}
-                            <button className=" bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
+                            <div onClick={addItem} className=" bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
                                 <FiPlus className="w-5 h-5 mr-1" /> Add Item
-                            </button>
+                            </div>
                         </div>
                         {/* list input mengisi item */}
                         <div className="mt-4 border overflow-hidden rounded-xl">
@@ -103,15 +245,21 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow>
-                                        <TableCell className="py-6 pl-10">1</TableCell>
-                                        <TableCell><input type="text" className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
-                                        <TableCell><input type="text" className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
-                                        <TableCell><input type="text" className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Item description" /></TableCell>
-                                        <TableCell className="space-x-2"><p className="inline-block">RP</p><input type="number" className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="0" /></TableCell>
-                                        <TableCell className="space-x-2"><p className="inline-block">RP</p><input type="number" className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="0" /></TableCell>
-                                        <TableCell className="text-center"><button className="cursor-pointer hover:contrast-75"><RiDeleteBinLine className="w-6 h-6 text-[#E7000B]" /></button></TableCell>
-                                    </TableRow>
+                                    {items.map((item, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell className="py-6 pl-10">{index + 1}</TableCell>
+                                            <TableCell><input required type="number" value={item.qty} onChange={(e) => handleItemChange(index, "qty", parseInt(e.target.value) || 0)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
+                                            <TableCell><input required type="text" value={item.unit} onChange={(e) => handleItemChange(index, "unit", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
+                                            <TableCell><input required type="text" value={item.description} onChange={(e) => handleItemChange(index, "description", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Item description" /></TableCell>
+                                            <TableCell className="space-x-2"><p className="inline-block">RP</p><input required type="number" value={item.unit_price} onChange={(e) => handleItemChange(index, "unit_price", parseInt(e.target.value) || 0)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="0" /></TableCell>
+                                            <TableCell className="text-left font-medium">
+                                                <div className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC] justify-start items-center flex">
+                                                    {(item.qty * item.unit_price).toLocaleString('id-ID')}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="text-center"><div onClick={() => removeItem(index)} className="cursor-pointer hover:contrast-75"><RiDeleteBinLine className="w-6 h-6 text-[#E7000B]" /></div></TableCell>
+                                        </TableRow>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </div>
@@ -123,36 +271,42 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
                         <div className="flex justify-between">
                             <p>Sub Total:</p>
                             {/* value subtotal */}
-                            <p>Rp 0</p>
+                            <span>Rp {totals.subTotal.toLocaleString('id-ID')}</span>
                         </div>
                         <hr className="border-b border-[#e6e6e6] my-1" />
-                        <div className="flex justify-between">
+                        <div className="flex justify-between items-center">
                             <p>10% VAT:</p>
                             {/* value subtotal */}
-                            <p>Rp 0</p>
+                            <input id="vat_percentage" type="number" value={formData.vat_percentage} onChange={handleInputChange} className="w-12 border px-1 text-center h-7 rounded ml-auto" />
+                            <span>%</span>
                         </div>
                         <hr className="border-b border-black my-1" />
                         <div className="flex justify-between">
                             <p>TOTAL:</p>
                             {/* value subtotal */}
-                            <p>Rp 0</p>
+                            <p>Rp {totals.grandTotal.toLocaleString('id-ID')}</p>
                         </div>
                     </div>
 
                     <hr className="border-b border-[#e6e6e6] my-6" />
 
+                    <div className="flex flex-col space-y-2">
+                        <label htmlFor="notes" className="text-sm font-medium">Notes</label>
+                        <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full border p-3 rounded-sm min-h-[100px]" placeholder="Add extra notes here..." />
+                    </div>
+
                     <div className="w-full grid grid-cols-3 gap-x-8 mt-6">
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="req" className="text-sm">Requested by</label>
-                            <input id="req" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name/Position" />
+                            <label htmlFor="requested_by" className="text-sm">Requested by</label>
+                            <input id="requested_by" required value={formData.requested_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name/Position" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="approvedby" className="text-sm">Approved by</label>
-                            <input id="approvedby" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name/Position" />
+                            <label htmlFor="approved_by" className="text-sm">Approved by</label>
+                            <input id="approved_by" required value={formData.approved_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name/Position" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="author" className="text-sm">Authorized by</label>
-                            <input id="author" type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Director" />
+                            <label htmlFor="authorized_by" className="text-sm">Authorized by</label>
+                            <input id="authorized_by" required value={formData.authorized_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Director" />
                         </div>
                     </div>
 
@@ -163,7 +317,7 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
                             Cancel
                         </Link>
                         <button className=" bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
-                            Save Purchase Requisition
+                            {loading ? "Processing..." : "Save Purchase Requisition"}
                         </button>
                     </div>
                 </form>
