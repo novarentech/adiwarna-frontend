@@ -15,9 +15,10 @@ import {
 import { LuEye, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
+import * as XLSX from "xlsx";
 
 // Import API & Interfaces
-import { GetAllDeliveryNote, GetAllDeliveryNoteResponse, GetAllDeliveryNoteData, deleteDeliveryNote } from "@/lib/delivery-notes";
+import { GetAllDeliveryNote, GetAllDeliveryNoteResponse, GetAllDeliveryNoteData, deleteDeliveryNote, GetAll999DeliveryNote } from "@/lib/delivery-notes";
 
 export default function SuratJalanPage() {
     const [search, setSearch] = useState("");
@@ -95,8 +96,123 @@ export default function SuratJalanPage() {
         fetchData(search, page);
     };
 
+
+    // 
+    // 
+    // 
+    const [isExporting, setIsExporting] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [exportCount, setExportCount] = useState(0);
+
+    // --- HELPER: FORMAT DATA UNTUK EKSPOR ---
+    const getExportData = async () => {
+        setIsExporting(true);
+        const res = await GetAll999DeliveryNote();
+
+        if (!res.success || !res.data) {
+            alert("Gagal mengambil data untuk ekspor");
+            setIsExporting(false);
+            return null;
+        }
+
+        const formatted = res.data.map((sj: any) => ({
+            "No. Surat Jalan": sj.delivery_note_no,
+            "Tanggal": sj.date,
+            "Customer (Kepada)": sj.customer,
+            "No. Work Order": sj.wo_no,
+            "Plat Kendaraan": sj.vehicle_plate,
+            "Total Items": sj.total_items,
+            "Status": sj.status,
+        }));
+
+        setExportCount(formatted.length);
+        return formatted;
+    };
+
+    // --- HANDLER: COPY ---
+    const handleCopy = async () => {
+        const data = await getExportData();
+        if (!data) return;
+
+        const headers = Object.keys(data[0]);
+        const rows = data.map((obj: any) =>
+            headers.map(header => obj[header]).join("\t")
+        );
+
+        const content = [headers.join("\t"), ...rows].join("\n");
+        await navigator.clipboard.writeText(content);
+        triggerSuccess();
+    };
+
+    // --- HANDLER: CSV ---
+    const handleCSV = async () => {
+        const data = await getExportData();
+        if (!data) return;
+
+        const headers = Object.keys(data[0]);
+        const rows = data.map((obj: any) =>
+            headers.map(header => `"${obj[header]}"`).join(",")
+        );
+
+        const content = [headers.join(","), ...rows].join("\n");
+        const blob = new Blob(["\uFEFF" + content], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `surat_jalan_${new Date().getTime()}.csv`;
+        link.click();
+
+        setIsExporting(false);
+    };
+
+    // --- HANDLER: EXCEL ---
+    const handleExcel = async () => {
+        const data = await getExportData();
+        if (!data) return;
+
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Surat Jalan");
+        XLSX.writeFile(workbook, `surat_jalan_${new Date().getTime()}.xlsx`);
+        setIsExporting(false);
+    };
+
+    const triggerSuccess = () => {
+        setShowModal(true);
+        setIsExporting(false);
+        setTimeout(() => setShowModal(false), 3000);
+    };
+
     return (
         <div className="w-full h-full px-8 py-4 bg-[#f4f6f9]">
+            {/* Modal Notifikasi */}
+            {showModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs">
+                    <div className="bg-white rounded-md shadow-2xl p-6 w-80 transform transition-all scale-110 animate-in fade-in zoom-in duration-100">
+                        <div className="flex flex-col items-center text-center">
+                            {/* Icon Centang */}
+                            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+
+                            <h3 className="text-lg font-bold text-gray-900">Successfully copied!</h3>
+                            <p className="text-sm text-gray-600 mt-2">
+                                Copied to clipboard
+                            </p>
+
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="mt-6 w-full py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="flex flex-row justify-between items-center space-x-2 mt-14">
                 <h1 className="text-3xl font-normal text-[#212529]">Daftar Surat Jalan</h1>
                 <Link href={"/admin/surat-jalan/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75 transition-all shadow-sm">
@@ -118,11 +234,33 @@ export default function SuratJalanPage() {
                 </form>
 
                 <div className="grid grid-cols-5 gap-x-2 h-10">
-                    {["Copy", "CSV", "Excel", "PDF", "Print"].map((btn) => (
-                        <button key={btn} className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
-                            {btn}
-                        </button>
-                    ))}
+                    <button
+                        onClick={handleCopy}
+                        disabled={isExporting}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                        Copy
+                    </button>
+                    <button
+                        onClick={handleCSV}
+                        disabled={isExporting}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                        CSV
+                    </button>
+                    <button
+                        onClick={handleExcel}
+                        disabled={isExporting}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                        Excel
+                    </button>
+                    <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                        PDF
+                    </button>
+                    <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                        Print
+                    </button>
                 </div>
             </div>
 

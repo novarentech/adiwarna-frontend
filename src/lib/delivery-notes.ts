@@ -114,6 +114,17 @@ export async function GetAllDeliveryNote(page = 1, perPage = 15, search = "") {
     }
 }
 
+export async function GetAll999DeliveryNote(page = 1, perPage = 999999, search = "") {
+    try {
+        // Request ke API dengan page, perPage, dan search
+        const res = await fetch(`/api/delivery-notes?page=${page}&per_page=${perPage}&search=${search}`);
+
+        return await res.json();
+    } catch (err: any) {
+        return { success: false, message: err.message || "Error fetch equipment data" };
+    }
+}
+
 // CREATE
 export async function CreateDeliveryNote(payload: CreateDeliveryNoteRequest) {
     try {
