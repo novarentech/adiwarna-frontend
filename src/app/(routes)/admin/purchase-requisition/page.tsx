@@ -230,7 +230,7 @@ export default function PurchaseRequisitionPage() {
                     <button type="submit" className="hidden">Search</button>
                 </form>
 
-                <div className="grid grid-cols-5 gap-x-2 h-10">
+                <div className="grid grid-cols-3 gap-x-2 h-10">
                     <button
                         onClick={handleCopy}
                         disabled={isExporting}
@@ -252,12 +252,12 @@ export default function PurchaseRequisitionPage() {
                     >
                         Excel
                     </button>
-                    <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                    {/* <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
                         PDF
                     </button>
                     <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
                         Print
-                    </button>
+                    </button> */}
                 </div>
             </div>
 

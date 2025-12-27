@@ -23,6 +23,9 @@ import { getAllEquipmentGeneral, GetAllEquipmentItem, EquipmentMeta, deleteEquip
 
 import * as XLSX from "xlsx";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 
 export default function DataEquipmentGeneral() {
 
@@ -331,6 +334,127 @@ export default function DataEquipmentGeneral() {
         }
     };
 
+    const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+    // --- HANDLER: PRINT ---
+    const handlePrint = async () => {
+        const response = await getAll999EquipmentGeneral();
+        if (!response.success || !response.data.data) {
+            alert("Gagal mengambil data untuk print");
+            return;
+        }
+
+        const data = response.data.data;
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const tableHtml = `
+            <html>
+                <head>
+                    <title>Print Equipment General</title>
+                    <style>
+                        body { font-family: sans-serif; padding: 20px; }
+                        h1 { text-align: center; color: #333; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; font-size: 11px; }
+                        th { background-color: #f4f4f4; }
+                        .footer { margin-top: 20px; font-size: 10px; color: #666; }
+                        @page { size: landscape; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Equipment General Report</h1>
+                    <div class="footer">Printed on: ${new Date().toLocaleString('id-ID')}</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Description</th>
+                                <th>Merk/Type</th>
+                                <th>Serial Number</th>
+                                <th>Calibration Date</th>
+                                <th>Expired Date</th>
+                                <th>Agency</th>
+                                <th>Condition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map((item: any, index: number) => `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${item.description}</td>
+                                    <td>${item.merk_type}</td>
+                                    <td>${item.serial_number}</td>
+                                    <td>${item.calibration_date}</td>
+                                    <td>${item.expired_date}</td>
+                                    <td>${item.calibration_agency}</td>
+                                    <td>${item.condition}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </body>
+            </html>
+        `;
+
+        printWindow.document.write(tableHtml);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    };
+
+    // --- HANDLER: PDF ---
+    const handleExportPdf = async () => {
+        setIsExportingPdf(true);
+        try {
+            const response = await getAll999EquipmentGeneral();
+            if (!response.success || !response.data.data) {
+                alert("Gagal mengambil data untuk PDF");
+                return;
+            }
+
+            const data = response.data.data;
+            const doc = new jsPDF('l', 'mm', 'a4'); // Landscape
+
+            doc.setFontSize(16);
+            doc.text("Equipment General Report", 14, 15);
+
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Generated: ${new Date().toLocaleString('id-ID')}`, 14, 22);
+
+            const headers = [["No", "Description", "Merk/Type", "Serial Number", "Cal. Date", "Exp. Date", "Agency", "Condition"]];
+            const body = data.map((item: any, index: number) => [
+                index + 1,
+                item.description,
+                item.merk_type,
+                item.serial_number,
+                item.calibration_date,
+                item.expired_date,
+                item.calibration_agency,
+                item.condition
+            ]);
+
+            autoTable(doc, {
+                head: headers,
+                body: body,
+                startY: 30,
+                styles: { fontSize: 8 },
+                headStyles: { fillColor: [23, 162, 184] }, // Warna biru info sesuai tombol Add
+                alternateRowStyles: { fillColor: [245, 245, 245] }
+            });
+
+            doc.save(`equipment_general_${new Date().getTime()}.pdf`);
+        } catch (error) {
+            console.error("PDF Export Error:", error);
+        } finally {
+            setIsExportingPdf(false);
+        }
+    };
+
 
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9] border">
@@ -414,8 +538,8 @@ export default function DataEquipmentGeneral() {
                         <button onClick={handleCopy} disabled={isCopying} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">{isCopying ? "Copying..." : "Copy"}</button>
                         <button onClick={handleExportCsv} disabled={isExportingCsv} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingCsv ? "Exporting..." : "CSV"}</button>
                         <button onClick={handleExportExcel} disabled={loadingExcel} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{loadingExcel ? "Exporting..." : "Excel"}</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">PDF</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-r-sm">Print</button>
+                        <button onClick={handleExportPdf} disabled={isExportingPdf} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingPdf ? "..." : "PDF"}</button>
+                        <button onClick={handlePrint} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-r-sm">Print</button>
                         <div className="relative">
                             <button
                                 type="button" // Tambahkan type="button" untuk mencegah submit form

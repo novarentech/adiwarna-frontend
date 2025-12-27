@@ -17,9 +17,11 @@ import { useEffect, useState } from "react";
 import { IoMdEye } from "react-icons/io"; // Ditambahkan untuk ikon View
 // Import interface dan fungsi API yang diperlukan
 import { getAll999TrackRecords, getAllTrackRecords, TrackRecordItem, TrackRecordMeta, TrackRecordResponse } from "@/lib/track-records";
-import { getAll999EquipmentGeneral } from "@/lib/equipment-general";
 
 import * as XLSX from "xlsx";
+
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 
 export default function TrackRecordPage() {
@@ -263,6 +265,102 @@ export default function TrackRecordPage() {
         setTimeout(() => setShowModal(false), 3000);
     };
 
+    const [isExportingPdf, setIsExportingPdf] = useState(false);
+    // --- HANDLER: PRINT ---
+    const handlePrint = async () => {
+        // 1. Ambil data lengkap (bukan hanya yang ada di halaman saat ini)
+        const data = await getExportData();
+        if (!data) return;
+
+        // 2. Buat elemen temporary untuk menampung tabel cetak
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const tableHtml = `
+            <html>
+                <head>
+                    <title>Print Track Record</title>
+                    <style>
+                        body { font-family: sans-serif; padding: 20px; }
+                        h1 { text-align: center; margin-bottom: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
+                        th { bg-color: #f2f2f2; font-bold: true; }
+                        @page { size: landscape; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Track Record Report</h1>
+                    <p>Generated on: ${new Date().toLocaleString('id-ID')}</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                ${Object.keys(data[0]).map(key => `<th>${key}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map((row: TrackRecordItem) => `
+                                <tr>
+                                    ${Object.values(row).map(val => `<td>${val}</td>`).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </body>
+            </html>
+        `;
+
+        printWindow.document.write(tableHtml);
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Beri sedikit jeda agar browser sempat merender tabel sebelum dialog print muncul
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    };
+
+    // --- HANDLER: PDF ---
+    const handleExportPdf = async () => {
+        setIsExportingPdf(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const doc = new jsPDF('l', 'mm', 'a4'); // 'l' untuk landscape
+
+            // Judul
+            doc.setFontSize(18);
+            doc.text("Track Record Report", 14, 15);
+
+            // Info Tambahan
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Generated on: ${new Date().toLocaleString('id-ID')}`, 14, 22);
+
+            // Buat Tabel
+            const headers = [Object.keys(data[0])];
+            const body = data.map((item: any) => Object.values(item));
+
+            autoTable(doc, {
+                head: headers,
+                body: body,
+                startY: 30,
+                styles: { fontSize: 8, cellPadding: 2 },
+                headStyles: { fillColor: [108, 117, 125] }, // Warna abu-abu sesuai tema Anda
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+            });
+
+            doc.save(`track_record_${new Date().getTime()}.pdf`);
+        } catch (error) {
+            console.error("PDF Error:", error);
+            alert("Terjadi kesalahan saat membuat PDF");
+        } finally {
+            setIsExportingPdf(false);
+        }
+    };
+
 
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9] border">
@@ -387,11 +485,11 @@ export default function TrackRecordPage() {
                 {/* start of copy, csv,, excel, pdf, print, column visibility*/}
                 <div className="w-2/6 flex pl-4 border-x">
                     <div className="bg-[#6c757d] w-full h-[38px] rounded-sm flex flex-row items-center text-white">
-                        <button onClick={handleCopy} disabled={isCopying} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">{isCopying ? "Loading..."  : "Copy"}</button>
+                        <button onClick={handleCopy} disabled={isCopying} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">{isCopying ? "Loading..." : "Copy"}</button>
                         <button onClick={handleExportCsv} disabled={isExportingCsv} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingCsv ? "Exporting..." : "CSV"}</button>
                         <button onClick={handleExportExcel} disabled={isExportingExcel} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingExcel ? "Exporting..." : "Excel"}</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">PDF</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-r-sm">Print</button>
+                        <button onClick={handleExportPdf} disabled={isExportingPdf} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingPdf ? "..." : "PDF"}</button>
+                        <button onClick={handlePrint} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-r-sm">Print</button>
                         <div className="relative">
                             <button
                                 type="button"
