@@ -455,7 +455,7 @@ export default function CreatePurchaseOrderPage() {
                             </div>
                             {/* position approved by */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="app_pos" className="font-bold">Person in Charge (PIC)</label>
+                                <label htmlFor="app_pos" className="font-bold">Position</label>
                                 <div className="flex">
                                     <input type="text" id="app_pos" value={formData.app_pos}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />

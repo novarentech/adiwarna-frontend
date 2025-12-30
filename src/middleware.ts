@@ -4,6 +4,13 @@ import type { NextRequest } from "next/server";
 export function middleware(req: NextRequest) {
     const token = req.cookies.get("token")?.value;
     const role = req.cookies.get("role")?.value;
+    const pathname = req.nextUrl.pathname;
+
+    // hide agar tidak bisa akses daily activity report
+    if (pathname === "/admin/daily-activity-report") {
+        return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+    }
+
 
     // Jika route diawali dengan /admin
     if (req.nextUrl.pathname.startsWith("/admin")) {
@@ -22,5 +29,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/admin/:path*"], // Semua route /admin
+    matcher: ["/admin/daily-activity-report", "/admin/:path*"], // Semua route /admin
 };

@@ -64,6 +64,21 @@ export default function PurchaseOrderPage() {
         fetchData();
     };
 
+    const handleISODateFormat = (date: string) => {
+        let d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+
+        if (month.length < 2) {
+            month = '0' + month;
+        }
+        if (day.length < 2) {
+            day = '0' + day;
+        }
+
+        return [year, month, day].join('-');
+
+
+    }
+
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
@@ -128,13 +143,14 @@ export default function PurchaseOrderPage() {
                                         <TableCell>{po.pic_name}</TableCell>
                                         <TableCell className="">{po.pic_phone}</TableCell>
                                         <TableCell className="">
-                                            {po.required_date}
+                                            {/* {po.required_date} */}
+                                            {handleISODateFormat(po.required_date)}
                                         </TableCell>
                                         <TableCell className="text-center">
                                             <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
                                                 <Link href={`/admin/purchase-order/edit/${po.id}`}><MdEdit className="w-7 h-7" /></Link>
                                                 <div><FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(po.id)} /></div>
-                                                <Link href={"/admin//purchase-order/print"}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
+                                                <Link href={`/admin//purchase-order/print/${po.id}`}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
                                             </div>
                                         </TableCell>
                                     </TableRow>

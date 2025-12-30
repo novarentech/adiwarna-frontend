@@ -4,7 +4,7 @@ import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 import { HiUserAdd } from "react-icons/hi";
-import { Customer, CustomerById, CustomerLocation, getCustomerById, updateCustomerRequest } from "@/lib/customer";
+import { Customer, CustomerById, CustomerLocation, EditCustomerBody, getCustomerById, updateCustomerRequest } from "@/lib/customer";
 import { useRouter } from "next/navigation";
 
 interface RowDataWorkLocation {
@@ -81,30 +81,41 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
     const handleEditCustomer = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const payload = {
+        // Susun payload sesuai dengan contoh yang Anda berikan
+        const payload: EditCustomerBody = {
             customer_no: customerNo,
             name: customerName,
             phone_number: telephone,
             address: address,
-            locations: rowsWorkLocation.map((loc) => ({
-                id: loc.id || 0, // Use 0 for new locations if id is undefined
-                location_name: loc.workLocation,
-                customer_id: parseInt(id), // Parse id to ensure it's a number
-                // created_at: loc.created_at || new Date().toISOString(),  // Add created_at
-                created_at: new Date().toISOString(),  // Add created_at
-                updated_at: new Date().toISOString(),  // Set updated_at to current time
-            })),
+            customer_locations: rowsWorkLocation.map((loc) => {
+                // Jika ID ada (record lama), sertakan ID. 
+                // Jika ID tidak ada (record baru), jangan kirim property ID.
+                if (loc.id) {
+                    return {
+                        id: loc.id,
+                        location_name: loc.workLocation,
+                    };
+                }
+                return {
+                    location_name: loc.workLocation,
+                };
+            }),
         };
 
-        const res = await updateCustomerRequest(Number(id), payload);
+        try {
+            const res = await updateCustomerRequest(Number(id), payload);
 
-        if (!res.success) {
-            alert("Update failed: " + res.message);
-            return;
+            if (!res.success) {
+                alert("Update failed: " + (res.message || "Unknown error"));
+                return;
+            }
+
+            alert("Customer updated!");
+            router.push("/admin/customer");
+        } catch (error) {
+            console.error("Error updating customer:", error);
+            alert("An error occurred during update.");
         }
-
-        alert("Customer updated!");
-        router.push("/admin/customer");
     };
 
 

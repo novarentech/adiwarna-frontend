@@ -39,3 +39,19 @@ export async function getAllTrackRecords(page = 1, perPage = 15, search = "", st
         return { success: false, message: err.message || "Error fetching track records" };
     }
 }
+
+
+export async function getAll999TrackRecords(page = 1, perPage = 999999, search = "", startDate = "", endDate = "") {
+    try {
+        // Menggunakan encodeURIComponent untuk memastikan nilai parameter aman dalam URL
+        const encodedSearch = encodeURIComponent(search);
+
+        // Memasukkan semua parameter (page, perPage, search, startDate, endDate) ke dalam URL
+        const res = await fetch(`/api/track-records?per_page=${perPage}&page=${page}&start_date=${startDate}&end_date=${endDate}&search=${encodedSearch}`);
+
+        // Parsing response JSON
+        return await res.json();
+    } catch (err: any) {
+        return { success: false, message: err.message || "Error fetching track records" };
+    }
+}

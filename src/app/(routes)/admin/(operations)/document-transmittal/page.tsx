@@ -122,7 +122,7 @@ export default function DocumentTransmittalPage() {
                                             <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
                                                 <Link href={`/admin/document-transmittal/edit/${doc.id}`}><MdEdit className="w-7 h-7" /></Link>
                                                 <div><FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(doc.id)} /></div>
-                                                <Link href={"/admin/document-transmittal/print"}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
+                                                <Link href={`/admin/document-transmittal/print/${doc.id}`}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
                                             </div>
                                         </TableCell>
                                     </TableRow>

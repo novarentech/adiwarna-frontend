@@ -14,12 +14,17 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import { FaCircle, FaTrash } from "react-icons/fa6";
+import { FaTrash } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { IoMdEye } from "react-icons/io";
+// import { IoMdEye } from "react-icons/io";
 
-// Asumsi import ini sudah diperbarui untuk menggunakan GetAllEquipmentItem
-import { getAllEquipmentGeneral, GetAllEquipmentItem, EquipmentMeta, deleteEquipmentGeneral } from "@/lib/equipment-general";
+
+import { getAllEquipmentGeneral, GetAllEquipmentItem, EquipmentMeta, deleteEquipmentGeneral, getAll999EquipmentGeneral } from "@/lib/equipment-general";
+
+import * as XLSX from "xlsx";
+
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 
 export default function DataEquipmentGeneral() {
@@ -155,9 +160,332 @@ export default function DataEquipmentGeneral() {
         fetchData();
     };
 
+    const [isCopying, setIsCopying] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [rowCount, setRowCount] = useState(0);
+
+    const handleCopy = async () => {
+        setIsCopying(true);
+        try {
+            const response = await getAll999EquipmentGeneral();
+
+            if (!response.success || !response.data.data) {
+                alert("Gagal mengambil data");
+                return;
+            }
+
+            const equipmentData = response.data.data;
+            const totalRows = equipmentData.length;
+
+            // 1. Definisikan Header
+            const headers = ["ID", "Description", "Merk/Type", "Serial Number", "Duration", "Calibration Date", "Expired Date", "Agency", "Condition"];
+
+            // 2. Buat baris data (Gunakan \t atau Tab agar Excel otomatis memisahkan kolom saat paste)
+            // Tips: Excel lebih suka Tab (\t) daripada Koma (,) saat proses Copy-Paste manual
+            const csvRows = equipmentData.map((item: any) => {
+                return [
+                    item.id,
+                    item.description,
+                    item.merk_type,
+                    item.serial_number,
+                    item.duration,
+                    item.calibration_date,
+                    item.expired_date,
+                    item.calibration_agency,
+                    item.condition,
+                ].join("\t"); // Menggunakan Tab
+            });
+
+            const fullText = [headers.join("\t"), ...csvRows].join("\n");
+
+            // 3. Gunakan Clipboard API
+            await navigator.clipboard.writeText(fullText);
+
+            // 3. Set data untuk modal dan tampilkan
+            setRowCount(totalRows);
+            setShowModal(true);
+
+        } catch (error) {
+            console.error("Copy error:", error);
+            alert("Gagal menyalin data");
+        } finally {
+            setIsCopying(false);
+        }
+    };
+
+
+    const [isExportingCsv, setIsExportingCsv] = useState(false);
+
+    const handleExportCsv = async () => {
+        setIsExportingCsv(true);
+        try {
+            // 1. Ambil data dari API
+            const response = await getAll999EquipmentGeneral();
+
+            if (!response.success || !response.data.data) {
+                alert("Gagal mengambil data untuk ekspor");
+                return;
+            }
+
+            const equipmentData = response.data.data;
+
+            // 2. Tentukan Header CSV
+            const headers = [
+                "ID",
+                "Description",
+                "Merk/Type",
+                "Serial Number",
+                "Duration",
+                "Calibration Date",
+                "Expired Date",
+                "Agency",
+                "Condition",
+            ];
+
+            // 3. Konversi data array of objects ke string CSV
+            // Kita gunakan map untuk memastikan setiap kolom terisi dengan benar
+            const csvRows = equipmentData.map((item: any) => {
+                return [
+                    item.id,
+                    `"${item.description}"`, // Bungkus dengan kutip jika mengandung koma
+                    `"${item.merk_type}"`,
+                    `"${item.serial_number}"`,
+                    item.duration,
+                    item.calibration_date,
+                    item.expired_date,
+                    item.calibration_agency,
+                    item.condition,
+                ].join(",");
+            });
+
+            // Gabungkan header dan baris dengan baris baru (\n)
+            const csvContent = [headers.join(","), ...csvRows].join("\n");
+
+            // 4. Proses Download
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.setAttribute("href", url);
+            link.setAttribute("download", `equipment_data_${new Date().getTime()}.csv`);
+            link.style.visibility = "hidden";
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+        } catch (error) {
+            console.error("Export error:", error);
+            alert("Terjadi kesalahan saat mengekspor data");
+        } finally {
+            setIsExportingCsv(false);
+        }
+    };
+
+    // export EXCELL
+    const [loadingExcel, setLoadingExcel] = useState(false);
+
+    const handleExportExcel = async () => {
+        setLoadingExcel(true);
+        try {
+            // 1. Ambil data dari API
+            const response = await getAll999EquipmentGeneral();
+
+            if (!response.success || !response.data.data) {
+                alert("Gagal mengambil data");
+                return;
+            }
+
+            const equipmentData = response.data.data;
+            setRowCount(equipmentData.length);
+
+            // 2. Mapping data agar header lebih rapi (Opsional tapi disarankan)
+            const formattedData = equipmentData.map((item: any) => ({
+                "ID": item.id,
+                "Description": item.description,
+                "Merk/Type": item.merk_type,
+                "Serial Number": item.serial_number,
+                "Duration": item.duration,
+                "Calibration Date": item.calibration_date,
+                "Expired Date": item.expired_date,
+                "Agency": item.calibration_agency,
+                "Condition": item.condition,
+            }));
+
+            // 3. Proses konversi ke Excel menggunakan SheetJS
+            const worksheet = XLSX.utils.json_to_sheet(formattedData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Equipment Data");
+
+            // 4. Trigger Download
+            // Menghasilkan file: equipment_report_2025-12-22.xlsx
+            const fileName = `equipment_report_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(workbook, fileName);
+
+            // 5. Tampilkan Modal Sukses
+            setShowModal(true);
+            setTimeout(() => setShowModal(false), 3000);
+
+        } catch (error) {
+            console.error("Excel Export error:", error);
+            alert("Terjadi kesalahan saat membuat file Excel");
+        } finally {
+            setLoadingExcel(false);
+        }
+    };
+
+    const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+    // --- HANDLER: PRINT ---
+    const handlePrint = async () => {
+        const response = await getAll999EquipmentGeneral();
+        if (!response.success || !response.data.data) {
+            alert("Gagal mengambil data untuk print");
+            return;
+        }
+
+        const data = response.data.data;
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const tableHtml = `
+            <html>
+                <head>
+                    <title>Print Equipment General</title>
+                    <style>
+                        body { font-family: sans-serif; padding: 20px; }
+                        h1 { text-align: center; color: #333; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; font-size: 11px; }
+                        th { background-color: #f4f4f4; }
+                        .footer { margin-top: 20px; font-size: 10px; color: #666; }
+                        @page { size: landscape; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Equipment General Report</h1>
+                    <div class="footer">Printed on: ${new Date().toLocaleString('id-ID')}</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Description</th>
+                                <th>Merk/Type</th>
+                                <th>Serial Number</th>
+                                <th>Calibration Date</th>
+                                <th>Expired Date</th>
+                                <th>Agency</th>
+                                <th>Condition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map((item: any, index: number) => `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${item.description}</td>
+                                    <td>${item.merk_type}</td>
+                                    <td>${item.serial_number}</td>
+                                    <td>${item.calibration_date}</td>
+                                    <td>${item.expired_date}</td>
+                                    <td>${item.calibration_agency}</td>
+                                    <td>${item.condition}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </body>
+            </html>
+        `;
+
+        printWindow.document.write(tableHtml);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    };
+
+    // --- HANDLER: PDF ---
+    const handleExportPdf = async () => {
+        setIsExportingPdf(true);
+        try {
+            const response = await getAll999EquipmentGeneral();
+            if (!response.success || !response.data.data) {
+                alert("Gagal mengambil data untuk PDF");
+                return;
+            }
+
+            const data = response.data.data;
+            const doc = new jsPDF('l', 'mm', 'a4'); // Landscape
+
+            doc.setFontSize(16);
+            doc.text("Equipment General Report", 14, 15);
+
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Generated: ${new Date().toLocaleString('id-ID')}`, 14, 22);
+
+            const headers = [["No", "Description", "Merk/Type", "Serial Number", "Cal. Date", "Exp. Date", "Agency", "Condition"]];
+            const body = data.map((item: any, index: number) => [
+                index + 1,
+                item.description,
+                item.merk_type,
+                item.serial_number,
+                item.calibration_date,
+                item.expired_date,
+                item.calibration_agency,
+                item.condition
+            ]);
+
+            autoTable(doc, {
+                head: headers,
+                body: body,
+                startY: 30,
+                styles: { fontSize: 8 },
+                headStyles: { fillColor: [23, 162, 184] }, // Warna biru info sesuai tombol Add
+                alternateRowStyles: { fillColor: [245, 245, 245] }
+            });
+
+            doc.save(`equipment_general_${new Date().getTime()}.pdf`);
+        } catch (error) {
+            console.error("PDF Export Error:", error);
+        } finally {
+            setIsExportingPdf(false);
+        }
+    };
+
 
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9] border">
+            {/* Modal Notifikasi */}
+            {showModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs">
+                    <div className="bg-white rounded-md shadow-2xl p-6 w-80 transform transition-all scale-110 animate-in fade-in zoom-in duration-100">
+                        <div className="flex flex-col items-center text-center">
+                            {/* Icon Centang */}
+                            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+
+                            <h3 className="text-lg font-bold text-gray-900">Successfully copied!</h3>
+                            <p className="text-sm text-gray-600 mt-2">
+                                Copied <span className="font-semibold text-blue-600">{rowCount} rows </span> to clipboard
+                            </p>
+
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="mt-6 w-full py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* title container */}
             <div className="flex flex-row items-center space-x-3 mt-2">
                 <ImWrench className="text-black w-10 h-10" />
@@ -207,11 +535,11 @@ export default function DataEquipmentGeneral() {
                 <div className="w-2/6 flex pl-4 border-x">
                     {/* ... Tombol Export/Visibility (tidak diubah) ... */}
                     <div className="bg-[#6c757d] w-full h-[38px] rounded-sm flex flex-row items-center text-white">
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">Copy</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">CSV</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">Excel</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">PDF</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-r-sm">Print</button>
+                        <button onClick={handleCopy} disabled={isCopying} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">{isCopying ? "Copying..." : "Copy"}</button>
+                        <button onClick={handleExportCsv} disabled={isExportingCsv} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingCsv ? "Exporting..." : "CSV"}</button>
+                        <button onClick={handleExportExcel} disabled={loadingExcel} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{loadingExcel ? "Exporting..." : "Excel"}</button>
+                        <button onClick={handleExportPdf} disabled={isExportingPdf} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingPdf ? "..." : "PDF"}</button>
+                        <button onClick={handlePrint} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-r-sm">Print</button>
                         <div className="relative">
                             <button
                                 type="button" // Tambahkan type="button" untuk mencegah submit form

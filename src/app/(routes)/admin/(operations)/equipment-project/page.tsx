@@ -39,7 +39,7 @@ export default function EquipmentProjectPage() {
 
         if (res.success) {
             // Ganti state yang diset
-            setEquipmentProjects(res.data.data);
+            setEquipmentProjects(res.data);
             setLastPage(res.meta.last_page);
         } else {
             console.error("Failed to fetch equipment projects:");
@@ -165,7 +165,7 @@ export default function EquipmentProjectPage() {
                                                     <FaTrash className="w-3.5 h-3.5" />
                                                 </button>
                                                 {/* View/Detail Button */}
-                                                <Link href={`/admin/equipment-projects/detail/${project.id}`} className="p-1 text-[#31C6D4] hover:text-[#17A2B8] bg-blue-50/50 rounded-full">
+                                                <Link href={`/admin/equipment-project/print/${project.id}`} className="p-1 text-[#31C6D4] hover:text-[#17A2B8] bg-blue-50/50 rounded-full">
                                                     <IoMdEye className="w-4 h-4" />
                                                 </Link>
                                             </div>

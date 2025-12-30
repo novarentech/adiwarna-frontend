@@ -16,7 +16,12 @@ import { FaCircle } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { IoMdEye } from "react-icons/io"; // Ditambahkan untuk ikon View
 // Import interface dan fungsi API yang diperlukan
-import { getAllTrackRecords, TrackRecordItem, TrackRecordMeta, TrackRecordResponse } from "@/lib/track-records";
+import { getAll999TrackRecords, getAllTrackRecords, TrackRecordItem, TrackRecordMeta, TrackRecordResponse } from "@/lib/track-records";
+
+import * as XLSX from "xlsx";
+
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 
 export default function TrackRecordPage() {
@@ -134,9 +139,259 @@ export default function TrackRecordPage() {
         return from + index;
     };
 
+    const [isCopying, setIsCopying] = useState(false);
+    const [isExportingCsv, setIsExportingCsv] = useState(false);
+    const [isExportingExcel, setIsExportingExcel] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [exportCount, setExportCount] = useState(0);
+
+    // --- HELPER: FORMAT DATA UNTUK EKSPOR ---
+    const getExportData = async () => {
+        try {
+            // Ambil data berdasarkan filter yang sedang aktif
+            const res = await getAll999TrackRecords(1, 999999, search, startDate, endDate);
+
+            if (!res.success || !res.data) {
+                alert("Gagal mengambil data untuk ekspor");
+                return null;
+            }
+
+            const formatted = res.data.map((item: any) => ({
+                "No. Work Order": formatWorkOrder(item.work_order_no, item.work_order_year),
+                "Date Started": item.date_started,
+                "Worker's Name": item.workers_name,
+                "Scope of Work": item.scope_of_work,
+                "Customer": item.customer,
+                "Work Location": item.work_location,
+            }));
+
+            setExportCount(formatted.length);
+            return formatted;
+        } catch (error) {
+            console.error("Export data error:", error);
+            alert("Terjadi kesalahan saat mengambil data");
+            return null;
+        }
+    };
+
+    // --- HANDLER: COPY ---
+    const handleCopy = async () => {
+        setIsCopying(true); // Tanda bahwa proses ekspor sedang berlangsung (untuk efek loading jika diperlukan)
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const headers = Object.keys(data[0]);
+            const rows = data.map((obj: any) =>
+                headers.map(header => obj[header]).join("\t") // Gunakan tab sebagai pemisah antar kolom
+            );
+
+            // Gabungkan header dan data dengan newline (\n)
+            const content = [headers.join("\t"), ...rows].join("\n");
+
+            // Salin ke clipboard
+            await navigator.clipboard.writeText(content);
+
+            triggerSuccess(); // Tampilkan modal sukses
+        } catch (error) {
+            console.error("Copy error:", error);
+            alert("Terjadi kesalahan saat menyalin data");
+        } finally {
+            setIsCopying(false); // Menyelesaikan proses ekspor
+        }
+    };
+
+
+    // --- HANDLER: CSV ---
+    const handleExportCsv = async () => {
+        setIsExportingCsv(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const headers = Object.keys(data[0]);
+            const csvRows = data.map((obj: any) =>
+                headers.map(header => `"${obj[header]}"`).join(",")
+            );
+
+            const content = [headers.join(","), ...csvRows].join("\n");
+            const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.setAttribute("href", url);
+            link.setAttribute("download", `track_record_${new Date().getTime()}.csv`);
+            link.style.visibility = "hidden";
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // triggerSuccess();
+        } catch (error) {
+            console.error("Export CSV error:", error);
+            alert("Terjadi kesalahan saat mengekspor CSV");
+        } finally {
+            setIsExportingCsv(false);
+        }
+    };
+
+    // --- HANDLER: EXCEL ---
+    const handleExportExcel = async () => {
+        setIsExportingExcel(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Track Records");
+
+            const fileName = `track_record_${new Date().getTime()}.xlsx`;
+            XLSX.writeFile(workbook, fileName);
+
+            // triggerSuccess();
+        } catch (error) {
+            console.error("Export Excel error:", error);
+            alert("Terjadi kesalahan saat membuat file Excel");
+        } finally {
+            setIsExportingExcel(false);
+        }
+    };
+
+    // --- TRIGGER SUCCESS MODAL ---
+    const triggerSuccess = () => {
+        setShowModal(true);
+        setTimeout(() => setShowModal(false), 3000);
+    };
+
+    const [isExportingPdf, setIsExportingPdf] = useState(false);
+    // --- HANDLER: PRINT ---
+    const handlePrint = async () => {
+        // 1. Ambil data lengkap (bukan hanya yang ada di halaman saat ini)
+        const data = await getExportData();
+        if (!data) return;
+
+        // 2. Buat elemen temporary untuk menampung tabel cetak
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const tableHtml = `
+            <html>
+                <head>
+                    <title>Print Track Record</title>
+                    <style>
+                        body { font-family: sans-serif; padding: 20px; }
+                        h1 { text-align: center; margin-bottom: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
+                        th { bg-color: #f2f2f2; font-bold: true; }
+                        @page { size: landscape; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Track Record Report</h1>
+                    <p>Generated on: ${new Date().toLocaleString('id-ID')}</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                ${Object.keys(data[0]).map(key => `<th>${key}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map((row: TrackRecordItem) => `
+                                <tr>
+                                    ${Object.values(row).map(val => `<td>${val}</td>`).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </body>
+            </html>
+        `;
+
+        printWindow.document.write(tableHtml);
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Beri sedikit jeda agar browser sempat merender tabel sebelum dialog print muncul
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    };
+
+    // --- HANDLER: PDF ---
+    const handleExportPdf = async () => {
+        setIsExportingPdf(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const doc = new jsPDF('l', 'mm', 'a4'); // 'l' untuk landscape
+
+            // Judul
+            doc.setFontSize(18);
+            doc.text("Track Record Report", 14, 15);
+
+            // Info Tambahan
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Generated on: ${new Date().toLocaleString('id-ID')}`, 14, 22);
+
+            // Buat Tabel
+            const headers = [Object.keys(data[0])];
+            const body = data.map((item: any) => Object.values(item));
+
+            autoTable(doc, {
+                head: headers,
+                body: body,
+                startY: 30,
+                styles: { fontSize: 8, cellPadding: 2 },
+                headStyles: { fillColor: [108, 117, 125] }, // Warna abu-abu sesuai tema Anda
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+            });
+
+            doc.save(`track_record_${new Date().getTime()}.pdf`);
+        } catch (error) {
+            console.error("PDF Error:", error);
+            alert("Terjadi kesalahan saat membuat PDF");
+        } finally {
+            setIsExportingPdf(false);
+        }
+    };
+
 
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9] border">
+            {/* MODAL NOTIFIKASI */}
+            {showModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs">
+                    <div className="bg-white rounded-md shadow-2xl p-6 w-80 transform transition-all scale-110 animate-in fade-in zoom-in duration-100">
+                        <div className="flex flex-col items-center text-center">
+                            {/* Icon Centang */}
+                            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+
+                            <h3 className="text-lg font-bold text-gray-900">Successfully copied!</h3>
+                            <p className="text-sm text-gray-600 mt-2">
+                                Copied <span className="font-semibold text-blue-600">{exportCount} rows </span> to clipboard
+                            </p>
+
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="mt-6 w-full py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* title container */}
             <div className="flex flex-row items-center space-x-3 mt-2">
                 <FaCircle className="text-black w-7 h-7" />
@@ -230,11 +485,11 @@ export default function TrackRecordPage() {
                 {/* start of copy, csv,, excel, pdf, print, column visibility*/}
                 <div className="w-2/6 flex pl-4 border-x">
                     <div className="bg-[#6c757d] w-full h-[38px] rounded-sm flex flex-row items-center text-white">
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">Copy</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">CSV</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">Excel</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">PDF</button>
-                        <button className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-r-sm">Print</button>
+                        <button onClick={handleCopy} disabled={isCopying} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">{isCopying ? "Loading..." : "Copy"}</button>
+                        <button onClick={handleExportCsv} disabled={isExportingCsv} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingCsv ? "Exporting..." : "CSV"}</button>
+                        <button onClick={handleExportExcel} disabled={isExportingExcel} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingExcel ? "Exporting..." : "Excel"}</button>
+                        <button onClick={handleExportPdf} disabled={isExportingPdf} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingPdf ? "..." : "PDF"}</button>
+                        <button onClick={handlePrint} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-r-sm">Print</button>
                         <div className="relative">
                             <button
                                 type="button"

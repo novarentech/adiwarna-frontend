@@ -8,6 +8,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { FaCircle } from "react-icons/fa";
 import { TbReceiptFilled } from "react-icons/tb";
 import { usePathname } from "next/navigation";
+import { MdSupervisorAccount } from "react-icons/md";
 
 
 export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed: boolean; onCollapseChange: () => void }) {
@@ -19,7 +20,12 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
     const hidePrefixes = [
         "/admin/quotations/print/",
         "/admin/purchase-order/print/",
-        "/admin/jobsheet/print/",
+        "/admin/work-assignment/print/",
+        "/admin/document-transmittal/print/",
+        "/admin/equipment-project/print/",
+        "/admin/surat-jalan/print/",
+        "/admin/material-receiving/print/",
+        "/admin/purchase-requisition/print/",
     ];
 
     const hideNavbarRoute = hidePrefixes.some(prefix =>
@@ -67,10 +73,11 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                         <Image src={"/icons/icon-work-order.svg"} className="" alt="icon work order" width={23} height={23} />
                         <p className="text-base">Work Order</p>
                     </Link>
-                    <Link href={"/admin/daily-activity-report"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
+                    {/* daily activity report wont be used (for now) */}
+                    {/* <Link href={"/admin/daily-activity-report"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
                         <Image src={"/icons/icon-daily-activity.svg"} className="" alt="icon daily activity" width={23} height={23} />
                         <p className="text-base">Daily Activity Report</p>
-                    </Link>
+                    </Link> */}
                     <Link href={"/admin/equipment-project"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
                         <FaCircle className="w-[23px] h-[23px]" />
                         <p className="text-base">Equipment Project</p>
@@ -113,6 +120,18 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                     <TbReceiptFilled className={`w-5 h-5 text-white ${collapsed ? 'mx-auto' : ''}`} />
 
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Payroll Managements</h1>
+                </Link>
+                <Link href={"/admin/surat-jalan"} className="flex flex-row items-center cursor-pointer">
+                    <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                    <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Surat Jalan</h1>
+                </Link>
+                <Link href={"/admin/material-receiving"} className="flex flex-row items-center cursor-pointer">
+                    <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                    <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Material Receiving</h1>
+                </Link>
+                <Link href={"/admin/purchase-requisition"} className="flex flex-row items-center cursor-pointer">
+                    <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                    <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Purchase Requisition</h1>
                 </Link>
                 <Link href={"/admin/accounts"} className="flex flex-row items-center cursor-pointer">
                     <Image src={"/icons/icon-accounts.svg"} className={`${collapsed ? 'mx-auto' : ''}`} alt="icon accounts" width={23} height={23} />
