@@ -10,22 +10,27 @@ import {
 } from "@/components/ui/table"
 import { RiDeleteBinLine } from "react-icons/ri";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { CreateDeliveryNote, CreateDeliveryNoteRequest, CreateDeliveryNoteItem } from "@/lib/delivery-notes";
 import { FiPlus } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Customer, getCustomerById, getCustomersAllForDropdown } from "@/lib/customer";
 
 export default function SuratJalanCreatePage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedCustomerAddress, setSelectedCustomerAddress] = useState("");
+
 
     // 1. State untuk Header Form
     const [formData, setFormData] = useState({
-        delivery_note_no: "",
+        dn_no: "",
         date: new Date().toISOString().split('T')[0], // Default tanggal hari ini
-        customer: "",
+        customer_id: "",
         customer_address: "",
         wo_no: "",
         delivered_with: "",
@@ -35,6 +40,29 @@ export default function SuratJalanCreatePage() {
         status: "pending" as "delivered" | "pending" | "cancelled",
         notes: ""
     });
+
+    // --- LOAD INITIAL DATA (CUSTOMERS) ---
+    useEffect(() => {
+        const loadCustomers = async () => {
+            setIsLoading(true);
+            const res = await getCustomersAllForDropdown();
+            if (res.success) {
+                setCustomers(res.data);
+            }
+            setIsLoading(false);
+        };
+        loadCustomers();
+    }, []);
+
+
+    // Handler Customer
+    const handleCustomerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const custId = e.target.value;
+        const cust = customers.find(c => c.id.toString() === custId);
+
+        setFormData({ ...formData, customer_id: custId });
+        setSelectedCustomerAddress(cust ? cust.address : "");
+    };
 
     // 2. State untuk Daftar Item
     const [items, setItems] = useState<CreateDeliveryNoteItem[]>([
@@ -112,12 +140,29 @@ export default function SuratJalanCreatePage() {
                         {/* left side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="customer" className="text-sm">Kepada (Customer/Shipper)</label>
-                                <input id="customer" required value={formData.customer} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <label htmlFor="customer_id" className="text-sm">Kepada (Customer/Shipper)</label>
+                                {/* <input id="customer" required value={formData.customer} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" /> */}
+
+                                {/* ini nanti fetch dari customerr */}
+                                <div className="flex">
+                                    <select
+                                        id="customer_id"
+                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        value={formData.customer_id}
+                                        onChange={handleCustomerChange}
+                                        required
+                                    >
+                                        <option value="" hidden>---Choose Customer's Name---</option>
+                                        {customers.map(c => (
+                                            <option key={c.id} value={c.id}>{c.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="customer_address" className="text-sm">Address</label>
-                                <textarea id="customer_address" required value={formData.customer_address} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#D1D5DC] resize-none" />
+                                <textarea id="customer_address" required value={selectedCustomerAddress} onChange={handleInputChange} disabled className="w-full h-[110px] border p-2 rounded-sm bg-[#e9ecef] border-[#D1D5DC] resize-none" />
                             </div>
                             <div className="flex flex-col space-y-4 mt-[37px]">
                                 <label htmlFor="status" className="text-sm">Status Pengiriman</label>
@@ -131,8 +176,8 @@ export default function SuratJalanCreatePage() {
                         {/* right side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="delivery_note_no" className="text-sm">No Surat</label>
-                                <input id="delivery_note_no" required value={formData.delivery_note_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <label htmlFor="dn_no" className="text-sm">No Surat</label>
+                                <input id="dn_no" required value={formData.dn_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="date" className="text-sm">Tanggal</label>

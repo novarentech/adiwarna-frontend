@@ -8,13 +8,20 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import { RiDeleteBinLine } from "react-icons/ri";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
-import { DeliveryNoteItemUpdate, getDeliveryNoteById, GetDeliveryNoteGetByIdResponse, updateDeliveryNote, UpdateDeliveryNoteRequest } from "@/lib/delivery-notes";
+import { 
+    DeliveryNoteItemUpdate, 
+    GetbyIdDeliveryNoteItemDetails, 
+    getDeliveryNoteById, 
+    updateDeliveryNote, 
+    UpdateDeliveryNoteRequest 
+} from "@/lib/delivery-notes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Customer, getCustomersAllForDropdown } from "@/lib/customer";
 
 export default function SuratJalanEditPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -22,13 +29,14 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
 
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [selectedCustomerAddress, setSelectedCustomerAddress] = useState("");
 
-    // 1. State Header
+    // 1. State Header (Disesuaikan namanya dengan Create Page)
     const [formData, setFormData] = useState({
-        delivery_note_no: "",
+        dn_no: "",
         date: "",
-        customer: "",
-        customer_address: "",
+        customer_id: "",
         wo_no: "",
         delivered_with: "",
         vehicle_plate: "",
@@ -41,28 +49,39 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
     // 2. State Items
     const [items, setItems] = useState<DeliveryNoteItemUpdate[]>([]);
 
-    // 3. Fetch Data Awal
+    // 3. Fetch Data Awal (Customers & Delivery Note Detail)
     useEffect(() => {
         const fetchInitialData = async () => {
-            const res: GetDeliveryNoteGetByIdResponse = await getDeliveryNoteById(Number(id));
+            setFetching(true);
+            
+            // Fetch list customer untuk dropdown
+            const resCust = await getCustomersAllForDropdown();
+            if (resCust.success) {
+                setCustomers(resCust.data);
+            }
+
+            // Fetch detail Surat Jalan
+            const res = await getDeliveryNoteById(Number(id));
             if (res.success && res.data) {
                 const d = res.data;
                 setFormData({
-                    delivery_note_no: d.delivery_note_no,
+                    dn_no: d.dn_no, // Menggunakan dn_no sesuai response API
                     date: d.date,
-                    customer: d.customer,
-                    customer_address: d.customer_address,
+                    customer_id: d.customer_id.toString(),
                     wo_no: d.wo_no,
                     delivered_with: d.delivered_with || "",
                     vehicle_plate: d.vehicle_plate,
                     delivered_by: d.delivered_by,
-                    received_by: d.received_by,
+                    received_by: d.received_by || "",
                     status: d.status,
                     notes: d.notes || ""
                 });
 
-                // Map items (pastikan serial_number tidak null untuk input)
-                const mappedItems = d.items.map(item => ({
+                // Set alamat dari object customer yang di-fetch
+                setSelectedCustomerAddress(d.customer?.address || "");
+
+                // Map items
+                const mappedItems = d.items.map((item : GetbyIdDeliveryNoteItemDetails)  => ({
                     id: item.id,
                     item_name: item.item_name,
                     serial_number: item.serial_number || "",
@@ -70,7 +89,7 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                 }));
                 setItems(mappedItems);
             } else {
-                alert("Data tidak ditemukan");
+                toast.error("Data tidak ditemukan");
                 router.push("/admin/surat-jalan");
             }
             setFetching(false);
@@ -79,7 +98,15 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
         if (id) fetchInitialData();
     }, [id, router]);
 
-    // Handlers
+    // Handler Customer Change (Sama dengan Create)
+    const handleCustomerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const custId = e.target.value;
+        const cust = customers.find(c => c.id.toString() === custId);
+
+        setFormData({ ...formData, customer_id: custId });
+        setSelectedCustomerAddress(cust ? cust.address : "");
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
         setFormData(prev => ({ ...prev, [id]: value }));
@@ -92,7 +119,6 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
     };
 
     const addItem = () => {
-        // Untuk item baru di mode Edit, ID sementara bisa 0 (tergantung spesifikasi backend)
         setItems([...items, { id: 0, item_name: "", serial_number: "", qty: 1 }]);
     };
 
@@ -111,8 +137,6 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
             items: items
         };
 
-        console.log(payload)
-
         const res = await updateDeliveryNote(Number(id), payload);
 
         if (res.success) {
@@ -128,11 +152,9 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
 
     return (
         <div className="w-full h-fit px-16 pt-4 pb-16 bg-[#f4f6f9]">
-            <h1 className="text-4xl mt-8">Edit Surat Jalan : {id}</h1>
-            {/* form container */}
+            <h1 className="text-4xl mt-8">Edit Surat Jalan : {formData.dn_no}</h1>
             <div className="bg-white mt-6 w-full h-fit rounded-[10px] p-6">
                 <div className="flex flex-row justify-between">
-                    {/* alamat */}
                     <div className="flex flex-col">
                         <p className="text-lg">PT. ADIWARNA PRATAMA</p>
                         <div className="flex flex-col text-[#4A5565]">
@@ -143,24 +165,39 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                             <p>7253610</p>
                         </div>
                     </div>
-                    {/* surat jalan */}
                     <h2 className="text-2xl uppercase">Surat Jalan</h2>
                 </div>
-
 
                 <hr className="border-b border-[#e6e6e6] my-6" />
 
                 <form onSubmit={handleSubmit} className="flex flex-col w-full h-fit">
                     <div className="w-full grid grid-cols-2 gap-x-8">
-                        {/* left side */}
+                        {/* Left Side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="customer" className="text-sm">Kepada (Customer/Shipper)</label>
-                                <input id="customer" required value={formData.customer} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <label htmlFor="customer_id" className="text-sm">Kepada (Customer/Shipper)</label>
+                                <select
+                                    id="customer_id"
+                                    className="w-full border rounded-sm h-10 px-2 bg-white"
+                                    value={formData.customer_id}
+                                    onChange={handleCustomerChange}
+                                    required
+                                >
+                                    <option value="" hidden>---Choose Customer's Name---</option>
+                                    {customers.map(c => (
+                                        <option key={c.id} value={c.id}>{c.name}</option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="customer_address" className="text-sm">Address</label>
-                                <textarea id="customer_address" required value={formData.customer_address} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#D1D5DC] resize-none" />
+                                <textarea 
+                                    id="customer_address" 
+                                    required 
+                                    value={selectedCustomerAddress} 
+                                    disabled 
+                                    className="w-full h-[110px] border p-2 rounded-sm bg-[#e9ecef] border-[#D1D5DC] resize-none" 
+                                />
                             </div>
                             <div className="flex flex-col space-y-4 mt-[37px]">
                                 <label htmlFor="status" className="text-sm">Status Pengiriman</label>
@@ -171,11 +208,12 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                                 </select>
                             </div>
                         </div>
-                        {/* right side */}
+
+                        {/* Right Side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="delivery_note_no" className="text-sm">No Surat</label>
-                                <input id="delivery_note_no" required value={formData.delivery_note_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <label htmlFor="dn_no" className="text-sm">No Surat</label>
+                                <input id="dn_no" required value={formData.dn_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="date" className="text-sm">Tanggal</label>
@@ -196,17 +234,14 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                         </div>
                     </div>
 
-
-                    {/* item list (nanti bisa add item) */}
+                    {/* Items Details */}
                     <div className="flex flex-col mt-6">
                         <div className="w-full flex flex-row justify-between">
-                            <h1>Items Details</h1>
-                            {/* button nambah item */}
-                            <div onClick={addItem} className=" bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
+                            <h1 className="text-xl font-semibold">Items Details</h1>
+                            <div onClick={addItem} className="cursor-pointer bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
                                 <FiPlus className="w-5 h-5 mr-1" /> Add Item
                             </div>
                         </div>
-                        {/* list input mengisi item */}
                         <div className="mt-4 border overflow-hidden rounded-xl">
                             <Table>
                                 <TableHeader className="bg-[#F9FAFB]">
@@ -222,10 +257,20 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                                     {items.map((item, index) => (
                                         <TableRow key={index}>
                                             <TableCell className="py-6">{index + 1}</TableCell>
-                                            <TableCell><input required type="text" value={item.item_name} onChange={(e) => handleItemChange(index, "item_name", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
-                                            <TableCell><input type="text" value={item.serial_number} onChange={(e) => handleItemChange(index, "serial_number", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
-                                            <TableCell><input required type="number" min="1" value={item.qty} onChange={(e) => handleItemChange(index, "qty", parseInt(e.target.value) || 0)} className="w-8/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
-                                            <TableCell className="text-center"><div onClick={() => removeItem(index)} className="cursor-pointer hover:contrast-75 flex"><RiDeleteBinLine className="w-6 h-6 mx-auto text-[#E7000B]" /></div></TableCell>
+                                            <TableCell>
+                                                <input required type="text" value={item.item_name} onChange={(e) => handleItemChange(index, "item_name", e.target.value)} className="w-11/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                            </TableCell>
+                                            <TableCell>
+                                                <input type="text" value={item.serial_number} onChange={(e) => handleItemChange(index, "serial_number", e.target.value)} className="w-11/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                            </TableCell>
+                                            <TableCell>
+                                                <input required type="number" min="1" value={item.qty} onChange={(e) => handleItemChange(index, "qty", parseInt(e.target.value) || 0)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                            </TableCell>
+                                            <TableCell className="text-center">
+                                                <div onClick={() => removeItem(index)} className="cursor-pointer hover:contrast-75 flex">
+                                                    <RiDeleteBinLine className="w-6 h-6 mx-auto text-[#E7000B]" />
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -235,16 +280,16 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
 
                     <div className="flex flex-col space-y-4 mt-6">
                         <label htmlFor="notes" className="text-sm">Note</label>
-                        <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#D1D5DC] resize-none" placeholder="Harapan S/N, RA 219-06207 dan silan S/N, 291905 biaya arca" />
+                        <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#D1D5DC] resize-none" placeholder="Masukkan catatan tambahan..." />
                     </div>
 
                     <div className="w-full grid grid-cols-2 gap-x-8 mt-6">
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="received_by" className="text-sm">Diterima / Diserahkan Oleh</label>
-                            <input id="received_by" required value={formData.received_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
+                            <label htmlFor="received_by" className="text-sm">Diterima Oleh</label>
+                            <input id="received_by" value={formData.received_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="delivered_by" className="text-sm">Diserahkan Oleh PT. Adiwarna Pratama</label>
+                            <label htmlFor="delivered_by" className="text-sm">Diserahkan Oleh</label>
                             <input id="delivered_by" required value={formData.delivered_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
                         </div>
                     </div>
@@ -252,18 +297,15 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                     <hr className="border-b border-[#e6e6e6] my-6" />
 
                     <div className="flex flex-row ml-auto gap-x-4">
-                        <Link href={"/admin/surat-jalan"} className=" border text-black px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
+                        <Link href={"/admin/surat-jalan"} className="border text-black px-5 h-12 flex justify-center items-center rounded-sm hover:bg-gray-100">
                             Cancel
                         </Link>
-                        <button type="submit" disabled={loading} className=" bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
-                            {loading ? "Saving..." : "Save Surat Jalan"}
+                        <button type="submit" disabled={loading} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
+                            {loading ? "Updating..." : "Update Surat Jalan"}
                         </button>
                     </div>
                 </form>
             </div>
-            {/* form container */}
-
-
         </div>
-    )
+    );
 }

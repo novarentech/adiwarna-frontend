@@ -288,7 +288,7 @@ export default function SuratJalanPage() {
                         ) : data.length > 0 ? (
                             data.map((sj) => (
                                 <TableRow key={sj.id} className="hover:bg-gray-50 border-[#E5E7EB]">
-                                    <TableCell className="py-6 font-medium">{sj.delivery_note_no}</TableCell>
+                                    <TableCell className="py-6 font-medium">{sj.dn_no}/AWP/{sj.dn_date}</TableCell>
                                     <TableCell>{sj.date}</TableCell>
                                     <TableCell>{sj.customer}</TableCell>
                                     <TableCell>{sj.wo_no}</TableCell>
