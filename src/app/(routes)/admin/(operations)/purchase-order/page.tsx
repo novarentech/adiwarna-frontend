@@ -20,6 +20,7 @@ import { IoMdEye } from "react-icons/io";
 import { IoMdCart } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { deletePurchaseOrders, getAllPurchaseOrders, PurchaseOrder } from "@/lib/purchase-order";
+import { toast } from "sonner";
 
 export default function PurchaseOrderPage() {
     const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrder[]>([]);
@@ -56,11 +57,14 @@ export default function PurchaseOrderPage() {
         const res = await deletePurchaseOrders(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            // alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert(`Purchase Order (${id}) deleted successfully!`);
+        // alert(`Purchase Order (${id}) deleted successfully!`);
+        // toast.success(`Purchase Order (${id}) deleted successfully!`);
+        toast.success(`Purchase Order deleted successfully!`);
         fetchData();
     };
 

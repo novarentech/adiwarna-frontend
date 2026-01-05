@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
+import { toast } from "sonner";
 
 interface RowDataScope {
     id?: string | number,
@@ -240,10 +241,12 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
         const result = await updateQuotations((id), payload);
 
         if (result.success) {
-            alert("Berhasil diupdate!");
+            // alert("Berhasil diupdate!");
+            toast.success("Quotation Updated successfully!");
             router.push("/admin/quotations");
         } else {
-            alert("Gagal update: " + result.message);
+            // alert("Gagal update: " + result.message);
+            toast.error("Failed to update: " + result.message);
         }
 
         setLoading(false);

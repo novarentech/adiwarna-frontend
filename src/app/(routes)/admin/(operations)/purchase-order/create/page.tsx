@@ -9,6 +9,7 @@ import { MdEdit } from "react-icons/md";
 import { Customer, getCustomerById, getCustomersAllForDropdown } from "@/lib/customer";
 import { useRouter } from "next/navigation";
 import { createPurchaseOrder, CreatePurchaseOrderPayload, PurchaseOrderItemPayload } from "@/lib/purchase-order";
+import { toast } from "sonner";
 
 interface RowDataScope {
     qty: string;
@@ -132,11 +133,13 @@ export default function CreatePurchaseOrderPage() {
         const result = await createPurchaseOrder(payload);
 
         if (result.success) {
-            alert("Purchase Order berhasil dibuat!");
+            // alert("Purchase Order berhasil dibuat!");
+            toast.success("Successfully created Purchase Order!");
             setLoading(false);
             router.push("/admin/purchase-order");
         } else {
-            alert(`Gagal: ${result.message}`);
+            // alert(`Gagal: ${result.message}`);
+            toast.error("Failed to create: " + result.message);
             setLoading(false);
         }
     };

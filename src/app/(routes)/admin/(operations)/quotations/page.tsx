@@ -19,6 +19,7 @@ import { FaTrash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { deleteQuotations, GetAllQuotation, getAllQuotations } from "@/lib/quotations";
+import { toast } from "sonner";
 
 
 
@@ -57,11 +58,13 @@ export default function QuotationsPage() {
         const res = await deleteQuotations(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            // alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Quotations deleted successfully!");
+        // alert("Quotations deleted successfully!");
+        toast.success("Quotation deleted successfully!");
         fetchData();
     };
 
@@ -86,7 +89,7 @@ export default function QuotationsPage() {
                             type="text"
                             className="w-[200px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm"
                             placeholder="Search Quotations..." />
-                        <button className="border-r border-t border-b h-8 w-8 my-auto flex rounded-r-sm" type="submit"><IoIosSearch className="w-5 m-auto" /></button>
+                        <button className="border-r border-t border-b h-8 w-8 my-auto flex rounded-r-sm cursor-pointer" type="submit"><IoIosSearch className="w-5 m-auto" /></button>
                     </form>
                 </div>
                 <div className="py-5 px-4 flex justify-between border-b border-x rounded-b-sm">
@@ -127,13 +130,13 @@ export default function QuotationsPage() {
                                         <TableCell className="text-center">
                                             <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
                                                 <Link href={`/admin/quotations/edit/${q.id}`}>
-                                                    <MdEdit className="w-7 h-7" />
+                                                    <MdEdit className="w-7 h-7 cursor-pointer" />
                                                 </Link>
                                                 <button>
-                                                    <FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(q.id)} />
+                                                    <FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(q.id)} />
                                                 </button>
                                                 <Link href={`/admin/quotations/print/${q.id}`}>
-                                                    <IoMdEye className="w-7 h-7 text-[#31C6D4]" />
+                                                    <IoMdEye className="w-7 h-7 text-[#31C6D4] cursor-pointer" />
                                                 </Link>
                                             </div>
                                         </TableCell>

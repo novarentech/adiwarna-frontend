@@ -14,6 +14,8 @@ import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 
+import { toast } from "sonner"; // Import toast
+
 interface RowDataScope {
     qty: string;
     unit: string;
@@ -183,11 +185,13 @@ export default function CreateQuotationsPage() {
         const result = await createQuotation(payload);
 
         if (result.success) {
-            alert("Quotation berhasil dibuat!");
+            // alert("Quotation berhasil dibuat!");
+            toast.success("Successfully created quotation!");
             setLoading(false);
             router.push("/admin/quotations");
         } else {
-            alert(`Gagal: ${result.message}`);
+            // alert(`Gagal: ${result.message}`);
+            toast.error("Failed to create: " + result.message);
         }
     };
 
