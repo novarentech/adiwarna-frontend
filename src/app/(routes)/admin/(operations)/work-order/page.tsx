@@ -21,6 +21,7 @@ import { FaTrash } from "react-icons/fa";
 import { deleteWorkOrders, GetAllWorkOrder, getAllWorkOrders, GetAllWorkOrdersResponse } from "@/lib/work-order";
 import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
+import { toast } from "sonner";
 // import { IoMdEye } from "react-icons/io";
 
 
@@ -60,11 +61,14 @@ export default function WorkOrderPage() {
         const res = await deleteWorkOrders(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            // alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert(`Purchase Order (${id}) deleted successfully!`);
+        // alert(`Purchase Order (${id}) deleted successfully!`);
+        toast.success(`Work Order deleted successfully!`);
+        
         fetchData();
     };
     return (

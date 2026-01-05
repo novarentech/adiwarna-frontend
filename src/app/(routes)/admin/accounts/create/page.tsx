@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { MdSupervisorAccount } from "react-icons/md";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { createUser } from "@/lib/account";
+import { toast } from "sonner";
 
 export default function CreateAccountPage() {
     const router = useRouter();
@@ -28,12 +29,12 @@ export default function CreateAccountPage() {
 
         // Basic validation
         if (!form.name || !form.email || !form.phone || !form.usertype) {
-            alert("Please fill all required fields!");
+            toast.error("Please fill all required fields!");
             return;
         }
 
         if (form.password !== form.password_confirmation) {
-            alert("Password does not match!");
+            toast.error("Password does not match!");
             return;
         }
 
@@ -41,11 +42,11 @@ export default function CreateAccountPage() {
         const res = await createUser(form);
 
         if (!res.success) {
-            alert("Failed: " + res.message);
+            toast.error("Failed: " + res.message);
             return;
         }
 
-        alert("User created successfully!");
+        toast.success("User created successfully!");
         router.push("/admin/accounts");
     };
 

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { FaAddressCard } from "react-icons/fa6";
+import { toast } from "sonner";
 
 export default function CreateEmployeePage() {
 
@@ -21,7 +22,8 @@ export default function CreateEmployeePage() {
         e.preventDefault();
 
         if (!employeeNo || !employeeName || !employeePosition) {
-            alert("All fields are required!");
+            // alert("All fields are required!");
+            toast.error("All fields are required!");
             return;
         }
 
@@ -38,9 +40,11 @@ export default function CreateEmployeePage() {
         setLoading(false);
 
         if (res.success) {
+            toast.success("Successfully created employee")
             router.push("/admin/employee");
         } else {
-            alert(res.message || "Failed to create employee");
+            // alert(res.message || "Failed to create employee");
+            toast.error(res.message || "Failed to create employee");
         }
     };
 

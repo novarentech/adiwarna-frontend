@@ -7,6 +7,7 @@ import { use, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 
 import { FaAddressCard } from "react-icons/fa6";
+import { toast } from "sonner";
 
 type EditEmployeeParams = Promise<{ id: string }>;
 
@@ -56,9 +57,11 @@ export default function EditEmployeePage({
         const res = await updateEmployee(id, payload);
 
         if (res.success) {
+            toast.success("Successfully updated employee")
             router.push("/admin/employee");
         } else {
-            alert(res.message || "Failed to update employee");
+            // alert(res.message || "Failed to update employee");
+            toast.error(res.message || "Failed to update employee");
         }
     };
 

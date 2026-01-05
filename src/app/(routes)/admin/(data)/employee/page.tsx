@@ -10,6 +10,7 @@ import { FaTrash } from "react-icons/fa";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { deleteEmployee, Employee, getEmployees } from "@/lib/employee";
+import { toast } from "sonner";
 
 
 export default function EmployeePage() {
@@ -43,11 +44,13 @@ export default function EmployeePage() {
         const res = await deleteEmployee(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            // alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Employee deleted successfully!");
+        // alert("Employee deleted successfully!");
+        toast.success("Employee deleted successfully!");
         fetchData();
     };
 

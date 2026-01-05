@@ -13,6 +13,7 @@ import {
     CreateEquipmentPayload,
     GetAllEquipmentItem,
 } from "@/lib/equipment-general";
+import { toast } from "sonner";
 
 
 // Tipe data untuk form, mirip dengan CreateEquipmentPayload tetapi dengan id (opsional)
@@ -51,7 +52,7 @@ export default function EditEquipmentGeneral() {
     // --- 1. FETCH DATA (LOAD DATA AWAL) ---
     useEffect(() => {
         if (!equipmentId || isNaN(equipmentId)) {
-            alert("ID Equipment tidak valid.");
+            toast.error("ID Equipment tidak valid.");
             setIsLoading(false);
             return;
         }
@@ -77,7 +78,7 @@ export default function EditEquipmentGeneral() {
                     condition: data.condition,
                 });
             } else {
-                alert("Gagal memuat data equipment: " + (res.message || "Data tidak ditemukan."));
+                toast.error("Gagal memuat data equipment: " + (res.message || "Data tidak ditemukan."));
                 // Redirect jika data gagal dimuat
                 router.push("/admin/equipment-general");
             }
@@ -107,7 +108,7 @@ export default function EditEquipmentGeneral() {
 
         // 1. Validasi
         if (!formData.description || !formData.serial_number || !formData.calibration_date || !formData.duration_months) {
-            alert("Harap lengkapi semua field yang diperlukan.");
+            toast.error("Harap lengkapi semua field yang diperlukan.");
             setIsSubmitting(false);
             return;
         }
@@ -128,14 +129,14 @@ export default function EditEquipmentGeneral() {
             const res = await updateEquipmentGeneral(equipmentId, payload);
 
             if (res.success) {
-                alert("Data Equipment General berhasil diperbarui!");
+                toast.success("Data Equipment General berhasil diperbarui!");
                 router.push("/admin/equipment-general");
             } else {
-                alert("Gagal memperbarui data equipment: " + res.message);
+                toast.error("Gagal memperbarui data equipment: " + res.message);
             }
         } catch (error) {
             console.error("Submission Error:", error);
-            alert("Terjadi kesalahan saat menyimpan data.");
+            toast.error("Terjadi kesalahan saat menyimpan data.");
         } finally {
             setIsSubmitting(false);
         }

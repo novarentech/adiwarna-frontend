@@ -8,6 +8,7 @@ import { FaTrash } from "react-icons/fa6";
 import { getWorkAssignmentById, updateWorkAssignment } from "@/lib/work-assignment";
 import { Customer, getCustomerById, getCustomersAllForDropdown } from "@/lib/customer";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface RowDataWorker {
     details: string;
@@ -165,16 +166,18 @@ export default function EditWorkAssignmentPage({
         try {
             const data = await updateWorkAssignment(id, payload);
             if (!data.success) {
-                alert(`Gagal: ${data.message}`);
+                // alert(`Gagal: ${data.message}`);
+                toast.error(`Failed to Update: ${data.message}`);
                 setLoading(false);
                 return;
             }
 
-            alert("Work Assignment berhasil diperbarui!");
+            // alert("Work Assignment berhasil diperbarui!");
+            toast.success("Successfully updated Work Assignment!");
             router.push("/admin/work-assignment");
         } catch (err) {
             console.error(err);
-            alert("Terjadi kesalahan!");
+            toast.error(`Failed to Update: ${err}`);
             setLoading(false);
         }
     };

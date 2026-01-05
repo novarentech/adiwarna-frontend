@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation"; // Untuk redirect setelah save
 import { Customer, getCustomersAllForDropdown } from "@/lib/customer";
 import { Employee, getEmployeesAllForDropdown } from "@/lib/employee";
 import { createWorkOrder, CreateWorkOrderBody } from "@/lib/work-order";
+import { toast } from "sonner";
 
 
 // Interface untuk baris worker di tabel
@@ -123,14 +124,15 @@ export default function CreateWorkOrderPage() {
 
         // 1. Validasi Input Dasar
         if (!formData.work_order_no || !formData.customer_id || !formData.customer_location_id) {
-            alert("Please fill in Work Order No, Customer, and Work Location.");
+            // alert("Please fill in Work Order No, Customer, and Work Location.");
+            toast.error("Please fill in Work Order No, Customer, and Work Location.");
             return;
         }
 
         // 2. Siapkan Scope of Work array
         const finalScopes = Array.from(selectedScopes);
         if (showOther && otherValue.trim() !== "") {
-            finalScopes.push("Other"); 
+            finalScopes.push("Other");
         }
 
         // 3. Siapkan Employees array (filter yang kosong)
@@ -141,7 +143,8 @@ export default function CreateWorkOrderPage() {
             }));
 
         if (finalEmployees.length === 0) {
-            alert("Please select at least one worker.");
+            // alert("Please select at least one worker.");
+            toast.error("Please select at least one worker.");
             return;
         }
 
@@ -160,14 +163,17 @@ export default function CreateWorkOrderPage() {
         try {
             const res = await createWorkOrder(body);
             if (res.success) {
-                alert("Work Order created successfully!");
+                // alert("Work Order created successfully!");
+                toast.success("Work Order created successfully!");
                 router.push("/admin/work-order"); // Redirect ke list
             } else {
-                alert("Failed: " + res.message);
+                // alert("Failed: " + res.message);
+                toast.error("Failed: " + res.message);
             }
         } catch (error) {
             console.error(error);
-            alert("An error occurred while creating work order.");
+            // alert("An error occurred while creating work order.");
+            toast.error("An error occurred while creating work order.");
         }
     }
 

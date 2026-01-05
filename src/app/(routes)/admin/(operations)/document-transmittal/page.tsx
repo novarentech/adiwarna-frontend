@@ -21,6 +21,7 @@ import { FaTrash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { deleteDocTrans, getAllDocTrans, GetAllDocTransmittalData } from "@/lib/document-transmittals";
+import { toast } from "sonner";
 
 export default function DocumentTransmittalPage() {
     const [docTrans, setDocTrans] = useState<GetAllDocTransmittalData[]>([]);
@@ -57,11 +58,13 @@ export default function DocumentTransmittalPage() {
         const res = await deleteDocTrans(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            // alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Quotations deleted successfully!");
+        // alert("Quotations deleted successfully!");
+        toast.success("Document Transmittal deleted successfully!");
         fetchData();
     };
     return (

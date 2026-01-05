@@ -15,6 +15,7 @@ import {
     UpdateDocTransmittalPayload,
     DocumentPayload
 } from "@/lib/document-transmittals";
+import { toast } from "sonner";
 
 
 // Perbarui interface untuk memasukkan ID (pivot ID dokumen)
@@ -149,7 +150,8 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
 
         // 1. Validasi Dasar
         if (!formData.name || !formData.ta_no || !formData.customer_id) {
-            alert("Harap lengkapi field Nama, TA No., dan Customer.");
+            // alert("Harap lengkapi field Nama, TA No., dan Customer.");
+            toast.error("Harap lengkapi field Nama, TA No., dan Customer.");
             return;
         }
 
@@ -172,7 +174,8 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
             });
 
         if (finalDocuments.length === 0) {
-            alert("Harap masukkan setidaknya satu Work Order.");
+            // alert("Harap masukkan setidaknya satu Work Order.");
+            toast.error("Harap masukkan setidaknya satu Work Order.");
             return;
         }
 
@@ -192,14 +195,17 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
         try {
             const res = await updateDocTransmittal(transmittalId, body);
             if (res.success) {
-                alert("Document Transmittal berhasil diperbarui!");
+                // alert("Document Transmittal berhasil diperbarui!");
+                toast.success("Document Transmittal updated successfully!");
                 router.push("/admin/document-transmittal");
             } else {
-                alert("Gagal memperbarui Document Transmittal: " + res.message);
+                // alert("Gagal memperbarui Document Transmittal: " + res.message);
+                toast.error("Failed to update Document Transmittal: " + res.message);
             }
         } catch (error) {
             console.error(error);
-            alert("Terjadi kesalahan saat memproses pembaruan Document Transmittal.");
+            // alert("Terjadi kesalahan saat memproses pembaruan Document Transmittal.");
+            toast.error("Terjadi kesalahan saat memproses pembaruan Document Transmittal.");
         }
     }
 

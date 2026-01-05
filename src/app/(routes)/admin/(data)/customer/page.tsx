@@ -19,6 +19,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Customer, CustomerLocation, deleteCustomer, getCustomers } from "@/lib/customer";
+import { toast } from "sonner";
 
 export default function CustomerPage() {
     const [customers, setCustomers] = useState<Customer[]>([]);
@@ -57,11 +58,13 @@ export default function CustomerPage() {
         const res = await deleteCustomer(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            // alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Customer deleted successfully!");
+        // alert("Customer deleted successfully!");
+        toast.success("Customer deleted successfully!");
 
         // reload data
         fetchData(search, page);

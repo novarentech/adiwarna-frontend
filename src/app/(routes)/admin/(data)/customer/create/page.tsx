@@ -7,6 +7,7 @@ import { useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 // import { MdEdit } from "react-icons/md";
 import { HiUserAdd } from "react-icons/hi";
+import { toast } from "sonner";
 
 
 interface RowDataWorkLocation {
@@ -61,11 +62,13 @@ export default function CreateCustomerPage() {
         const res = await createCustomerRequest(payload);
 
         if (!res.success) {
-            alert("Failed to create customer: " + res.message);
+            // alert("Failed to create customer: " + res.message);
+            toast.error("Failed to create customer: " + res.message);
             return;
         }
 
-        alert("Customer created!");
+        // alert("Customer created!");
+        toast.success("Customer created!");
         router.push("/admin/customer");
     };
 

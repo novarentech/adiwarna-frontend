@@ -27,6 +27,7 @@ import {
     EquipmentProjectDetail,
     GetEquipmentProjectByIdResponse
 } from "@/lib/equipment-project";
+import { toast } from "sonner";
 
 
 interface CustomerLocation {
@@ -130,7 +131,8 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                 setSelectedEquipmentIds(initialSelectedEquipment);
 
             } else {
-                alert(`Gagal memuat data proyek: ${result.message || "Proyek tidak ditemukan."}`);
+                // alert(`Gagal memuat data proyek: ${result.message || "Proyek tidak ditemukan."}`);
+                toast.error(`Gagal memuat data proyek: ${result.message || "Proyek tidak ditemukan."}`);
                 router.push("/admin/equipment-project"); // Redirect jika gagal
             }
             setIsProjectLoading(false);
@@ -239,7 +241,8 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
 
         // Validasi Sederhana
         if (!payload.project_date || !payload.customer_id || !payload.customer_location_id || selectedEquipmentIds.length === 0) {
-            alert("Harap isi semua kolom wajib dan pilih minimal satu peralatan!");
+            // alert("Harap isi semua kolom wajib dan pilih minimal satu peralatan!");
+            toast.error("Harap isi semua kolom wajib dan pilih minimal satu peralatan!");
             setLoading(false);
             return;
         }
@@ -250,18 +253,21 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
             const data = await updateEquipmentproject(Number(projectId), payload); // Panggil fungsi update
 
             if (!data.success) {
-                alert(`Gagal mengupdate Equipment Project: ${data.message}`);
+                // alert(`Gagal mengupdate Equipment Project: ${data.message}`);
+                toast.error("Failed to update: " + data.message);
                 setLoading(false);
                 return;
             }
 
-            alert("Equipment Project berhasil diupdate!");
+            // alert("Equipment Project berhasil diupdate!");
+            toast.success("Equipment Project Updated successfully!");
             setLoading(false);
             router.push("/admin/equipment-project");
 
         } catch (err) {
             console.error(err);
-            alert("Terjadi kesalahan saat menyimpan data!");
+            // alert("Terjadi kesalahan saat menyimpan data!");
+            toast.error("Something went wrong when saving the data")
             setLoading(false);
         }
     };
@@ -355,7 +361,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                 </select>
                             </div>
                             {/* Verified By */}
-                            <div className="flex flex-col space-y-1 pt-[50px]">
+                            <div className="flex flex-col space-y-1">
                                 <label htmlFor="verified_by" className="font-bold">Verified By</label>
                                 <input type="text" id="verified_by"
                                     value={formData.verified_by}

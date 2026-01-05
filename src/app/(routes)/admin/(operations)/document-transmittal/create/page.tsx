@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 // Asumsi path import library
 import { getCustomersAllForDropdown, Customer } from "@/lib/customer";
 import { createDocumentTransmittal, CreateDocTransmittalPayload, DocumentPayload } from "@/lib/document-transmittals";
+import { toast } from "sonner";
 
 
 interface RowDataReport {
@@ -97,7 +98,8 @@ export default function CreateDocTransmittal() {
 
         // 1. Validasi Dasar
         if (!formData.name || !formData.ta_no || !formData.customer_id) {
-            alert("Harap lengkapi field Nama, TA No., dan Customer.");
+            // alert("Harap lengkapi field Nama, TA No., dan Customer.");
+            toast.error("Harap lengkapi field Nama, TA No., dan Customer.");
             return;
         }
 
@@ -112,7 +114,8 @@ export default function CreateDocTransmittal() {
             }));
 
         if (finalDocuments.length === 0) {
-            alert("Harap masukkan setidaknya satu Work Order yang lengkap.");
+            // alert("Harap masukkan setidaknya satu Work Order yang lengkap.");
+            toast.error("Harap masukkan setidaknya satu Work Order yang lengkap.");
             return;
         }
 
@@ -132,14 +135,17 @@ export default function CreateDocTransmittal() {
         try {
             const res = await createDocumentTransmittal(body);
             if (res.success) {
-                alert("Document Transmittal berhasil dibuat!");
+                // alert("Document Transmittal berhasil dibuat!");
+                toast.success("Successfully created Document Transmittal!");
                 router.push("/admin/document-transmittal");
             } else {
-                alert("Gagal membuat Document Transmittal: " + res.message);
+                // alert("Gagal membuat Document Transmittal: " + res.message);
+                toast.error("Failed to create Document Transmittal: " + res.message);
             }
         } catch (error) {
             console.error(error);
-            alert("Terjadi kesalahan saat memproses Document Transmittal.");
+            // alert("Terjadi kesalahan saat memproses Document Transmittal.");
+            toast.error("Failed to create: " + error);
         }
     }
 

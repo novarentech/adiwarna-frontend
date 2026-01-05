@@ -25,6 +25,7 @@ import * as XLSX from "xlsx";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { toast } from "sonner";
 
 
 export default function DataEquipmentGeneral() {
@@ -152,11 +153,11 @@ export default function DataEquipmentGeneral() {
         const res = await deleteEquipmentGeneral(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Equipment deleted successfully!");
+        toast.success("Equipment deleted successfully!");
         fetchData();
     };
 
@@ -170,7 +171,7 @@ export default function DataEquipmentGeneral() {
             const response = await getAll999EquipmentGeneral();
 
             if (!response.success || !response.data.data) {
-                alert("Gagal mengambil data");
+                toast.error("Gagal mengambil data");
                 return;
             }
 
@@ -207,7 +208,7 @@ export default function DataEquipmentGeneral() {
 
         } catch (error) {
             console.error("Copy error:", error);
-            alert("Gagal menyalin data");
+            toast.error("Gagal menyalin data");
         } finally {
             setIsCopying(false);
         }
@@ -223,7 +224,7 @@ export default function DataEquipmentGeneral() {
             const response = await getAll999EquipmentGeneral();
 
             if (!response.success || !response.data.data) {
-                alert("Gagal mengambil data untuk ekspor");
+                toast.error("Gagal mengambil data untuk ekspor");
                 return;
             }
 
@@ -276,7 +277,7 @@ export default function DataEquipmentGeneral() {
 
         } catch (error) {
             console.error("Export error:", error);
-            alert("Terjadi kesalahan saat mengekspor data");
+            toast.error("Terjadi kesalahan saat mengekspor data");
         } finally {
             setIsExportingCsv(false);
         }
@@ -292,7 +293,7 @@ export default function DataEquipmentGeneral() {
             const response = await getAll999EquipmentGeneral();
 
             if (!response.success || !response.data.data) {
-                alert("Gagal mengambil data");
+                toast.error("Gagal mengambil data");
                 return;
             }
 
@@ -328,7 +329,7 @@ export default function DataEquipmentGeneral() {
 
         } catch (error) {
             console.error("Excel Export error:", error);
-            alert("Terjadi kesalahan saat membuat file Excel");
+            toast.error("Terjadi kesalahan saat membuat file Excel");
         } finally {
             setLoadingExcel(false);
         }
@@ -340,7 +341,7 @@ export default function DataEquipmentGeneral() {
     const handlePrint = async () => {
         const response = await getAll999EquipmentGeneral();
         if (!response.success || !response.data.data) {
-            alert("Gagal mengambil data untuk print");
+            toast.error("Gagal mengambil data untuk print");
             return;
         }
 
@@ -412,7 +413,7 @@ export default function DataEquipmentGeneral() {
         try {
             const response = await getAll999EquipmentGeneral();
             if (!response.success || !response.data.data) {
-                alert("Gagal mengambil data untuk PDF");
+                toast.error("Gagal mengambil data untuk PDF");
                 return;
             }
 

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"; // Import useRouter untuk redirect
 
 // Import interface dan fungsi API yang baru
 import { createEquipmentGeneral, CreateEquipmentPayload } from "@/lib/equipment-general";
+import { toast } from "sonner";
 
 
 export default function CreateEquipmentGeneral() {
@@ -45,7 +46,7 @@ export default function CreateEquipmentGeneral() {
 
         // 1. Validasi Sederhana
         if (!formData.description || !formData.serial_number || !formData.calibration_date || !formData.duration_months) {
-            alert("Harap lengkapi semua field yang diperlukan (Deskripsi, Serial Number, Tanggal Kalibrasi, Durasi).");
+            toast.error("Harap lengkapi semua field yang diperlukan (Deskripsi, Serial Number, Tanggal Kalibrasi, Durasi).");
             setIsSubmitting(false);
             return;
         }
@@ -67,15 +68,15 @@ export default function CreateEquipmentGeneral() {
             const res = await createEquipmentGeneral(payload);
 
             if (res.success) {
-                alert("Data Equipment General berhasil dibuat!");
+                toast.success("Data Equipment General berhasil dibuat!");
                 // Redirect ke halaman list setelah berhasil
                 router.push("/admin/equipment-general");
             } else {
-                alert("Gagal membuat data equipment: " + res.message);
+                toast.error("Gagal membuat data equipment: " + res.message);
             }
         } catch (error) {
             console.error("Submission Error:", error);
-            alert("Terjadi kesalahan saat menyimpan data.");
+            toast.error("Terjadi kesalahan saat menyimpan data.");
         } finally {
             setIsSubmitting(false);
         }

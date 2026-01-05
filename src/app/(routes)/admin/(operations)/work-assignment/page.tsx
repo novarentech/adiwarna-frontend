@@ -21,6 +21,7 @@ import { FaTrash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { deleteWorkAssignment, getAllWorkAssignment, GetAllWorkAssignment } from "@/lib/work-assignment";
+import { toast } from "sonner";
 
 
 export default function WorkAssignmentPage() {
@@ -60,11 +61,13 @@ export default function WorkAssignmentPage() {
         const res = await deleteWorkAssignment(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            // alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("work assignment deleted successfully!");
+        // alert("work assignment deleted successfully!");
+        toast.success("work assignment deleted successfully!");
         fetchData();
     };
 
