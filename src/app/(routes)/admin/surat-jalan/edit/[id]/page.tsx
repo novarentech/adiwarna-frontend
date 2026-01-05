@@ -14,6 +14,7 @@ import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { DeliveryNoteItemUpdate, getDeliveryNoteById, GetDeliveryNoteGetByIdResponse, updateDeliveryNote, UpdateDeliveryNoteRequest } from "@/lib/delivery-notes";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SuratJalanEditPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -115,10 +116,10 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
         const res = await updateDeliveryNote(Number(id), payload);
 
         if (res.success) {
-            alert("Surat Jalan berhasil diperbarui!");
+            toast.success("Surat Jalan berhasil diperbarui!");
             router.push("/admin/surat-jalan");
         } else {
-            alert("Gagal update: " + res.message);
+            toast.error("Gagal update: " + res.message);
         }
         setLoading(false);
     };

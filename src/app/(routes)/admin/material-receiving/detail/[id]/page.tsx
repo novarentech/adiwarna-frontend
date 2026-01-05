@@ -13,6 +13,7 @@ import { use, useState, useEffect } from "react";
 import { getMaterialReceivinById, GetMaterialReceivingReportResponseById } from "@/lib/material-receiving";
 import { LuArrowLeft, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
+import { toast } from "sonner";
 
 export default function DetailMaterialReceivingPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -25,7 +26,7 @@ export default function DetailMaterialReceivingPage({ params }: { params: Promis
             if (res.success) {
                 setData(res.data);
             } else {
-                alert("Data not found");
+                toast.error("Data not found");
             }
             setLoading(false);
         };

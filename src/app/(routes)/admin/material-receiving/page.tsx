@@ -21,6 +21,7 @@ import { deleteMaterialReceiving, GetAll999MaterialReceiving, GetAllMaterialRece
 // Import service API dan Interface
 
 import * as XLSX from "xlsx";
+import { toast } from "sonner";
 
 export default function MaterialReceivingPage() {
     const [search, setSearch] = useState("");
@@ -79,11 +80,11 @@ export default function MaterialReceivingPage() {
         const res = await deleteMaterialReceiving(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Equipment deleted successfully!");
+        toast.success("Equipment deleted successfully!");
         fetchData(search, page);
     };
 
@@ -97,7 +98,7 @@ export default function MaterialReceivingPage() {
         const res = await GetAll999MaterialReceiving(1, 999999, search);
 
         if (!res.success || !res.data) {
-            alert("Gagal mengambil data untuk ekspor");
+            toast.error("Gagal mengambil data untuk ekspor");
             setIsExporting(false);
             return null;
         }

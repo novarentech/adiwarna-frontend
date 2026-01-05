@@ -14,6 +14,7 @@ import Link from "next/link";
 import { use, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getPurchaseRequisitionById, PurchaseRequisitionGetByIdResponse, PurchaseRequisitionItemUpdate, PurchaseRequisitionUpdateRequest, updatePurchaseRequisition } from "@/lib/purchase-requisitions";
+import { toast } from "sonner";
 
 export default function EditPurchaseRequisitionPage({ params }: { params: Promise<{ id: number }> }) {
     const { id } = use(params);
@@ -131,10 +132,10 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
         const res = await updatePurchaseRequisition(id, payload);
 
         if (res.success) {
-            alert("Purchase Requisition updated successfully!");
+            toast.success("Purchase Requisition updated successfully!");
             router.push("/admin/purchase-requisition");
         } else {
-            alert("Update failed: " + res.message);
+            toast.error("Update failed: " + res.message);
         }
         setLoading(false);
     };

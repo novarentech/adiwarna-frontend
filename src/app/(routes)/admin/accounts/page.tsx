@@ -47,7 +47,7 @@ export default function AccountsPage() {
         if (data.success) {
             // hapus langsung dari state tanpa reload
             setUsers((prev) => prev.filter((u) => u.id !== id));
-            toast.error(data.message);
+            toast.success(data.message);
         } else {
             toast.error("Failed: " + data.message);
         }

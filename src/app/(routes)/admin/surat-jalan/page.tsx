@@ -19,6 +19,7 @@ import * as XLSX from "xlsx";
 
 // Import API & Interfaces
 import { GetAllDeliveryNote, GetAllDeliveryNoteResponse, GetAllDeliveryNoteData, deleteDeliveryNote, GetAll999DeliveryNote } from "@/lib/delivery-notes";
+import { toast } from "sonner";
 
 export default function SuratJalanPage() {
     const [search, setSearch] = useState("");
@@ -88,11 +89,11 @@ export default function SuratJalanPage() {
         const res = await deleteDeliveryNote(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Equipment deleted successfully!");
+        toast.success("Equipment deleted successfully!");
         fetchData(search, page);
     };
 
@@ -110,7 +111,7 @@ export default function SuratJalanPage() {
         const res = await GetAll999DeliveryNote();
 
         if (!res.success || !res.data) {
-            alert("Gagal mengambil data untuk ekspor");
+            toast.error("Gagal mengambil data untuk ekspor");
             setIsExporting(false);
             return null;
         }

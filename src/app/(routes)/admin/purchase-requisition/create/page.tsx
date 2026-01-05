@@ -14,6 +14,7 @@ import Link from "next/link";
 import { CreatePurchaseRequisition, PurchaseRequisitionItem, PurchaseRequisitionRequest } from "@/lib/purchase-requisitions";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function CreatePurchaseRequisitionPage() {
     const router = useRouter();
@@ -85,10 +86,10 @@ export default function CreatePurchaseRequisitionPage() {
         const res = await CreatePurchaseRequisition(payload);
 
         if (res.success) {
-            alert("Purchase Requisition created successfully!");
+            toast.success("Purchase Requisition created successfully!");
             router.push("/admin/purchase-requisition");
         } else {
-            alert("Error: " + res.message);
+            toast.error("Error: " + res.message);
         }
         setLoading(false);
     };

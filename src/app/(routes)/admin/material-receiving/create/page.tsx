@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { CreateMaterialReceiving, MaterialReceivingReportItemRequest, MaterialReceivingReportRequestBody } from "@/lib/material-receiving";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function CreateMaterialReceivingPage() {
     const router = useRouter();
@@ -78,10 +79,10 @@ export default function CreateMaterialReceivingPage() {
         const res = await CreateMaterialReceiving(payload);
 
         if (res.success) {
-            alert("Data successfully saved!");
+            toast.success("Material Receiving successfully saved!");
             router.push("/admin/material-receiving");
         } else {
-            alert("Failed to save data: " + res.message);
+            toast.error("Failed to save data: " + res.message);
         }
         setLoading(false);
     };

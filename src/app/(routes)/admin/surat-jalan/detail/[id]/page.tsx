@@ -13,6 +13,7 @@ import { use, useEffect, useState } from "react";
 import { getDeliveryNoteById, GetbyIdDeliveryNoteDetails } from "@/lib/delivery-notes";
 import { LuArrowLeft, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
+import { toast } from "sonner";
 
 export default function SuratJalanDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -25,7 +26,7 @@ export default function SuratJalanDetailPage({ params }: { params: Promise<{ id:
             if (res.success) {
                 setData(res.data);
             } else {
-                alert("Surat Jalan tidak ditemukan");
+                toast.error("Surat Jalan tidak ditemukan");
             }
             setLoading(false);
         };

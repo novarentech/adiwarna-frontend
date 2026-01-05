@@ -20,6 +20,7 @@ import {
 } from "@/lib/material-receiving"; // Sesuaikan path lib Anda
 import { useRouter } from "next/navigation";
 import { use, useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function EditMaterialReceivingPage({ params }: { params: Promise<{ id: number }> }) {
     const { id } = use(params);
@@ -124,10 +125,10 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
         const res = await updateMaterialReceiving(id, payload);
 
         if (res.success) {
-            alert("Record updated successfully!");
+            toast.success("Material Receiving updated successfully!");
             router.push("/admin/material-receiving");
         } else {
-            alert("Update failed: " + res.message);
+            toast.error("Update failed: " + res.message);
         }
         setLoading(false);
     };

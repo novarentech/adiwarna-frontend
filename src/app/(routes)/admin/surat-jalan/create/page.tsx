@@ -15,6 +15,7 @@ import { useState } from "react";
 import { CreateDeliveryNote, CreateDeliveryNoteRequest, CreateDeliveryNoteItem } from "@/lib/delivery-notes";
 import { FiPlus } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SuratJalanCreatePage() {
     const router = useRouter();
@@ -75,10 +76,10 @@ export default function SuratJalanCreatePage() {
         const res = await CreateDeliveryNote(payload);
 
         if (res.success) {
-            alert("Surat Jalan berhasil dibuat!");
+            toast.success("Surat Jalan berhasil dibuat!");
             router.push("/admin/surat-jalan");
         } else {
-            alert("Gagal: " + res.message);
+            toast.error("Gagal: " + res.message);
         }
         setLoading(false);
     };

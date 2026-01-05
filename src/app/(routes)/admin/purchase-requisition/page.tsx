@@ -19,6 +19,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 // Import API and Interfaces
 import { GetAllPurchaseRequisition, GetAllPurchaseRequisitionResponse, GetAllPurchaseRequisitionData, deletePurchaseRequisition, GetAll999PurchaseRequisition } from "@/lib/purchase-requisitions";
 import * as XLSX from "xlsx";
+import { toast } from "sonner";
 
 export default function PurchaseRequisitionPage() {
     const [search, setSearch] = useState("");
@@ -90,11 +91,11 @@ export default function PurchaseRequisitionPage() {
         const res = await deletePurchaseRequisition(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Equipment deleted successfully!");
+        toast.success("Equipment deleted successfully!");
         fetchData(search, page);
     };
 
@@ -108,7 +109,7 @@ export default function PurchaseRequisitionPage() {
         const res = await GetAll999PurchaseRequisition(1, 999999, search);
 
         if (!res.success || !res.data) {
-            alert("Gagal mengambil data untuk ekspor");
+            toast.error("Gagal mengambil data untuk ekspor");
             setIsExporting(false);
             return null;
         }
