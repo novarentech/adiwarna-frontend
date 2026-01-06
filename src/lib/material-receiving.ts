@@ -12,9 +12,10 @@ interface Meta {
     total: number;
 }
 
-interface AllMaterialReceivingData {
+export interface AllMaterialReceivingData {
     id: number;
-    po_inv_pr_no: string;
+    po_no: string;
+    po_date: string;
     supplier: string;
     receiving_date: string;
     order_by: string;
@@ -34,8 +35,9 @@ export interface MaterialReceivingReportItemRequest {
 
 // Request body utama
 export interface MaterialReceivingReportRequestBody {
-    po_inv_pr_no: string;
-    supplier: string;
+    po_no: string;
+    // po_year: string;
+    supplier: string | null;
     receiving_date: string; // format: YYYY-MM-DD
     order_by: "online" | "offline";
     received_by: string;
@@ -63,8 +65,9 @@ export interface GetMaterialReceivingReportResponseById {
     success: boolean;
     data: {
         id: number;
-        po_inv_pr_no: string;
-        supplier: string;
+        po_no: string;
+        po_date: string;
+        supplier: string | null;
         receiving_date: string;  // format: YYYY-MM-DD
         order_by: "online" | "offline";
         received_by: string;
@@ -79,8 +82,9 @@ export interface GetMaterialReceivingReportResponseById {
 
 export interface GetMaterialRecevingResponseByIDForPrint {
     id: number;
-    po_inv_pr_no: string;
-    supplier: string;
+    po_no: string;
+    po_date: string;
+    supplier: string | null;
     receiving_date: string;  // format: YYYY-MM-DD
     order_by: "online" | "offline";
     received_by: string;
@@ -105,12 +109,14 @@ export interface ReceivingItemUpdateRequest {
 
 // Request body untuk edit/update material receiving
 export interface MaterialReceivingUpdateRequestBody {
-    po_inv_pr_no: string;
-    supplier: string;
+    po_no: string;
+    supplier: string | null;
     receiving_date: string; // format: YYYY-MM-DD
     order_by: "online" | "offline";
     received_by: string;
+    received_position: string;
     acknowledge_by: string;
+    acknowledge_position: string;
     status: "partial" | "complete";
     notes?: string; // notes optional
     items: ReceivingItemUpdateRequest[];

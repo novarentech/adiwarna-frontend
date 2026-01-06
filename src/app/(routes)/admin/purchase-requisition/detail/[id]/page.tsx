@@ -66,7 +66,7 @@ export default function DetailPurchaseRequisitionPage({ params }: { params: Prom
                     <div className="text-right">
                         <p className="text-sm text-gray-500 uppercase">Document No:</p>
                         <p className="text-lg font-bold">M-PU-1-04</p>
-                        <p className={`mt-2 px-3 py-1 rounded-full text-xs font-bold inline-block uppercase 
+                        <p className={`mt-2 px-3 py-1 rounded-full text-lg font-bold inline-block uppercase 
                             ${data.status === 'approved' ? 'bg-green-100 text-green-700' :
                                 data.status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>
                             Status : {data.status}
@@ -79,19 +79,19 @@ export default function DetailPurchaseRequisitionPage({ params }: { params: Prom
                     <div className="space-y-4">
                         <div className="grid grid-cols-2 border-b pb-2">
                             <span className="text-sm text-gray-500 uppercase">P.R. Number</span>
-                            <span className="font-semibold">{data.pr_no}</span>
+                            <span className="font-semibold">{data.pr_no}/PR/AWP-{data.pr_date}</span>
                         </div>
-                        <div className="grid grid-cols-2 border-b pb-2">
+                        {/* <div className="grid grid-cols-2 border-b pb-2">
                             <span className="text-sm text-gray-500 uppercase">Rev. No./Date</span>
                             <span className="font-semibold">{data.rev_no || "-"}</span>
-                        </div>
+                        </div> */}
                         <div className="grid grid-cols-2 border-b pb-2">
                             <span className="text-sm text-gray-500 uppercase">Required Delivery</span>
-                            <span className="font-semibold">{data.required_delivery}</span>
+                            <span className="font-semibold">AWP</span>
                         </div>
                         <div className="grid grid-cols-2 border-b pb-2">
                             <span className="text-sm text-gray-500 uppercase">Place of Delivery</span>
-                            <span className="font-semibold">{data.place_of_delivery}</span>
+                            <span className="font-semibold">AWP HO</span>
                         </div>
                     </div>
 
@@ -179,14 +179,17 @@ export default function DetailPurchaseRequisitionPage({ params }: { params: Prom
                     <div className="text-center">
                         <p className="text-xs text-gray-400 uppercase font-bold mb-10 text-left border-b pb-1">Requested By</p>
                         <p className="text-lg font-bold border-b-2 border-gray-100 inline-block px-4">{data.requested_by}</p>
+                        <p className="text-base font-bold block">{data.requested_position}</p>
                     </div>
                     <div className="text-center">
                         <p className="text-xs text-gray-400 uppercase font-bold mb-10 text-left border-b pb-1">Approved By</p>
                         <p className="text-lg font-bold border-b-2 border-gray-100 inline-block px-4">{data.approved_by}</p>
+                        <p className="text-base font-bold block">{data.approved_position}</p>
                     </div>
                     <div className="text-center">
                         <p className="text-xs text-gray-400 uppercase font-bold mb-10 text-left border-b pb-1">Authorized By</p>
                         <p className="text-lg font-bold border-b-2 border-gray-100 inline-block px-4">{data.authorized_by}</p>
+                        <p className="text-base font-bold block">Director</p>
                     </div>
                 </div>
             </div>

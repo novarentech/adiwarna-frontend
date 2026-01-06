@@ -16,7 +16,7 @@ import {
 import { LuEye, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { deleteMaterialReceiving, GetAll999MaterialReceiving, GetAllMaterialReceiving, GetAllMaterialReceivingReportResponse } from "@/lib/material-receiving";
+import { AllMaterialReceivingData, deleteMaterialReceiving, GetAll999MaterialReceiving, GetAllMaterialReceiving, GetAllMaterialReceivingReportResponse } from "@/lib/material-receiving";
 
 // Import service API dan Interface
 
@@ -27,7 +27,7 @@ export default function MaterialReceivingPage() {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [perPage] = useState(15);
-    const [data, setData] = useState<any[]>([]); // State untuk menampung list data
+    const [data, setData] = useState<AllMaterialReceivingData[]>([]); // State untuk menampung list data
     const [meta, setMeta] = useState({
         current_page: 1,
         last_page: 1,
@@ -272,8 +272,8 @@ export default function MaterialReceivingPage() {
                         ) : data.length > 0 ? (
                             data.map((item) => (
                                 <TableRow key={item.id}>
-                                    <TableCell className="py-6">{item.po_inv_pr_no}</TableCell>
-                                    <TableCell>{item.supplier}</TableCell>
+                                    <TableCell className="py-6">{item.po_no}/MR/AWP-{item.po_date}</TableCell>
+                                    <TableCell>{item.supplier || "-"}</TableCell>
                                     <TableCell>{item.receiving_date}</TableCell>
                                     <TableCell>
                                         <p className={`${item.order_by?.toLowerCase() === 'online' ? 'bg-[#DBEAFE] text-[#193CB8]' : 'bg-[#F3E8FF] text-[#6E11B0]'} w-fit px-4 py-1 rounded-md text-sm font-medium`}>

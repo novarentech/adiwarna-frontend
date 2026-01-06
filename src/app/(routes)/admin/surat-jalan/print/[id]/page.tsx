@@ -111,7 +111,7 @@ export default function DeliveryNotePrintPage({ params }: { params: Promise<{ id
                     {/* Informasi Atas: Customer & Document Details */}
                     <div className="grid grid-cols-2 gap-8 mb-6">
                         {/* Kolom Kiri: Customer */}
-                        <div className="border border-black p-3 rounded-sm">
+                        <div className="border border-black p-3">
                             <table className="w-full">
                                 <tbody>
                                     <tr>
@@ -124,14 +124,14 @@ export default function DeliveryNotePrintPage({ params }: { params: Promise<{ id
                                     </tr>
                                     <tr>
                                         <td className="font-semibold align-top pt-2">Attn</td>
-                                        <td className="align-top pt-2">: {data.received_by || "Fill In"}</td>
+                                        <td className="align-top pt-2">: {data.received_by || ""}</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
                         {/* Kolom Kanan: Dokumen */}
-                        <div className="border border-black p-3 rounded-sm">
+                        <div className="border border-black p-3">
                             <table className="w-full">
                                 <tbody>
                                     <tr>

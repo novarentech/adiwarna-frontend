@@ -26,16 +26,15 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
     // 1. State Header & Metadata
     const [formData, setFormData] = useState({
         pr_no: "",
-        rev_no: "",
         date: "",
-        required_delivery: "",
         po_no_cash: "",
         supplier: "",
-        place_of_delivery: "",
         routing: "offline" as "online" | "offline",
         vat_percentage: 10,
         requested_by: "",
+        requested_position: "",
         approved_by: "",
+        approved_position: "",
         authorized_by: "",
         status: "draft" as "draft" | "pending" | "approved" | "rejected",
         notes: ""
@@ -53,16 +52,15 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
                     const d = res.data;
                     setFormData({
                         pr_no: d.pr_no,
-                        rev_no: d.rev_no || "",
                         date: d.date,
-                        required_delivery: d.required_delivery,
                         po_no_cash: d.po_no_cash,
                         supplier: d.supplier,
-                        place_of_delivery: d.place_of_delivery,
                         routing: d.routing,
                         vat_percentage: Number(d.vat_percentage),
                         requested_by: d.requested_by,
+                        requested_position: d.requested_position,
                         approved_by: d.approved_by,
+                        approved_position: d.approved_position,
                         authorized_by: d.authorized_by,
                         status: d.status,
                         notes: d.notes || ""
@@ -110,6 +108,19 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
         setItems(newItems);
     };
 
+    const displayDate = useMemo(() => {
+        if (!formData.date) return { month: "", year: "" };
+        const [year, month] = formData.date.split("-");
+        return { month, year };
+    }, [formData.date]);
+
+    const toRoman = (num: number): string => {
+        const romanNumerals = [
+            "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"
+        ];
+        return romanNumerals[num - 1];
+    };
+
     const addItem = () => {
         setItems([...items, { qty: 0, unit: "", description: "", unit_price: 0 }]);
     };
@@ -140,6 +151,20 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
         setLoading(false);
     };
 
+    useEffect(() => {
+        if (formData.routing === "online") {
+            setFormData((prev) => ({
+                ...prev,
+                supplier: "online", // or any other default supplier name for online routing
+            }));
+        } else if (formData.routing === "offline") {
+            setFormData((prev) => ({
+                ...prev,
+                supplier: "offline", // or any other default supplier name for offline routing
+            }));
+        }
+    }, [formData.routing]);
+
     if (fetching) return <div className="p-16 text-center">Loading PR Data...</div>;
 
     return (
@@ -168,23 +193,41 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
                     <div className="w-full grid grid-cols-2 gap-x-8">
                         {/* left side */}
                         <div className="space-y-4">
-                            <div className="flex flex-row space-x-4">
-                                <div className="flex-1 flex flex-col space-y-4">
-                                    <label htmlFor="pr_no" className="text-sm">P.R. No.</label>
-                                    <input id="pr_no" type="text" required value={formData.pr_no} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="037/PU/AWP/01/2018" />
-                                </div>
-                                <div className="flex-1 flex flex-col space-y-4">
-                                    <label htmlFor="rev_no" className="text-sm">Rev. No./Date</label>
-                                    <input id="rev_no" type="text" required value={formData.rev_no} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="01/02.01.2018" />
+                            <div className="flex-1 flex flex-col space-y-4">
+                                <label htmlFor="pr_no" className="text-sm">P.R. No.</label>
+                                <div className="w-full flex flex-row items-center">
+                                    <input id="pr_no" type="text" required value={formData.pr_no} onChange={handleInputChange} className="w-2/6 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="e.g 037" />
+                                    <p className="w-2/6 text-center mx-2">/PR/AWP - </p>
+                                    {/* Input Bulan - Mengambil dari displayDate.month */}
+                                    <input
+                                        id="display_month"
+                                        value={toRoman(Number(displayDate.month))}
+                                        type="text"
+                                        className="w-1/6 h-10 text-center border px-2 rounded-sm border-[#D1D5DC] bg-[#e9ecef]"
+                                        readOnly
+                                        disabled
+                                    />
+
+                                    <p className="w-1/6 text-center mx-1">/</p>
+
+                                    {/* Input Tahun - Mengambil dari displayDate.year */}
+                                    <input
+                                        id="display_year"
+                                        value={displayDate.year}
+                                        type="text"
+                                        className="w-2/6 h-10 border text-center px-2 rounded-sm border-[#D1D5DC] bg-[#e9ecef]"
+                                        readOnly
+                                        disabled
+                                    />
                                 </div>
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="required_delivery" className="text-sm">Required Delivery</label>
-                                <input id="required_delivery" type="date" required value={formData.required_delivery} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="required_delivery" type="text" required value={"AWP"} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm bg-[#e9ecef] border-[#D1D5DC]" disabled />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="place_of_delivery" className="text-sm">Place of Delivery</label>
-                                <input id="place_of_delivery" type="text" required value={formData.place_of_delivery} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="AWP HO" />
+                                <input id="place_of_delivery" type="text" required value={"AWP HO"} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm bg-[#e9ecef] border-[#D1D5DC]" disabled />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="date" className="text-sm">Date</label>
@@ -195,7 +238,7 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="po_no_cash" className="text-sm">P.O. No. / Cash</label>
-                                <input id="po_no_cash" type="text" required value={formData.po_no_cash} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Fill in -> Null" />
+                                <input id="po_no_cash" type="text" value={formData.po_no_cash} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Fill in -> Null" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="supplier" className="text-sm">Supplier</label>
@@ -296,18 +339,26 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
                         <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full border p-3 rounded-sm min-h-[100px]" placeholder="Add extra notes here..." />
                     </div>
 
-                    <div className="w-full grid grid-cols-3 gap-x-8 mt-6">
+                    <div className="w-full grid grid-cols-2 gap-x-8 gap-y-4 mt-6">
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="requested_by" className="text-sm">Requested by</label>
-                            <input id="requested_by" required value={formData.requested_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name/Position" />
+                            <input id="requested_by" required value={formData.requested_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
+                        </div>
+                        <div className="flex flex-col space-y-4">
+                            <label htmlFor="requested_position" className="text-sm">Position</label>
+                            <input id="requested_position" required value={formData.requested_position} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Position" />
                         </div>
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="approved_by" className="text-sm">Approved by</label>
                             <input id="approved_by" required value={formData.approved_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name/Position" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="authorized_by" className="text-sm">Authorized by</label>
-                            <input id="authorized_by" required value={formData.authorized_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Director" />
+                            <label htmlFor="approved_position" className="text-sm">position</label>
+                            <input id="approved_position" required value={formData.approved_position} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Position" />
+                        </div>
+                        <div className="flex flex-col space-y-4">
+                            <label htmlFor="authorized_by" className="text-sm">Approved by</label>
+                            <input id="authorized_by" required value={formData.authorized_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
                         </div>
                     </div>
 

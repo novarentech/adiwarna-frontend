@@ -111,27 +111,28 @@ export default function MaterialReceivingPrintPage({ params }: { params: Promise
                         <table className="w-full">
                             <tbody>
                                 <tr>
-                                    <td className="w-[15%] font-semibold">Ref. PO No.</td>
-                                    <td className="w-[45%] font-bold">{data.po_inv_pr_no}</td>
-                                    <td className="w-[15%] font-semibold">Supplier</td>
-                                    <td className="w-[25%]">{data.supplier}</td>
+                                    <td className="w-[20%] font-semibold">Ref. PO No.</td>
+                                    <td className="w-[30%] font-bold">{data.po_no}/MR/AWP-{data.po_date} </td>
+                                    <td className="w-[20%] font-semibold">Supplier</td>
+                                    <td className="w-[30%]">{data.supplier}</td>
                                 </tr>
                                 <tr>
                                     <td className="font-semibold">Ref. P.O No.</td>
                                     <td>-</td>
                                     <td className="font-semibold">Receiving Date</td>
-                                    <td>{formatDate(data.receiving_date)}</td>
+                                    <td>{data.receiving_date}</td>
                                 </tr>
                                 <tr>
                                     <td colSpan={2}></td>
                                     <td className="font-semibold">Order By</td>
-                                    <td className="flex gap-4">
-                                        <div className="flex items-center gap-1">
+                                    <td className="">
+                                        {/* <div className="flex items-center gap-1">
                                             <div className={`w-3 h-3 border border-black ${data.order_by === 'offline' ? 'bg-black' : ''}`}></div> Offline
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <div className={`w-3 h-3 border border-black ${data.order_by === 'online' ? 'bg-black' : ''}`}></div> Online
-                                        </div>
+                                        </div> */}
+                                        {data.order_by}
                                     </td>
                                 </tr>
                             </tbody>
@@ -184,7 +185,7 @@ export default function MaterialReceivingPrintPage({ params }: { params: Promise
                                     <div className="font-normal text-[8pt] border-t border-dotted border-gray-400 mt-1">{data.received_position}</div>
                                 </div>
                             </div>
-                            <p className="mt-2">Date: {formatDate(data.receiving_date)}</p>
+                            <p className="mt-2">Date: {data.receiving_date}</p>
                         </div>
 
                         <div className="text-right">

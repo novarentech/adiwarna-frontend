@@ -75,7 +75,7 @@ export default function DetailMaterialReceivingPage({ params }: { params: Promis
                 <div className="grid grid-cols-3 gap-8">
                     <div className="space-y-1">
                         <p className="text-xs text-gray-500 uppercase font-bold">P.O. / INV. / PR No.</p>
-                        <p className="text-lg border-b pb-1">{data.po_inv_pr_no}</p>
+                        <p className="text-lg border-b pb-1">{data.po_no}/MR/AWP-{data.po_date} </p>
                     </div>
                     <div className="space-y-1">
                         <p className="text-xs text-gray-500 uppercase font-bold">Supplier</p>

@@ -9,10 +9,10 @@ export interface GetAllPurchaseRequisitionResponse {
 export interface GetAllPurchaseRequisitionData {
     id: number;
     pr_no: string;
-    rev_no: string | null;
-    required_delivery: string; // format: DD/MM/YYYY
+    pr_date: string;
+    date: string; // format: DD/MM/YYYY
     supplier: string;
-    place_of_delivery: string;
+    // place_of_delivery: string;
     total_amount: string; // contoh: "Rp 52.945.660"
     status: "Draft" | "Approved" | "Pending";
 }
@@ -27,16 +27,18 @@ export interface PaginationMeta {
 // CREATE
 export interface PurchaseRequisitionRequest {
     pr_no: string;
-    rev_no: string;
+    // rev_no: string;
     date: string; // format: YYYY-MM-DD
-    required_delivery: string; // format: YYYY-MM-DD
-    po_no_cash: string;
+    // required_delivery: string; // format: YYYY-MM-DD
+    po_no_cash: string | null;
     supplier: string;
-    place_of_delivery: string;
     routing: "online" | "offline";
+    // place_of_delivery: string;
     vat_percentage: number; // contoh: 10
     requested_by: string;
+    requested_position: string;
     approved_by: string;
+    approved_position: string;
     authorized_by: string;
     status: "draft" | "pending" | "approved" | "rejected";
     notes?: string;
@@ -59,19 +61,22 @@ export interface PurchaseRequisitionGetByIdResponse {
 export interface GetByIDPurchaseRequisitionDetails {
     id: number;
     pr_no: string;
-    rev_no: string | null;
+    pr_date: string;
+    // rev_no: string | null;
     date: string; // format: YYYY-MM-DD
-    required_delivery: string; // format: YYYY-MM-DD
+    // required_delivery: string; // format: YYYY-MM-DD
     po_no_cash: string;
     supplier: string;
-    place_of_delivery: string;
+    // place_of_delivery: string;
     routing: "online" | "offline";
     sub_total: string; // misalnya: "30135.99"
     vat_percentage: string; // misalnya: "10.00"
     vat_amount: string; // misalnya: "3013.60"
     total_amount: string; // misalnya: "33149.59"
     requested_by: string;
+    requested_position: string;
     approved_by: string;
+    approved_position: string;
     authorized_by: string;
     status: "draft" | "pending" | "approved" | "rejected";
     notes: string | null;
@@ -90,12 +95,12 @@ export interface GetbyIDPurchaseRequisitionItem {
 // EDIT / UPDATE
 export interface PurchaseRequisitionUpdateRequest {
     pr_no: string;
-    rev_no: string;
+    // rev_no: string;
     date: string; // format: YYYY-MM-DD
-    required_delivery: string; // format: YYYY-MM-DD
+    // required_delivery: string; // format: YYYY-MM-DD
     po_no_cash: string;
     supplier: string;
-    place_of_delivery: string;
+    // place_of_delivery: string;
     routing: "online" | "offline";
     vat_percentage: number;
     requested_by: string;
