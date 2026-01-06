@@ -22,6 +22,7 @@ import * as XLSX from "xlsx";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { toast } from "sonner";
 
 
 export default function TrackRecordPage() {
@@ -152,7 +153,7 @@ export default function TrackRecordPage() {
             const res = await getAll999TrackRecords(1, 999999, search, startDate, endDate);
 
             if (!res.success || !res.data) {
-                alert("Gagal mengambil data untuk ekspor");
+                toast.error("Gagal mengambil data untuk ekspor");
                 return null;
             }
 
@@ -169,7 +170,7 @@ export default function TrackRecordPage() {
             return formatted;
         } catch (error) {
             console.error("Export data error:", error);
-            alert("Terjadi kesalahan saat mengambil data");
+            toast.error("Terjadi kesalahan saat mengambil data");
             return null;
         }
     };
@@ -195,7 +196,7 @@ export default function TrackRecordPage() {
             triggerSuccess(); // Tampilkan modal sukses
         } catch (error) {
             console.error("Copy error:", error);
-            alert("Terjadi kesalahan saat menyalin data");
+            toast.error("Terjadi kesalahan saat menyalin data");
         } finally {
             setIsCopying(false); // Menyelesaikan proses ekspor
         }
@@ -230,7 +231,7 @@ export default function TrackRecordPage() {
             // triggerSuccess();
         } catch (error) {
             console.error("Export CSV error:", error);
-            alert("Terjadi kesalahan saat mengekspor CSV");
+            toast.error("Terjadi kesalahan saat mengekspor CSV");
         } finally {
             setIsExportingCsv(false);
         }
@@ -253,7 +254,7 @@ export default function TrackRecordPage() {
             // triggerSuccess();
         } catch (error) {
             console.error("Export Excel error:", error);
-            alert("Terjadi kesalahan saat membuat file Excel");
+            toast.error("Terjadi kesalahan saat membuat file Excel");
         } finally {
             setIsExportingExcel(false);
         }
@@ -355,7 +356,7 @@ export default function TrackRecordPage() {
             doc.save(`track_record_${new Date().getTime()}.pdf`);
         } catch (error) {
             console.error("PDF Error:", error);
-            alert("Terjadi kesalahan saat membuat PDF");
+            toast.error("Terjadi kesalahan saat membuat PDF");
         } finally {
             setIsExportingPdf(false);
         }

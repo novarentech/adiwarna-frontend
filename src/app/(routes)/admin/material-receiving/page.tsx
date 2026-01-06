@@ -16,17 +16,18 @@ import {
 import { LuEye, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { deleteMaterialReceiving, GetAll999MaterialReceiving, GetAllMaterialReceiving, GetAllMaterialReceivingReportResponse } from "@/lib/material-receiving";
+import { AllMaterialReceivingData, deleteMaterialReceiving, GetAll999MaterialReceiving, GetAllMaterialReceiving, GetAllMaterialReceivingReportResponse } from "@/lib/material-receiving";
 
 // Import service API dan Interface
 
 import * as XLSX from "xlsx";
+import { toast } from "sonner";
 
 export default function MaterialReceivingPage() {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [perPage] = useState(15);
-    const [data, setData] = useState<any[]>([]); // State untuk menampung list data
+    const [data, setData] = useState<AllMaterialReceivingData[]>([]); // State untuk menampung list data
     const [meta, setMeta] = useState({
         current_page: 1,
         last_page: 1,
@@ -79,11 +80,11 @@ export default function MaterialReceivingPage() {
         const res = await deleteMaterialReceiving(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Equipment deleted successfully!");
+        toast.success("Equipment deleted successfully!");
         fetchData(search, page);
     };
 
@@ -97,7 +98,7 @@ export default function MaterialReceivingPage() {
         const res = await GetAll999MaterialReceiving(1, 999999, search);
 
         if (!res.success || !res.data) {
-            alert("Gagal mengambil data untuk ekspor");
+            toast.error("Gagal mengambil data untuk ekspor");
             setIsExporting(false);
             return null;
         }
@@ -271,8 +272,8 @@ export default function MaterialReceivingPage() {
                         ) : data.length > 0 ? (
                             data.map((item) => (
                                 <TableRow key={item.id}>
-                                    <TableCell className="py-6">{item.po_inv_pr_no}</TableCell>
-                                    <TableCell>{item.supplier}</TableCell>
+                                    <TableCell className="py-6">{item.po_no}/PR/AWP-{item.po_date}</TableCell>
+                                    <TableCell>{item.supplier || "-"}</TableCell>
                                     <TableCell>{item.receiving_date}</TableCell>
                                     <TableCell>
                                         <p className={`${item.order_by?.toLowerCase() === 'online' ? 'bg-[#DBEAFE] text-[#193CB8]' : 'bg-[#F3E8FF] text-[#6E11B0]'} w-fit px-4 py-1 rounded-md text-sm font-medium`}>

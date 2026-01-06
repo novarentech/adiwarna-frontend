@@ -21,6 +21,7 @@ import {
 import { Customer, getCustomerById, getCustomersAllForDropdown } from "@/lib/customer";
 import { getAllAvailableEquipment, createEquipmentproject } from "@/lib/equipment-project"; // Asumsi createEquipmentproject & getAllAvailableEquipment ada di sini
 import { EquipmentItem, CreateEquipmentProjectPayload } from "@/lib/equipment-project";
+import { toast } from "sonner";
 
 
 interface CustomerLocation {
@@ -176,7 +177,8 @@ export default function CreateEquipmentProjectPage() {
 
         // Validasi Sederhana
         if (!payload.project_date || !payload.customer_id || !payload.customer_location_id || selectedEquipmentIds.length === 0) {
-            alert("Harap isi semua kolom wajib (Customer, Lokasi, Tanggal) dan pilih minimal satu peralatan!");
+            // alert("Harap isi semua kolom wajib (Customer, Lokasi, Tanggal) dan pilih minimal satu peralatan!");
+            toast.error("Harap isi semua kolom wajib (Customer, Lokasi, Tanggal) dan pilih minimal satu peralatan!");
             setLoading(false);
             return;
         }
@@ -187,18 +189,21 @@ export default function CreateEquipmentProjectPage() {
             const data = await createEquipmentproject(payload); // Pastikan fungsi ini tersedia
 
             if (!data.success) {
-                alert(`Gagal membuat Equipment Project: ${data.message}`);
+                // alert(`Gagal membuat Equipment Project: ${data.message}`);
+                toast.error("Failed to create: " + data.message);
                 setLoading(false);
                 return;
             }
 
-            alert("Equipment Project berhasil dibuat!");
+            // alert("Equipment Project berhasil dibuat!");
+            toast.success("Successfully created Equipment Project!");
             setLoading(false);
             router.push("/admin/equipment-project");
 
         } catch (err) {
             console.error(err);
-            alert("Terjadi kesalahan saat menyimpan data!");
+            // alert("Terjadi kesalahan saat menyimpan data!");
+            toast.error("Failed to create: " + err);
             setLoading(false);
         }
     };
@@ -284,7 +289,7 @@ export default function CreateEquipmentProjectPage() {
                                 </select>
                             </div>
                             {/* Verified By */}
-                            <div className="flex flex-col space-y-1 pt-[50px]"> {/* Penyesuaian padding agar sejajar dengan Prepared By */}
+                            <div className="flex flex-col space-y-1"> {/* Penyesuaian padding agar sejajar dengan Prepared By */}
                                 <label htmlFor="verified_by" className="font-bold">Verified By</label>
                                 <input type="text" id="verified_by"
                                     value={formData.verified_by}
@@ -418,7 +423,7 @@ export default function CreateEquipmentProjectPage() {
 
                     {/* ACTION BUTTONS */}
                     <div className="ml-auto w-1/4 grid grid-cols-2 space-x-4">
-                        <Link href={"/admin/equipment-projects"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm hover:bg-red-600 transition">Cancel</Link>
+                        <Link href={"/admin/equipment-project"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm hover:bg-red-600 transition">Cancel</Link>
                         <button type="submit" disabled={loading} className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm hover:bg-[#1593A5] transition disabled:opacity-50">
                             {loading ? "Saving..." : "Save"}
                         </button>

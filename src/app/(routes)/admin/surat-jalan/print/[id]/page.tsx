@@ -1,18 +1,18 @@
 "use client";
 
-import { getDeliveryNoteById } from "@/lib/delivery-notes";
+import { GetbyIdDeliveryNoteDetails, getDeliveryNoteById } from "@/lib/delivery-notes";
 import { use, useEffect, useState } from "react";
 
 export default function DeliveryNotePrintPage({ params }: { params: Promise<{ id: number }> }) {
     const { id } = use(params);
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<GetbyIdDeliveryNoteDetails>();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Sesuai interface GetbyIdDeliveryNoteDetails yang Anda berikan
-                
+
                 // Ganti dengan call API asli:
                 const res = await getDeliveryNoteById(id);
                 setData(res.data);
@@ -111,32 +111,32 @@ export default function DeliveryNotePrintPage({ params }: { params: Promise<{ id
                     {/* Informasi Atas: Customer & Document Details */}
                     <div className="grid grid-cols-2 gap-8 mb-6">
                         {/* Kolom Kiri: Customer */}
-                        <div className="border border-black p-3 rounded-sm">
+                        <div className="border border-black p-3">
                             <table className="w-full">
                                 <tbody>
                                     <tr>
                                         <td className="w-16 font-semibold align-top">Kepada</td>
-                                        <td className="align-top">: <b>{data.customer}</b></td>
+                                        <td className="align-top">: <b>{data.customer.name}</b></td>
                                     </tr>
                                     <tr>
                                         <td className="font-semibold align-top">Alamat</td>
-                                        <td className="align-top">: <span className="whitespace-pre-line">{data.customer_address}</span></td>
+                                        <td className="align-top">: <span className="whitespace-pre-line">{data.customer.address}</span></td>
                                     </tr>
                                     <tr>
                                         <td className="font-semibold align-top pt-2">Attn</td>
-                                        <td className="align-top pt-2">: {data.received_by || "Fill In"}</td>
+                                        <td className="align-top pt-2">: {data.received_by || ""}</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
                         {/* Kolom Kanan: Dokumen */}
-                        <div className="border border-black p-3 rounded-sm">
+                        <div className="border border-black p-3">
                             <table className="w-full">
                                 <tbody>
                                     <tr>
                                         <td className="w-32 font-semibold">No. Surat</td>
-                                        <td>: {data.delivery_note_no}</td>
+                                        <td>: {data.dn_no}/AWP/{data.dn_date}</td>
                                     </tr>
                                     <tr>
                                         <td className="font-semibold">Tanggal</td>

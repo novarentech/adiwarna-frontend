@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { deleteEquipmentproject, getAllEquipmentproject } from "@/lib/equipment-project";
 import { EquipmentProjectData } from "@/lib/equipment-project"; // Sesuaikan path interface Anda
 import { ImWrench } from "react-icons/im";
+import { toast } from "sonner";
 
 
 export default function EquipmentProjectPage() {
@@ -67,11 +68,13 @@ export default function EquipmentProjectPage() {
         const res = await deleteEquipmentproject(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            // alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Equipment Project deleted successfully!");
+        // alert("Equipment Project deleted successfully!");
+        toast.success("Equipment Project deleted successfully!");
         fetchData();
     };
 

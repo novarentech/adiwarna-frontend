@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { FaUserEdit } from "react-icons/fa";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { toast } from "sonner";
 
 
 export default function EditAccountPage({ params }: { params: Promise<{ id: string }> }) {
@@ -61,8 +62,8 @@ export default function EditAccountPage({ params }: { params: Promise<{ id: stri
         });
 
         const data = await res.json();
-        alert(data.message || "Updated!");
-        if(res.ok){
+        toast.success(data.message || "Updated!");
+        if (res.ok) {
             router.push("/admin/accounts")
         }
     }

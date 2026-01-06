@@ -6,6 +6,7 @@ import { FaTrash } from "react-icons/fa6";
 import { HiUserAdd } from "react-icons/hi";
 import { Customer, CustomerById, CustomerLocation, EditCustomerBody, getCustomerById, updateCustomerRequest } from "@/lib/customer";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface RowDataWorkLocation {
     id?: number;
@@ -106,15 +107,18 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
             const res = await updateCustomerRequest(Number(id), payload);
 
             if (!res.success) {
-                alert("Update failed: " + (res.message || "Unknown error"));
+                // alert("Update failed: " + (res.message || "Unknown error"));
+                toast.error("Update failed: " + (res.message || "Unknown error"));
                 return;
             }
 
-            alert("Customer updated!");
+            // alert("Customer updated!");
+            toast.success("Customer updated!");
             router.push("/admin/customer");
         } catch (error) {
             console.error("Error updating customer:", error);
-            alert("An error occurred during update.");
+            // alert("An error occurred during update.");
+            toast.error("An error occurred during update.");
         }
     };
 

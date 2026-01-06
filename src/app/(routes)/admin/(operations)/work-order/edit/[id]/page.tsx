@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Customer, getCustomersAllForDropdown } from "@/lib/customer";
 import { Employee, getEmployeesAllForDropdown } from "@/lib/employee";
 import { getWorkOrderById, updateWorkOrder, UpdateWorkOrderBody } from "@/lib/work-order";
+import { toast } from "sonner";
 
 interface RowDataWorker {
     id?: number; // ID Pivot (penting untuk Update)
@@ -190,7 +191,8 @@ export default function EditWorkOrderPage({ params }: { params: Promise<{ id: st
 
         // 1. Validasi
         if (!formData.work_order_no || !formData.customer_id || !formData.customer_location_id) {
-            alert("Please fill in Work Order No, Customer, and Work Location.");
+            // alert("Please fill in Work Order No, Customer, and Work Location.");
+            toast.error("Please fill in Work Order No, Customer, and Work Location.");
             return;
         }
 
@@ -221,7 +223,8 @@ export default function EditWorkOrderPage({ params }: { params: Promise<{ id: st
             });
 
         if (finalEmployees.length === 0) {
-            alert("Please select at least one worker.");
+            // alert("Please select at least one worker.");
+            toast.error("Please select at least one worker.");
             return;
         }
 
@@ -240,14 +243,17 @@ export default function EditWorkOrderPage({ params }: { params: Promise<{ id: st
         try {
             const res = await updateWorkOrder(workOrderId, body);
             if (res.success) {
-                alert("Work order updated successfully");
+                // alert("Work order updated successfully");
+                toast.success("Work order updated successfully");
                 router.push("/admin/work-order");
             } else {
-                alert("Failed: " + res.message);
+                // alert("Failed: " + res.message);
+                toast.error("Failed: " + res.message);
             }
         } catch (error) {
             console.error(error);
-            alert("An error occurred while updating work order.");
+            // alert("An error occurred while updating work order.");
+            toast.error("An error occurred while updating work order.");
         }
     }
 

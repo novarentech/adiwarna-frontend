@@ -8,6 +8,7 @@ import { FaTrash } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { createPurchaseWorkAssignment } from "@/lib/work-assignment";
 import { Customer, getCustomerById, getCustomersAllForDropdown } from "@/lib/customer";
+import { toast } from "sonner";
 
 
 interface RowDataWorker {
@@ -139,18 +140,21 @@ export default function CreateWorkAssignmentPage() {
             const data = await createPurchaseWorkAssignment(payload);
 
             if (!data.success) {
-                alert(`Gagal: ${data.message}`);
+                // alert(`Gagal: ${data.message}`);
+                toast.error("Failed to create: " + data.message);
                 setLoading(false);
                 return;
             }
 
-            alert("Work Assignment berhasil dibuat!");
+            // alert("Work Assignment berhasil dibuat!");
+            toast.success("Successfully created Work Assignment!");
             setLoading(false);
             router.push("/admin/work-assignment");
 
         } catch (err) {
             console.error(err);
-            alert("Terjadi kesalahan!");
+            // alert("Terjadi kesalahan!");
+            toast.error("Failed to create: " + err);
             setLoading(false);
         }
     };

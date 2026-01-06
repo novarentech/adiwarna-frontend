@@ -19,6 +19,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 // Import API and Interfaces
 import { GetAllPurchaseRequisition, GetAllPurchaseRequisitionResponse, GetAllPurchaseRequisitionData, deletePurchaseRequisition, GetAll999PurchaseRequisition } from "@/lib/purchase-requisitions";
 import * as XLSX from "xlsx";
+import { toast } from "sonner";
 
 export default function PurchaseRequisitionPage() {
     const [search, setSearch] = useState("");
@@ -84,17 +85,36 @@ export default function PurchaseRequisitionPage() {
         }
     };
 
+    // // convert to roman
+    // const toRoman = (num: number): string => {
+    //     const romanNumerals = [
+    //         "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"
+    //     ];
+    //     return romanNumerals[num - 1];
+    // };
+
+    // const convertPrDateToRoman = (prDate: string) => {
+    //     // Pisahkan tanggal dan tahun berdasarkan tanda "/"
+    //     const [month, year] = prDate.split("/");
+
+    //     // Konversikan bulan menjadi angka Romawi
+    //     const monthRoman = toRoman(parseInt(month)); // Parse bulan menjadi angka dan konversi ke Romawi
+
+    //     // Gabungkan bulan Romawi dengan tahun
+    //     return `${monthRoman}/${year}`;
+    // };
+
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this Purchase Requisition?")) return;
 
         const res = await deletePurchaseRequisition(id);
 
         if (!res.success) {
-            alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete: " + res.message);
             return;
         }
 
-        alert("Equipment deleted successfully!");
+        toast.success("Equipment deleted successfully!");
         fetchData(search, page);
     };
 
@@ -108,7 +128,7 @@ export default function PurchaseRequisitionPage() {
         const res = await GetAll999PurchaseRequisition(1, 999999, search);
 
         if (!res.success || !res.data) {
-            alert("Gagal mengambil data untuk ekspor");
+            toast.error("Gagal mengambil data untuk ekspor");
             setIsExporting(false);
             return null;
         }
@@ -267,10 +287,10 @@ export default function PurchaseRequisitionPage() {
                     <TableHeader>
                         <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
                             <TableHead className="text-[#212529] font-bold py-8">P.R. No.</TableHead>
-                            <TableHead className="text-[#212529] font-bold">Rev. No.</TableHead>
-                            <TableHead className="text-[#212529] font-bold">Required Delivery</TableHead>
+                            {/* <TableHead className="text-[#212529] font-bold">Rev. No.</TableHead> */}
+                            <TableHead className="text-[#212529] font-bold">Date</TableHead>
                             <TableHead className="text-[#212529] font-bold">Supplier</TableHead>
-                            <TableHead className="text-[#212529] font-bold">Place of Delivery</TableHead>
+                            {/* <TableHead className="text-[#212529] font-bold">Place of Delivery</TableHead> */}
                             <TableHead className="text-[#212529] font-bold">Total Amount</TableHead>
                             <TableHead className="text-[#212529] font-bold">Status</TableHead>
                             <TableHead className="text-[#212529] font-bold text-center">Actions</TableHead>
@@ -284,11 +304,11 @@ export default function PurchaseRequisitionPage() {
                         ) : data.length > 0 ? (
                             data.map((pr) => (
                                 <TableRow key={pr.id}>
-                                    <TableCell className="py-6 font-medium">{pr.pr_no}</TableCell>
-                                    <TableCell>{pr.rev_no || "-"}</TableCell>
-                                    <TableCell>{pr.required_delivery}</TableCell>
+                                    <TableCell className="py-6 font-medium">{pr.pr_no}/PR/AWP-{(pr.pr_date)}</TableCell>
+                                    {/* <TableCell>{pr.rev_no || "-"}</TableCell> */}
+                                    <TableCell>{pr.date}</TableCell>
                                     <TableCell>{pr.supplier}</TableCell>
-                                    <TableCell>{pr.place_of_delivery}</TableCell>
+                                    {/* <TableCell>{pr.place_of_delivery}</TableCell> */}
                                     <TableCell className="font-semibold">{pr.total_amount}</TableCell>
                                     <TableCell>
                                         <p className={`${getStatusStyle(pr.status)} w-fit px-4 py-1 rounded-full text-sm font-medium`}>

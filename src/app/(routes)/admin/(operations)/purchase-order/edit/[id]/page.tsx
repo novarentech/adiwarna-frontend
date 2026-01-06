@@ -9,6 +9,7 @@ import { MdEdit } from "react-icons/md";
 import { getPurchaseOrderById, updatePurchaseOrder, UpdatePurchaseOrderItemPayload, UpdatePurchaseOrderPayload } from "@/lib/purchase-order";
 import { Customer, getCustomerById, getCustomersAllForDropdown } from "@/lib/customer";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface RowDataScope {
     id?: string | number;
@@ -185,10 +186,12 @@ export default function EditPurchaseOrderPage({
 
         const result = await updatePurchaseOrder(id, payload);
         if (result.success) {
-            alert("Purchase Order updated!");
+            // alert("Purchase Order updated!");
+            toast.success("Purchase Order updated successfully!");
             router.push("/admin/purchase-order");
         } else {
-            alert(result.message || "Gagal update PO");
+            // alert(result.message || "Gagal update PO");
+            toast.error(result.message || "Gagal update PO");
         }
 
         setLoading(false);

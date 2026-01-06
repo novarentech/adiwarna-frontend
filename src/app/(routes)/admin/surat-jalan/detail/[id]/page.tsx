@@ -13,6 +13,7 @@ import { use, useEffect, useState } from "react";
 import { getDeliveryNoteById, GetbyIdDeliveryNoteDetails } from "@/lib/delivery-notes";
 import { LuArrowLeft, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
+import { toast } from "sonner";
 
 export default function SuratJalanDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -25,7 +26,7 @@ export default function SuratJalanDetailPage({ params }: { params: Promise<{ id:
             if (res.success) {
                 setData(res.data);
             } else {
-                alert("Surat Jalan tidak ditemukan");
+                toast.error("Surat Jalan tidak ditemukan");
             }
             setLoading(false);
         };
@@ -84,11 +85,11 @@ export default function SuratJalanDetailPage({ params }: { params: Promise<{ id:
                     <div className="space-y-6">
                         <div className="flex flex-col space-y-2">
                             <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Kepada (Customer/Shipper)</label>
-                            <p className="p-3 bg-gray-50 border rounded-sm font-medium">{data.customer}</p>
+                            <p className="p-3 bg-gray-50 border rounded-sm font-medium">{data.customer.name}</p>
                         </div>
                         <div className="flex flex-col space-y-2">
                             <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Address</label>
-                            <p className="p-3 bg-gray-50 border rounded-sm min-h-[110px] whitespace-pre-wrap text-sm text-gray-700">{data.customer_address}</p>
+                            <p className="p-3 bg-gray-50 border rounded-sm min-h-[110px] whitespace-pre-wrap text-sm text-gray-700">{data.customer.address}</p>
                         </div>
                     </div>
 
@@ -96,7 +97,7 @@ export default function SuratJalanDetailPage({ params }: { params: Promise<{ id:
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col space-y-2">
                             <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">No Surat</label>
-                            <p className="p-3 bg-gray-50 border rounded-sm font-bold">{data.delivery_note_no}</p>
+                            <p className="p-3 bg-gray-50 border rounded-sm font-bold">{data.dn_no}</p>
                         </div>
                         <div className="flex flex-col space-y-2">
                             <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Tanggal</label>

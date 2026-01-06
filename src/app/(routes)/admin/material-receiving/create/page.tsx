@@ -11,25 +11,29 @@ import {
 } from "@/components/ui/table"
 import { RiDeleteBinLine } from "react-icons/ri";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { CreateMaterialReceiving, MaterialReceivingReportItemRequest, MaterialReceivingReportRequestBody } from "@/lib/material-receiving";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function CreateMaterialReceivingPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
 
+
     // 1. State untuk data utama
     const [formData, setFormData] = useState({
-        po_inv_pr_no: "",
+        po_no: "",
+        po_month: "",
+        po_year: "",
         supplier: "",
-        receiving_date: "",
-        order_by: "offline" as "online" | "offline",
+        receiving_date: new Date().toISOString().split('T')[0], // Default hari ini,
+        order_by: "" as "online" | "offline",
         received_by: "",
         acknowledge_by: "",
-        status: "complete" as "partial" | "complete",
+        status: "" as "partial" | "complete",
         notes: "",
-        received_position : "",
+        received_position: "",
         acknowledge_position: "",
     });
 
@@ -41,7 +45,19 @@ export default function CreateMaterialReceivingPage() {
     // Handle input perubahan header
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
-        setFormData(prev => ({ ...prev, [id]: value }));
+        // setFormData(prev => ({ ...prev, [id]: value }));
+        setFormData(prev => {
+            const updatedData = { ...prev, [id]: value };
+
+            if (id === "receiving_date" && value) {
+                const year = new Date(value).getFullYear();
+                const month = new Date(value).getMonth() + 1;
+
+                updatedData.po_month = toRoman(month);
+                updatedData.po_year = year.toString();
+            }
+            return updatedData;
+        })
     };
 
     // Handle perubahan item material
@@ -49,6 +65,19 @@ export default function CreateMaterialReceivingPage() {
         const newItems = [...items];
         newItems[index] = { ...newItems[index], [field]: value };
         setItems(newItems);
+    };
+
+    const displayDate = useMemo(() => {
+        if (!formData.receiving_date) return { month: "", year: "" };
+        const [year, month] = formData.receiving_date.split("-");
+        return { month, year };
+    }, [formData.receiving_date]);
+
+    const toRoman = (num: number): string => {
+        const romanNumerals = [
+            "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"
+        ];
+        return romanNumerals[num - 1];
     };
 
     // Tambah baris item
@@ -78,10 +107,10 @@ export default function CreateMaterialReceivingPage() {
         const res = await CreateMaterialReceiving(payload);
 
         if (res.success) {
-            alert("Data successfully saved!");
+            toast.success("Material Receiving successfully saved!");
             router.push("/admin/material-receiving");
         } else {
-            alert("Failed to save data: " + res.message);
+            toast.error("Failed to save data: " + res.message);
         }
         setLoading(false);
     };
@@ -114,12 +143,37 @@ export default function CreateMaterialReceivingPage() {
                 <form onSubmit={handleSubmit} className="flex flex-col w-full h-fit">
                     <div className="w-full grid grid-cols-3 gap-x-8">
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="po_inv_pr_no" className="text-sm">P.O. / INV. / PR No.</label>
-                            <input id="po_inv_pr_no" required value={formData.po_inv_pr_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="e.g., 037/PRI/PR/2018" />
+                            <label htmlFor="po_no" className="text-sm">P.O. / INV. / PR No.</label>
+                            <div className="w-full flex flex-row items-center">
+                                {/* po_no */}
+                                <input id="po_no" required value={formData.po_no} onChange={handleInputChange} type="text" className="w-2/6 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="e.g., 037" />
+                                <p className="w-2/6 text-center mx-2">/PR/AWP - </p>
+                                {/* Input Bulan - Mengambil dari displayDate.month */}
+                                <input
+                                    id="display_month"
+                                    value={toRoman(Number(displayDate.month))}
+                                    type="text"
+                                    className="w-1/6 h-10 text-center border px-2 rounded-sm border-[#D1D5DC] bg-[#e9ecef]"
+                                    readOnly
+                                    disabled
+                                />
+
+                                <p className="w-1/6 text-center mx-1">/</p>
+
+                                {/* Input Tahun - Mengambil dari displayDate.year */}
+                                <input
+                                    id="display_year"
+                                    value={displayDate.year}
+                                    type="text"
+                                    className="w-2/6 h-10 border text-center px-2 rounded-sm border-[#D1D5DC] bg-[#e9ecef]"
+                                    readOnly
+                                    disabled
+                                />
+                            </div>
                         </div>
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="supplier" className="text-sm">Supplier</label>
-                            <input id="supplier" required value={formData.supplier} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Supplier name" />
+                            <input id="supplier" value={formData.supplier} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Supplier name" />
                         </div>
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="receiving_date" className="text-sm">Receiving Date</label>
@@ -127,17 +181,23 @@ export default function CreateMaterialReceivingPage() {
                         </div>
                     </div>
 
-                    <div className="mt-4">
+                    <div className="mt-4 flex flex-col space-y-3">
                         <label htmlFor="">Order By</label>
-                        <div className="flex flex-row space-x-4 mt-4">
+                        {/* <div className="flex flex-row space-x-4 mt-4">
                             <p onClick={() => setFormData(p => ({ ...p, order_by: "offline" }))} className={`${formData.order_by === "offline" ? "outline" : ""} px-4 py-2 rounded-md cursor-pointer hover:contrast-50`}>Offline</p>
                             <p onClick={() => setFormData(p => ({ ...p, order_by: "online" }))} className={`${formData.order_by === "online" ? "outline" : ""} px-4 py-2 rounded-md cursor-pointer hover:contrast-50`}>Online</p>
-                        </div>
+                        </div> */}
+                        <select name="order_by" id="order_by" value={formData.order_by} onChange={handleInputChange} className="w-1/4 h-10 border px-3 rounded-sm border-[#D1D5DC] mt-2">
+                            <option value="" className="font-light" hidden>--- Choose order by option ---</option>
+                            <option value="online">Online</option>
+                            <option value="offline">Offline</option>
+                        </select>
                     </div>
 
                     <div className="flex flex-col space-y-3 mt-4">
                         <label htmlFor="status">Status</label>
                         <select id="status" value={formData.status} onChange={handleInputChange} className="w-1/4 h-10 border px-3 rounded-sm border-[#D1D5DC] mt-2">
+                            <option value="" className="font-light" hidden>--- Choose status ---</option>
                             <option value="complete">Complete</option>
                             <option value="partial">Partial</option>
                         </select>
@@ -173,7 +233,14 @@ export default function CreateMaterialReceivingPage() {
                                             <TableCell className=""><input required value={item.description} onChange={(e) => handleItemChange(index, "description", e.target.value)} type="text" className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Item description" /></TableCell>
                                             <TableCell className="text-center"><input type="number" required value={item.order_qty} onChange={(e) => handleItemChange(index, "order_qty", parseInt(e.target.value) || 0)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="0" /></TableCell>
                                             <TableCell className="text-center"><input type="number" required value={item.received_qty} onChange={(e) => handleItemChange(index, "received_qty", parseInt(e.target.value) || 0)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="0" /></TableCell>
-                                            <TableCell className="space-x-2"><input type="text" value={item.remarks} onChange={(e) => handleItemChange(index, "remarks", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
+                                            <TableCell className="space-x-2">
+                                                {/* <input type="text" value={item.remarks} onChange={(e) => handleItemChange(index, "remarks", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /> */}
+                                                <select name="order_by" id="order_by" value={item.remarks} onChange={(e) => handleItemChange(index, "remarks", e.target.value)} className="w-10/12 h-10 border px-3 rounded-sm border-[#D1D5DC]">
+                                                    <option value="" className="font-light" hidden>--- Choose remark option ---</option>
+                                                    <option value="good">Good Condition</option>
+                                                    <option value="reject">Reject</option>
+                                                </select>
+                                            </TableCell>
                                             <TableCell className="text-center"><div onClick={() => removeItem(index)} className="cursor-pointer hover:contrast-75"><RiDeleteBinLine className="w-6 h-6 text-[#E7000B]" /></div></TableCell>
                                         </TableRow>
                                     ))}

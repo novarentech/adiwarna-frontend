@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table"
 import { deleteUser, getUsersList } from "@/lib/account";
 import { IUser } from "@/lib/auth";
+import { toast } from "sonner";
 
 export default function AccountsPage() {
     const [users, setUsers] = useState<IUser[]>([]);
@@ -46,9 +47,9 @@ export default function AccountsPage() {
         if (data.success) {
             // hapus langsung dari state tanpa reload
             setUsers((prev) => prev.filter((u) => u.id !== id));
-            alert(data.message);
+            toast.success(data.message);
         } else {
-            alert("Failed: " + data.message);
+            toast.error("Failed: " + data.message);
         }
     };
 

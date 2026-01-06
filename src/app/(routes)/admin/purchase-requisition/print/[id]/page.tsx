@@ -106,37 +106,32 @@ export default function PurchaseRequisitionPrintPage({ params }: { params: Promi
                     </header>
 
                     {/* Metadata Section */}
-                    <div className="all-cell-borders mb-3">
+                    <div className="border border-black mb-3">
                         <table className="w-full">
                             <tbody>
                                 <tr>
-                                    <td className="w-[15%] font-semibold">P.R. No. :</td>
-                                    <td className="w-[35%] font-bold">{data.pr_no}</td>
-                                    <td className="w-[20%] font-semibold">P.O. No. / Cash :</td>
-                                    <td className="w-[30%]">{data.po_no_cash}</td>
+                                    <td className="w-[20%] font-semibold p-1">P.R. No. :</td>
+                                    <td className="w-[30%] p-1">{data.pr_no}/PR/AWP-{data.pr_date}</td>
+                                    <td className="w-[20%] font-semibold p-1">P.O. No. / Cash :</td>
+                                    <td className="w-[30%] p-1">{data.po_no_cash}</td>
                                 </tr>
                                 <tr>
-                                    <td className="font-semibold">Date :</td>
-                                    <td>{formatDate(data.date)}</td>
-                                    <td className="font-semibold">Supplier :</td>
-                                    <td className="font-bold uppercase">{data.supplier}</td>
+                                    <td className="font-semibold p-1" >Date :</td>
+                                    <td className="p-1">{formatDate(data.date)}</td>
+                                    <td className="font-semibold p-1">Supplier :</td>
+                                    <td className="capitalize p-1">{data.supplier}</td>
                                 </tr>
                                 <tr>
-                                    <td className="font-semibold">Required Delivery :</td>
-                                    <td className="">{formatDate(data.required_delivery)}</td>
-                                    <td className="font-semibold">Place of Delivery :</td>
-                                    <td className="font-bold">{data.place_of_delivery}</td>
+                                    <td className="font-semibold p-1">Required Delivery :</td>
+                                    <td className="p-1">AWP</td>
+                                    <td className="font-semibold p-1">Place of Delivery :</td>
+                                    <td className="font-normal p-1">AWP</td>
                                 </tr>
                                 <tr>
                                     <td colSpan={2}></td>
-                                    <td className="font-semibold">Routing :</td>
-                                    <td className="flex gap-4">
-                                        <div className="flex items-center gap-1">
-                                            <div className={`w-3 h-3 border border-black ${data.routing === 'online' ? 'bg-black' : ''}`}></div> Online
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <div className={`w-3 h-3 border border-black ${data.routing === 'offline' ? 'bg-black' : ''}`}></div> Offline
-                                        </div>
+                                    <td className="font-semibold p-1">Online/Offline :</td>
+                                    <td className="flex gap-4 p-1">
+                                        {data.routing}
                                     </td>
                                 </tr>
                             </tbody>
@@ -206,24 +201,24 @@ export default function PurchaseRequisitionPrintPage({ params }: { params: Promi
 
                     {/* Signatures */}
                     <div className="grid grid-cols-3 gap-0 mt-8 all-cell-borders">
-                        <div className="text-center p-2 min-h-[100px] flex flex-col justify-between border-r-0">
+                        <div className="text-center p-2 min-h-[130px] flex flex-col justify-between border-r-0">
                             <p className="font-semibold text-[8pt]">Requested by:</p>
                             <div className="mt-auto">
-                                <div className="font-bold underline uppercase">{data.requested_by}</div>
-                                <div className="text-[8pt] text-gray-600">Chairul</div>
+                                <div className="font-bold ">{data.requested_by}</div>
+                                <div className="text-[8pt] text-gray-600 border-t border-black mt-1">{data.requested_position}</div>
                             </div>
                         </div>
-                        <div className="text-center p-2 min-h-[100px] flex flex-col justify-between border-x-0">
+                        <div className="text-center p-2 min-h-[130px] flex flex-col justify-between border-x-0">
                             <p className="font-semibold text-[8pt]">Approved by:</p>
                             <div className="mt-auto">
-                                <div className="font-bold underline uppercase">{data.approved_by}</div>
-                                <div className="text-[8pt] text-gray-600 italic">Purchasing</div>
+                                <div className="font-bold">{data.approved_by}</div>
+                                <div className="text-[8pt] text-gray-600 border-t border-black mt-1">{data.approved_position}</div>
                             </div>
                         </div>
-                        <div className="text-center p-2 min-h-[100px] flex flex-col justify-between border-l-0">
+                        <div className="text-center p-2 min-h-[130px] flex flex-col justify-between border-l-0">
                             <p className="font-semibold text-[8pt]">Authorized by:</p>
                             <div className="mt-auto">
-                                <div className="font-bold underline uppercase">{data.authorized_by}</div>
+                                <div className="font-bold">{data.authorized_by}</div>
                                 <div className="text-[8pt] font-bold border-t border-black mt-1">Director</div>
                             </div>
                         </div>

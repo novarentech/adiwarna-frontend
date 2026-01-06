@@ -19,7 +19,8 @@ import {
     GetMaterialReceivingReportResponseById,
 } from "@/lib/material-receiving"; // Sesuaikan path lib Anda
 import { useRouter } from "next/navigation";
-import { use, useState, useEffect } from "react";
+import { use, useState, useEffect, useMemo } from "react";
+import { toast } from "sonner";
 
 export default function EditMaterialReceivingPage({ params }: { params: Promise<{ id: number }> }) {
     const { id } = use(params);
@@ -32,7 +33,7 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
 
     // 1. State untuk data utama
     const [formData, setFormData] = useState({
-        po_inv_pr_no: "",
+        po_no: "",
         supplier: "",
         receiving_date: "",
         order_by: "offline" as "online" | "offline",
@@ -55,8 +56,8 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
                 if (res.success && res.data) {
                     const d = res.data;
                     setFormData({
-                        po_inv_pr_no: d.po_inv_pr_no,
-                        supplier: d.supplier,
+                        po_no: d.po_no,
+                        supplier: d.supplier || "",
                         receiving_date: d.receiving_date,
                         order_by: d.order_by,
                         received_by: d.received_by,
@@ -102,6 +103,19 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
         setItems(newItems);
     };
 
+    const displayDate = useMemo(() => {
+        if (!formData.receiving_date) return { month: "", year: "" };
+        const [year, month] = formData.receiving_date.split("-");
+        return { month, year };
+    }, [formData.receiving_date]);
+
+    const toRoman = (num: number): string => {
+        const romanNumerals = [
+            "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"
+        ];
+        return romanNumerals[num - 1];
+    };
+
     const addItem = () => {
         setItems([...items, { description: "", order_qty: 0, received_qty: 0, remarks: "" }]);
     };
@@ -124,10 +138,10 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
         const res = await updateMaterialReceiving(id, payload);
 
         if (res.success) {
-            alert("Record updated successfully!");
+            toast.success("Material Receiving updated successfully!");
             router.push("/admin/material-receiving");
         } else {
-            alert("Update failed: " + res.message);
+            toast.error("Update failed: " + res.message);
         }
         setLoading(false);
     };
@@ -162,12 +176,37 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
                 <form onSubmit={handleSubmit} className="flex flex-col w-full h-fit">
                     <div className="w-full grid grid-cols-3 gap-x-8">
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="po_inv_pr_no" className="text-sm">P.O. / INV. / PR No.</label>
-                            <input id="po_inv_pr_no" required value={formData.po_inv_pr_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="e.g., 037/PRI/PR/2018" />
+                            <label htmlFor="po_no" className="text-sm">P.O. / INV. / PR No.</label>
+                            <div className="w-full flex flex-row items-center">
+                                {/* po_no */}
+                                <input id="po_no" required value={formData.po_no} onChange={handleInputChange} type="text" className="w-2/6 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="e.g., 037" />
+                                <p className="w-2/6 text-center mx-2">/PR/AWP - </p>
+                                {/* Input Bulan - Mengambil dari displayDate.month */}
+                                <input
+                                    id="display_month"
+                                    value={toRoman(Number(displayDate.month))}
+                                    type="text"
+                                    className="w-1/6 h-10 text-center border px-2 rounded-sm border-[#D1D5DC] bg-[#e9ecef]"
+                                    readOnly
+                                    disabled
+                                />
+
+                                <p className="w-1/6 text-center mx-1">/</p>
+
+                                {/* Input Tahun - Mengambil dari displayDate.year */}
+                                <input
+                                    id="display_year"
+                                    value={displayDate.year}
+                                    type="text"
+                                    className="w-2/6 h-10 border text-center px-2 rounded-sm border-[#D1D5DC] bg-[#e9ecef]"
+                                    readOnly
+                                    disabled
+                                />
+                            </div>
                         </div>
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="supplier" className="text-sm">Supplier</label>
-                            <input id="supplier" required value={formData.supplier} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Supplier name" />
+                            <input id="supplier" value={formData.supplier} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Supplier name" />
                         </div>
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="receiving_date" className="text-sm">Receiving Date</label>
@@ -221,7 +260,15 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
                                             <TableCell className=""><input required value={item.description} onChange={(e) => handleItemChange(index, "description", e.target.value)} type="text" className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Item description" /></TableCell>
                                             <TableCell className="text-center"><input type="number" required value={item.order_qty} onChange={(e) => handleItemChange(index, "order_qty", parseInt(e.target.value) || 0)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="0" /></TableCell>
                                             <TableCell className="text-center"><input type="number" required value={item.received_qty} onChange={(e) => handleItemChange(index, "received_qty", parseInt(e.target.value) || 0)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="0" /></TableCell>
-                                            <TableCell className="space-x-2"><input type="text" value={item.remarks} onChange={(e) => handleItemChange(index, "remarks", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
+                                            {/* <TableCell className="space-x-2"><input type="text" value={item.remarks} onChange={(e) => handleItemChange(index, "remarks", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell> */}
+                                            <TableCell className="space-x-2">
+                                                {/* <input type="text" value={item.remarks} onChange={(e) => handleItemChange(index, "remarks", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /> */}
+                                                <select name="order_by" id="order_by" value={item.remarks} onChange={(e) => handleItemChange(index, "remarks", e.target.value)} className="w-10/12 h-10 border px-3 rounded-sm border-[#D1D5DC]">
+                                                    <option value="" className="font-light" hidden>--- Choose remark option ---</option>
+                                                    <option value="good">Good Condition</option>
+                                                    <option value="reject">Reject</option>
+                                                </select>
+                                            </TableCell>
                                             <TableCell className="text-center"><div onClick={() => removeItem(index)} className="cursor-pointer hover:contrast-75"><RiDeleteBinLine className="w-6 h-6 text-[#E7000B]" /></div></TableCell>
                                         </TableRow>
                                     ))}
