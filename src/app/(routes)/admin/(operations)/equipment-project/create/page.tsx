@@ -401,6 +401,7 @@ export default function CreateEquipmentProjectPage() {
                                     disabled={equipmentPage <= 1 || loadingEquipment}
                                     onClick={() => setEquipmentPage(p => p - 1)}
                                     className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 text-sm"
+                                    type="button"
                                 >
                                     Previous
                                 </button>
@@ -412,6 +413,7 @@ export default function CreateEquipmentProjectPage() {
                                     disabled={equipmentPage >= equipmentLastPage || loadingEquipment}
                                     onClick={() => setEquipmentPage(p => p + 1)}
                                     className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 text-sm"
+                                    type="button"
                                 >
                                     Next
                                 </button>
