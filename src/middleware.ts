@@ -11,6 +11,10 @@ export function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/admin/dashboard", req.url));
     }
 
+    // if (pathname === "/admin/payroll-managements") {
+    //     return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+    // }
+
 
     // Jika route diawali dengan /admin
     if (req.nextUrl.pathname.startsWith("/admin")) {
