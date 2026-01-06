@@ -48,7 +48,10 @@ export default function CoolNavigationBar({
 
     const handleLogout = async () => {
         const res = await logoutRequest();
-        if (!res.success) return alert("Logout failed: " + res.message);
+        if (!res.success) {
+            alert("Logout failed: " + res.message)
+            window.location.reload;
+        };
 
         toast.message("Logout successful");
         router.push("/");

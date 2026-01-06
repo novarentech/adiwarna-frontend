@@ -162,7 +162,7 @@ export default function Home() {
               <input
                 type="email"
                 id="email"
-                className="h-11 border-[#AAAAAA] border-2 rounded-lg placeholder:text-xl px-3"
+                className="h-11 border-[#AAAAAA] border-2 rounded-lg px-3"
                 placeholder="Add email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

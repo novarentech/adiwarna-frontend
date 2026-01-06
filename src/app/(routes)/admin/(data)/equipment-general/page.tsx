@@ -628,10 +628,10 @@ export default function DataEquipmentGeneral() {
                                                 <TableCell className="text-center">{item.expired_date}</TableCell>
                                             )}
                                             {columns.lembagaKalibrasi && (
-                                                <TableCell className="text-center">{item.calibration_agency}</TableCell>
+                                                <TableCell className="text-center capitalize">{item.calibration_agency}</TableCell>
                                             )}
                                             {columns.kondisi && (
-                                                <TableCell className="text-center">
+                                                <TableCell className="text-center capitalize">
                                                     <span className={`${getConditionColor(item.condition)} p-1 rounded font-semibold text-white`}>
                                                         {item.condition}
                                                     </span>

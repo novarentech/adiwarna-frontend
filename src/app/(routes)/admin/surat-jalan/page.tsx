@@ -270,7 +270,7 @@ export default function SuratJalanPage() {
                 <Table>
                     <TableHeader>
                         <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                            <TableHead className="text-[#212529] font-bold py-8">No Surat</TableHead>
+                            <TableHead className="text-[#212529] font-bold py-8 pl-8">No Surat</TableHead>
                             <TableHead className="text-[#212529] font-bold">Tanggal</TableHead>
                             <TableHead className="text-[#212529] font-bold">Kepada</TableHead>
                             <TableHead className="text-[#212529] font-bold">No. WO</TableHead>
@@ -288,7 +288,7 @@ export default function SuratJalanPage() {
                         ) : data.length > 0 ? (
                             data.map((sj) => (
                                 <TableRow key={sj.id} className="hover:bg-gray-50 border-[#E5E7EB]">
-                                    <TableCell className="py-6 font-medium">{sj.dn_no}/AWP/{sj.dn_date}</TableCell>
+                                    <TableCell className="py-6 font-medium pl-6">{sj.dn_no}/AWP/{sj.dn_date}</TableCell>
                                     <TableCell>{sj.date}</TableCell>
                                     <TableCell>{sj.customer}</TableCell>
                                     <TableCell>{sj.wo_no}</TableCell>
