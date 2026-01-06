@@ -18,6 +18,71 @@ export default function Home() {
 
   const [rememberMe, setRememberMe] = useState(false);
 
+  // store images
+  const images = [
+    "login1.jpeg",
+    "login2.jpeg",
+    "login3.jpeg",
+    "login4.jpeg",
+    "login5.jpeg",
+    "login6.jpeg",
+    "login7.png",
+  ]
+  const extendedImages = [...images, images[0]];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  // const [fade, setFade] = useState(true);
+  const intervalDuration = 4000;
+
+  const [enableTransition, setEnableTransition] = useState(true);
+
+
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     // Calculate the next index, looping back to 0 if at the end
+  //     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  //   }, intervalDuration);
+
+  //   // Cleanup function to clear the interval when the component unmounts
+  //   return () => clearInterval(intervalId);
+  // }, [])
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setFade(false); // fade out
+
+  //     setTimeout(() => {
+  //       setCurrentIndex((prev) => (prev + 1) % images.length);
+  //       setFade(true); // fade in
+  //     }, 1000); // durasi fade
+  //   }, 4000);
+
+  //   return () => clearInterval(interval);
+  // }, [images.length]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prev) => prev + 1);
+    }, intervalDuration);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    if (currentIndex === images.length) {
+      // tunggu animasi selesai
+      setTimeout(() => {
+        setEnableTransition(false);
+        setCurrentIndex(0);
+      }, 700); // harus sama dengan duration animasi
+    } else {
+      setEnableTransition(true);
+    }
+  }, [currentIndex]);
+
+
+
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
     if (savedEmail) {
@@ -151,8 +216,49 @@ export default function Home() {
         </div>
 
         {/* right side */}
-        <div className="p-6">
-          <div className="w-full h-full bg-[url('/images/adiwarna-login.png')] rounded-r-[20px] bg-cover bg-no-repeat"></div>
+        {/* <div className="p-6">
+          <div className={`w-full h-full rounded-r-[20px] bg-cover bg-center transition-opacity duration-500 ${fade ? "opacity-100" : "opacity-0"}`} style={{
+            backgroundImage: `url(/images/${images[currentIndex]})`,
+          }}>
+          </div>
+        </div> */}
+        {/* right side */}
+        {/* <div className="m-6 overflow-hidden rounded-r-[20px]">
+          <div
+            className="w-full h-full rounded-r-[20px] flex transition-transform duration-700 ease-in-out"
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`,
+            }}
+          >
+            {images.map((img, index) => (
+              <div
+                key={index}
+                className="min-w-full h-full bg-cover bg-no-repeat bg-center"
+                style={{
+                  backgroundImage: `url(/images/${img})`,
+                }}
+              />
+            ))}
+          </div>
+        </div> */}
+        <div className="m-6 overflow-hidden rounded-r-[20px]">
+          <div
+            className={`w-full h-full flex ${enableTransition ? "transition-transform duration-700 ease-in-out" : ""
+              }`}
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`,
+            }}
+          >
+            {extendedImages.map((img, index) => (
+              <div
+                key={index}
+                className="min-w-full h-full bg-cover bg-no-repeat bg-center"
+                style={{
+                  backgroundImage: `url(/images/${img})`,
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </>

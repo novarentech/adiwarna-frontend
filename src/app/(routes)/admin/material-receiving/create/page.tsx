@@ -147,7 +147,7 @@ export default function CreateMaterialReceivingPage() {
                             <div className="w-full flex flex-row items-center">
                                 {/* po_no */}
                                 <input id="po_no" required value={formData.po_no} onChange={handleInputChange} type="text" className="w-2/6 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="e.g., 037" />
-                                <p className="w-2/6 text-center mx-2">/MR/AWP - </p>
+                                <p className="w-2/6 text-center mx-2">/PR/AWP - </p>
                                 {/* Input Bulan - Mengambil dari displayDate.month */}
                                 <input
                                     id="display_month"

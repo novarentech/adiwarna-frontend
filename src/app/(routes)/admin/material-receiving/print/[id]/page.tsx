@@ -112,7 +112,7 @@ export default function MaterialReceivingPrintPage({ params }: { params: Promise
                             <tbody>
                                 <tr>
                                     <td className="w-[20%] font-semibold">Ref. PO No.</td>
-                                    <td className="w-[30%] font-bold">{data.po_no}/MR/AWP-{data.po_date} </td>
+                                    <td className="w-[30%] font-bold">{data.po_no}/PR/AWP-{data.po_date} </td>
                                     <td className="w-[20%] font-semibold">Supplier</td>
                                     <td className="w-[30%]">{data.supplier}</td>
                                 </tr>

@@ -272,7 +272,7 @@ export default function MaterialReceivingPage() {
                         ) : data.length > 0 ? (
                             data.map((item) => (
                                 <TableRow key={item.id}>
-                                    <TableCell className="py-6">{item.po_no}/MR/AWP-{item.po_date}</TableCell>
+                                    <TableCell className="py-6">{item.po_no}/PR/AWP-{item.po_date}</TableCell>
                                     <TableCell>{item.supplier || "-"}</TableCell>
                                     <TableCell>{item.receiving_date}</TableCell>
                                     <TableCell>
