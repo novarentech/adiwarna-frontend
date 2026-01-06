@@ -9,6 +9,10 @@ import { FaCircle } from "react-icons/fa";
 import { TbReceiptFilled } from "react-icons/tb";
 import { usePathname } from "next/navigation";
 import { MdSupervisorAccount } from "react-icons/md";
+import { SlEnvolopeLetter } from "react-icons/sl";
+import { BiSolidPurchaseTag } from "react-icons/bi";
+import { RiFolderReceivedFill } from "react-icons/ri";
+
 
 
 export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed: boolean; onCollapseChange: () => void }) {
@@ -122,15 +126,15 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Payroll Managements</h1>
                 </Link>
                 <Link href={"/admin/surat-jalan"} className="flex flex-row items-center cursor-pointer">
-                    <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                    <SlEnvolopeLetter className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Surat Jalan</h1>
                 </Link>
                 <Link href={"/admin/material-receiving"} className="flex flex-row items-center cursor-pointer">
-                    <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                    <RiFolderReceivedFill className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Material Receiving</h1>
                 </Link>
                 <Link href={"/admin/purchase-requisition"} className="flex flex-row items-center cursor-pointer">
-                    <MdSupervisorAccount className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                    <BiSolidPurchaseTag className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Purchase Requisition</h1>
                 </Link>
                 <Link href={"/admin/accounts"} className="flex flex-row items-center cursor-pointer">
