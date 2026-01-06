@@ -327,7 +327,7 @@ export default function CreateEquipmentProjectPage() {
                             </div>
 
                             {/* Search Bar untuk Equipment */}
-                            <form onSubmit={handleEquipmentSearch} className="flex flex-row items-center space-x-2">
+                            <div className="flex flex-row items-center space-x-2">
                                 <label htmlFor="search-equipment" className="text-sm">Search:</label>
                                 <input value={tempEquipmentSearch}
                                     onChange={(e) => setTempEquipmentSearch(e.target.value)}
@@ -335,8 +335,8 @@ export default function CreateEquipmentProjectPage() {
                                     type="text"
                                     className="w-[200px] rounded-sm h-8 border px-2 placeholder:text-sm"
                                     placeholder="Search Equipment..." />
-                                <button className="h-8 w-8 flex items-center justify-center rounded-sm bg-gray-100 border" type="submit"><IoIosSearch className="w-4 h-4 text-gray-600" /></button>
-                            </form>
+                                <div onClick={handleEquipmentSearch} className="h-8 w-8 flex items-center justify-center rounded-sm bg-gray-100 border cursor-pointer"><IoIosSearch className="w-4 h-4 text-gray-600" /></div>
+                            </div>
                         </div>
 
                         {/* Tabel Peralatan */}
@@ -401,6 +401,7 @@ export default function CreateEquipmentProjectPage() {
                                     disabled={equipmentPage <= 1 || loadingEquipment}
                                     onClick={() => setEquipmentPage(p => p - 1)}
                                     className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 text-sm"
+                                    type="button"
                                 >
                                     Previous
                                 </button>
@@ -412,6 +413,7 @@ export default function CreateEquipmentProjectPage() {
                                     disabled={equipmentPage >= equipmentLastPage || loadingEquipment}
                                     onClick={() => setEquipmentPage(p => p + 1)}
                                     className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 text-sm"
+                                    type="button"
                                 >
                                     Next
                                 </button>

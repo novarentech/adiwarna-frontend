@@ -286,7 +286,7 @@ export default function PurchaseRequisitionPage() {
                 <Table className="bg-[#FFFFFF] rounded-t-[10px]">
                     <TableHeader>
                         <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                            <TableHead className="text-[#212529] font-bold py-8">P.R. No.</TableHead>
+                            <TableHead className="text-[#212529] font-bold py-8 pl-8">P.R. No.</TableHead>
                             {/* <TableHead className="text-[#212529] font-bold">Rev. No.</TableHead> */}
                             <TableHead className="text-[#212529] font-bold">Date</TableHead>
                             <TableHead className="text-[#212529] font-bold">Supplier</TableHead>
@@ -304,7 +304,7 @@ export default function PurchaseRequisitionPage() {
                         ) : data.length > 0 ? (
                             data.map((pr) => (
                                 <TableRow key={pr.id}>
-                                    <TableCell className="py-6 font-medium">{pr.pr_no}/PR/AWP-{(pr.pr_date)}</TableCell>
+                                    <TableCell className="py-6 font-medium pl-6">{pr.pr_no}/PR/AWP-{(pr.pr_date)}</TableCell>
                                     {/* <TableCell>{pr.rev_no || "-"}</TableCell> */}
                                     <TableCell>{pr.date}</TableCell>
                                     <TableCell>{pr.supplier}</TableCell>

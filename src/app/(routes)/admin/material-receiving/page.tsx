@@ -254,7 +254,7 @@ export default function MaterialReceivingPage() {
                 <Table className="bg-[#FFFFFF] rounded-t-[10px]">
                     <TableHeader>
                         <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                            <TableHead className="text-[#212529] font-bold py-8">P.O./INV./PR No.</TableHead>
+                            <TableHead className="text-[#212529] font-bold py-8 pl-8">P.O./INV./PR No.</TableHead>
                             <TableHead className="text-[#212529] font-bold">Supplier</TableHead>
                             <TableHead className="text-[#212529] font-bold">Receiving Date</TableHead>
                             <TableHead className="text-[#212529] font-bold">Order By</TableHead>
@@ -262,7 +262,7 @@ export default function MaterialReceivingPage() {
                             <TableHead className="text-[#212529] font-bold">Received By</TableHead>
                             <TableHead className="text-[#212529] font-bold">Status</TableHead>
                             <TableHead className="w-1/5 text-[#212529] font-bold text-center">Actions</TableHead>
-                        </TableRow>
+                        </TableRow> 
                     </TableHeader>
                     <TableBody>
                         {loading ? (
@@ -272,7 +272,7 @@ export default function MaterialReceivingPage() {
                         ) : data.length > 0 ? (
                             data.map((item) => (
                                 <TableRow key={item.id}>
-                                    <TableCell className="py-6">{item.po_no}/PR/AWP-{item.po_date}</TableCell>
+                                    <TableCell className="py-6 pl-6">{item.po_no}/PR/AWP-{item.po_date}</TableCell>
                                     <TableCell>{item.supplier || "-"}</TableCell>
                                     <TableCell>{item.receiving_date}</TableCell>
                                     <TableCell>

@@ -33,15 +33,18 @@ export default function WorkOrderPage() {
     const [lastPage, setLastPage] = useState(1);
     const [loading, setLoading] = useState(true);
 
+
+
     const fetchData = async () => {
         setLoading(true);
         const res: GetAllWorkOrdersResponse = await getAllWorkOrders(page, search);
+        console.log(res);
 
         if (res.success) {
             setWorkOrder(res.data);
             setLastPage(res.meta.last_page);
         }
-
+        console.log(workOrder);
         setLoading(false);
     };
 
@@ -68,7 +71,7 @@ export default function WorkOrderPage() {
 
         // alert(`Purchase Order (${id}) deleted successfully!`);
         toast.success(`Work Order deleted successfully!`);
-        
+
         fetchData();
     };
     return (

@@ -151,7 +151,7 @@ export default function EquipmentProjectPage() {
                                     // Ganti key dari q.id ke project.id
                                     <TableRow key={project.id} className="even:bg-white odd:bg-[#fafafa] hover:bg-gray-50">
                                         <TableCell className="text-center font-medium">{getNo(index)}</TableCell>
-                                        <TableCell className="py-6 text-sm">{formatDate(project.project_date)}</TableCell>
+                                        <TableCell className="py-6 text-sm">{(project.project_date)}</TableCell>
                                         <TableCell className="text-sm">{project.customer}</TableCell>
                                         <TableCell className="text-sm">{project.location}</TableCell>
                                         <TableCell className="text-sm">{project.prepared_by}</TableCell>

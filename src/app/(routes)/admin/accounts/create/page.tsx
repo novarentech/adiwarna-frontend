@@ -13,6 +13,7 @@ export default function CreateAccountPage() {
     const router = useRouter();
 
     const [showPass, setShowPass] = useState(false);
+    const [showPass2, setShowPass2] = useState(false);
 
     // Form values
     const [form, setForm] = useState({
@@ -134,15 +135,25 @@ export default function CreateAccountPage() {
                     {/* confirm password */}
                     <div className="flex flex-col space-y-1 mt-4">
                         <label className="font-bold">Confirm Password</label>
-                        <input
-                            type="password"
-                            className="border rounded-sm h-9 px-2"
-                            placeholder="Confirm Password"
-                            value={form.password_confirmation}
-                            onChange={(e) =>
-                                setForm({ ...form, password_confirmation: e.target.value })
-                            }
-                        />
+                        <div className="flex items-center border rounded-sm h-9 px-2">
+
+                            <input
+                                type={showPass2 ? "text" : "password"}
+                                className="flex-1 outline-none"
+                                placeholder="Confirm Password"
+                                value={form.password_confirmation}
+                                onChange={(e) =>
+                                    setForm({ ...form, password_confirmation: e.target.value })
+                                }
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPass2(!showPass2)}
+                                className="text-gray-600"
+                            >
+                                {showPass2 ? <FaRegEyeSlash className="w-6 h-6" /> : <FaRegEye className="w-6 h-6" />}
+                            </button>
+                        </div>
                     </div>
 
                     <hr className="border-b my-6" />

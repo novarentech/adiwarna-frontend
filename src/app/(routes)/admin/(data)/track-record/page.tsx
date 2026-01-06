@@ -122,7 +122,7 @@ export default function TrackRecordPage() {
     const formatWorkOrder = (no: string, year: number) => {
         // Contoh: 1234/AWP-INS/JKT/2025 (ini harus disesuaikan dengan format API Anda)
         // Jika API hanya memberikan NO dan YEAR, kita perlu asumsikan sisanya
-        return `${no}/AWP-INS/XXX/${year}`; // XXX Placeholder, sesuaikan jika ada data lokasi
+        return `${no}/AWP-INS/JKT/${year}`; // XXX Placeholder, sesuaikan jika ada data lokasi
     };
 
 

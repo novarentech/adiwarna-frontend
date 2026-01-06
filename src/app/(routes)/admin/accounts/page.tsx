@@ -101,7 +101,7 @@ export default function AccountsPage() {
                                     </TableCell>
 
                                     <TableCell className="text-center">{user.phone}</TableCell>
-                                    <TableCell className="text-center">{user.usertype}</TableCell>
+                                    <TableCell className="text-center capitalize">{user.usertype}</TableCell>
                                     <TableCell className="text-left">{user.email}</TableCell>
 
                                     <TableCell className="text-center">

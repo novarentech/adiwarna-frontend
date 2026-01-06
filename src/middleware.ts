@@ -5,11 +5,16 @@ export function middleware(req: NextRequest) {
     const token = req.cookies.get("token")?.value;
     const role = req.cookies.get("role")?.value;
     const pathname = req.nextUrl.pathname;
+    
 
     // hide agar tidak bisa akses daily activity report
     if (pathname === "/admin/daily-activity-report") {
         return NextResponse.redirect(new URL("/admin/dashboard", req.url));
     }
+
+    // if (pathname === "/admin/payroll-managements") {
+    //     return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+    // }
 
 
     // Jika route diawali dengan /admin
