@@ -324,7 +324,7 @@ export default function DataEquipmentGeneral() {
             XLSX.writeFile(workbook, fileName);
 
             // 5. Tampilkan Modal Sukses
-            setShowModal(true);
+            // setShowModal(true);
             setTimeout(() => setShowModal(false), 3000);
 
         } catch (error) {

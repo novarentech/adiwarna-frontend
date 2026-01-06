@@ -1,11 +1,11 @@
 "use client";
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginRequest, loginRequest, LoginResult } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+import { toast } from "sonner";
 
 export default function Home() {
   const router = useRouter();
@@ -15,6 +15,16 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const [showPass, setShowPass] = useState(false);
+
+  const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,16 +38,32 @@ export default function Home() {
     setLoading(false);
 
     if (!result.success) {
-      alert(result.message);
+      toast.error(result.message);
       return;
+    }
+
+    // --- LOGIKA REMEMBER ME ---
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", email);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+    }
+    // ---------------------------
+
+    if (result?.user?.usertype === "admin") {
+      router.push("/admin/dashboard");
+    } else if (result?.user?.usertype === "teknisi") {
+      router.push("/teknisi");
     }
 
     // alert("Login Berhasil!");
     if (result?.user?.usertype === "admin") {
       router.push("/admin/dashboard"); // sesuaikan routing
+      toast.success("Successfully signed in as Admin");
     }
     if (result?.user?.usertype === "teknisi") {
       router.push("/teknisi"); // sesuaikan routing
+      toast.success("Successfully signed in as teknisi");
     }
   };
 
@@ -107,8 +133,14 @@ export default function Home() {
               </button>
 
               <div className="flex mt-6 space-x-4 items-center">
-                <input type="checkbox" id="remember" className="w-6 h-6" />
-                <label htmlFor="remember" className="text-lg text-[#595959]">
+                <input
+                  type="checkbox"
+                  id="remember"
+                  className="w-6 h-6 cursor-pointer"
+                  checked={rememberMe} // Tambahkan ini
+                  onChange={(e) => setRememberMe(e.target.checked)} // Tambahkan ini
+                />
+                <label htmlFor="remember" className="text-lg text-[#595959] cursor-pointer">
                   Remember Me
                 </label>
               </div>

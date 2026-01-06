@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { FaUser } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { getUserProfile, IUser, logoutRequest } from "@/lib/auth";
+import { toast } from "sonner";
 
 export default function CoolNavigationBar({
     children,
@@ -49,7 +50,7 @@ export default function CoolNavigationBar({
         const res = await logoutRequest();
         if (!res.success) return alert("Logout failed: " + res.message);
 
-        alert("Logout successful");
+        toast.message("Logout successful");
         router.push("/");
     };
 
