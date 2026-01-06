@@ -52,7 +52,7 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                 <div className="flex flex-row items-center cursor-pointer" onClick={() => setShowingCollapsibleOperations(!showingCollapsibleOperations)}>
                     <FaGear className={`w-5 h-5 text-white ${collapsed ? 'mx-auto' : ''}`} />
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Operations</h1>
-                    <IoIosArrowDown className={`ml-auto w-5 h-5 ${showingCollapsibleOperations ? "rotate-180" : ""} ${collapsed ? 'hidden' : ''}`} />
+                    <IoIosArrowDown className={`ml-auto w-5 h-5 ${showingCollapsibleOperations ? "" : "rotate-90"} ${collapsed ? 'hidden' : ''}`} />
                 </div>
                 {/* list route collapsible */}
                 <div className={`${showingCollapsibleOperations ? "" : "hidden"} ${collapsed ? "hidden" : ""} flex flex-col space-y-2 transition mt-3 ml-10`}>
@@ -95,7 +95,7 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                 <div className="flex flex-row items-center cursor-pointer" onClick={() => setShowingCollapsibleData(!showingCollapsibleData)}>
                     <Image src={"/icons/icon-data.svg"} className={`${collapsed ? 'mx-auto' : ''}`} alt="icon accounts" width={23} height={23} />
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Data</h1>
-                    <IoIosArrowDown className={`ml-auto w-5 h-5 ${showingCollapsibleData ? "rotate-180" : ""} ${collapsed ? 'hidden' : ''}`} />
+                    <IoIosArrowDown className={`ml-auto w-5 h-5 ${showingCollapsibleData ? "" : "rotate-90"} ${collapsed ? 'hidden' : ''}`} />
                 </div>
                 {/* list route collapsible */}
                 <div className={`${showingCollapsibleData ? "" : "hidden"} ${collapsed ? "hidden" : ""} flex flex-col space-y-2 transition mt-3 ml-10`}>
