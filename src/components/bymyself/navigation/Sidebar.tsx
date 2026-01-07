@@ -86,6 +86,18 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                         <FaCircle className="w-[23px] h-[23px]" />
                         <p className="text-base">Equipment Project</p>
                     </Link>
+                    <Link href={"/admin/surat-jalan"} className="h-10 flex flex-row items-center cursor-pointer">
+                        <SlEnvolopeLetter className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                        <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Surat Jalan</h1>
+                    </Link>
+                    <Link href={"/admin/material-receiving"} className="h-10 flex flex-row items-center cursor-pointer">
+                        <RiFolderReceivedFill className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                        <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Material Receiving</h1>
+                    </Link>
+                    <Link href={"/admin/purchase-requisition"} className="h-10 flex flex-row items-center cursor-pointer">
+                        <BiSolidPurchaseTag className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                        <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Purchase Requisition</h1>
+                    </Link>
                 </div>
             </div>
 
@@ -124,18 +136,6 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                     <TbReceiptFilled className={`w-5 h-5 text-white ${collapsed ? 'mx-auto' : ''}`} />
 
                     <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Payroll Managements</h1>
-                </Link>
-                <Link href={"/admin/surat-jalan"} className="flex flex-row items-center cursor-pointer">
-                    <SlEnvolopeLetter className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
-                    <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Surat Jalan</h1>
-                </Link>
-                <Link href={"/admin/material-receiving"} className="flex flex-row items-center cursor-pointer">
-                    <RiFolderReceivedFill className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
-                    <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Material Receiving</h1>
-                </Link>
-                <Link href={"/admin/purchase-requisition"} className="flex flex-row items-center cursor-pointer">
-                    <BiSolidPurchaseTag className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
-                    <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Purchase Requisition</h1>
                 </Link>
                 <Link href={"/admin/accounts"} className="flex flex-row items-center cursor-pointer">
                     <Image src={"/icons/icon-accounts.svg"} className={`${collapsed ? 'mx-auto' : ''}`} alt="icon accounts" width={23} height={23} />
