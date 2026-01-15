@@ -66,7 +66,7 @@ export default function CreateEmployeePage() {
                         <div className="flex">
                             <input id="employee-no"
                                 value={employeeNo}
-                                onChange={(e) => setEmployeeNo(e.target.value)} type="text" className="flex-1 border rounded-sm h-9 px-2" placeholder="add employee number" />
+                                onChange={(e) => setEmployeeNo(e.target.value)} type="text" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="add employee number" />
                         </div>
                     </div>
                     {/* Name */}
@@ -74,7 +74,7 @@ export default function CreateEmployeePage() {
                         <label htmlFor="employee-name" className="font-bold">Name</label>
                         <div className="flex">
                             <input value={employeeName}
-                                onChange={(e) => setEmployeeName(e.target.value)} type="text" id="employee-name" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add employee name" />
+                                onChange={(e) => setEmployeeName(e.target.value)} type="text" id="employee-name" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add employee name" />
                         </div>
                     </div>
                     {/* Position */}
@@ -82,7 +82,7 @@ export default function CreateEmployeePage() {
                         <label htmlFor="employee-position" className="font-bold">Position</label>
                         <div className="flex">
                             <input value={employeePosition}
-                                onChange={(e) => setEmployeePosition(e.target.value)} type="text" id="employee-position" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add employee position" />
+                                onChange={(e) => setEmployeePosition(e.target.value)} type="text" id="employee-position" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add employee position" />
                         </div>
                     </div>
                     <hr className="border-b my-6" />

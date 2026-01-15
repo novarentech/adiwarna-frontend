@@ -200,7 +200,7 @@ export default function CreateWorkOrderPage() {
                                     <input
                                         type="text"
                                         id="no-wo-order"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         placeholder="Number"
                                         value={formData.work_order_no}
                                         onChange={(e) => setFormData({ ...formData, work_order_no: e.target.value })}
@@ -210,7 +210,7 @@ export default function CreateWorkOrderPage() {
                                     <input
                                         type="number"
                                         id="year"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         placeholder="year"
                                         value={formData.work_order_year}
                                         onChange={(e) => setFormData({ ...formData, work_order_year: Number(e.target.value) })}
@@ -227,7 +227,7 @@ export default function CreateWorkOrderPage() {
                                     <input
                                         type="date"
                                         id="date"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         value={formData.date}
                                         onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                                     />
@@ -255,7 +255,7 @@ export default function CreateWorkOrderPage() {
                                             <select
                                                 value={row.employeeId}
                                                 onChange={(e) => handleWorkerSelect(index, e.target.value)}
-                                                className="border rounded-sm min-h-12 px-2 w-full p-2"
+                                                className="border border-[#AAAAAA] rounded-sm min-h-12 px-2 w-full p-2"
                                                 required={index === 0} // Baris pertama wajib
                                             >
                                                 <option value="" className="">---Choose worker's name---</option>
@@ -272,7 +272,7 @@ export default function CreateWorkOrderPage() {
                                             <input
                                                 type="text"
                                                 value={row.position}
-                                                className="border rounded-sm min-h-12 px-2 w-full p-2 bg-gray-200"
+                                                className="border border-[#AAAAAA] rounded-sm min-h-12 px-2 w-full p-2 bg-gray-200"
                                                 placeholder="Worker's position"
                                                 disabled
                                                 readOnly
@@ -296,7 +296,7 @@ export default function CreateWorkOrderPage() {
                         {/* Button Add Row */}
                         <div
                             onClick={addRowDataWorker}
-                            className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
+                            className="mt-4 px-4 py-2 bg-[#31C6D4] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
                         >
                             + Add Worker
                         </div>
@@ -309,7 +309,7 @@ export default function CreateWorkOrderPage() {
                         <label htmlFor="customer" className="font-bold">Customer</label>
                         <div className="flex">
                             <select
-                                className="flex-1 border rounded-sm h-9 px-2"
+                                className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 value={formData.customer_id}
                                 onChange={handleCustomerChange}
                                 required
@@ -329,7 +329,7 @@ export default function CreateWorkOrderPage() {
                         <label htmlFor="work-location" className="font-bold">Work Location</label>
                         <div className="flex">
                             <select
-                                className="flex-1 border rounded-sm h-9 px-2"
+                                className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 value={formData.customer_location_id}
                                 onChange={(e) => setFormData({ ...formData, customer_location_id: e.target.value })}
                                 disabled={!selectedCustomer} // Disabled jika customer belum dipilih
@@ -353,7 +353,7 @@ export default function CreateWorkOrderPage() {
                         <div className="flex">
                             <input
                                 type="text"
-                                className="flex-1 border rounded-sm h-9 px-2 bg-gray-200"
+                                className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2 bg-gray-200"
                                 disabled
                                 value={selectedCustomer?.phone_number || ""}
                                 placeholder="Phone number will appear here..."
@@ -423,7 +423,7 @@ export default function CreateWorkOrderPage() {
 
                     <div className="ml-auto w-1/4 grid grid-cols-2 space-x-4">
                         <Link href={"/admin/work-order"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm">Cancel</Link>
-                        <button type="submit" className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
+                        <button type="submit" className="bg-[#31C6D4] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
                     </div>
                 </form>
                 {/* end form */}

@@ -271,7 +271,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                         id="ref_no"
                                         value={formData.ref_no}
                                         onChange={handleFormChange}
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         placeholder="Add Number"
                                     />
                                     <p className="mx-4 font-bold">/AWS-INS/</p>
@@ -280,7 +280,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                         id="ref_year"
                                         value={formData.ref_year}
                                         onChange={handleFormChange}
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         placeholder="Year"
                                     />
                                 </div>
@@ -292,7 +292,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                     id="customer_id"
                                     value={formData.customer_id}
                                     onChange={handleFormChange}
-                                    className="flex-1 border rounded-sm h-9 px-2 mt-1 block "
+                                    className="flex-1 border border-[#AAAAAA] rounded-sm h-9 py-1.5 px-2 mt-1 block "
                                 >
                                     <option value="" hidden>---Choose Customer---</option>
                                     {customers.map(customer => (
@@ -309,7 +309,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                     id="subject"
                                     value={formData.subject}
                                     onChange={handleFormChange}
-                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                     placeholder="Add Subject"
                                 />
                             </div>
@@ -323,7 +323,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                     id="date"
                                     value={formData.date}
                                     onChange={handleFormChange}
-                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                 />
                             </div>
 
@@ -334,7 +334,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                     id="pic_name"
                                     value={formData.pic_name}
                                     onChange={handleFormChange}
-                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                     placeholder="Add PIC's name"
                                 />
                             </div>
@@ -346,7 +346,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                     id="pic_phone"
                                     value={formData.pic_phone}
                                     onChange={handleFormChange}
-                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                     placeholder="Add Phone Number"
                                 />
                             </div>
@@ -375,7 +375,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                                 type="number"
                                                 value={row.qty}
                                                 onChange={(e) => updateRowScope(index, "qty", e.target.value)}
-                                                className="border rounded-sm h-9 px-2 w-full"
+                                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full"
                                             />
                                         </td>
 
@@ -383,7 +383,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                             <input
                                                 value={row.unit}
                                                 onChange={(e) => updateRowScope(index, "unit", e.target.value)}
-                                                className="border rounded-sm h-9 px-2 w-full"
+                                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full"
                                             />
                                         </td>
 
@@ -394,7 +394,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                                 onChange={(e) =>
                                                     updateRowScope(index, "description", e.target.value)
                                                 }
-                                                className="border rounded-sm h-9 px-2 w-full"
+                                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full"
                                             />
                                         </td>
 
@@ -405,7 +405,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                                 onChange={(e) =>
                                                     updateRowScope(index, "unitRate", e.target.value)
                                                 }
-                                                className="border rounded-sm h-9 px-2 w-full"
+                                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full"
                                             />
                                         </td>
 
@@ -427,7 +427,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                     <button
                         type="button"
                         onClick={addRowScope}
-                        className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded"
+                        className="mt-4 px-4 py-2 bg-[#31C6D4] text-white rounded"
                     >
                         + Add Row
                     </button>
@@ -453,7 +453,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                             onChange={(e) =>
                                                 updateRowAdiwarna(index, "details", e.target.value)
                                             }
-                                            className="border rounded-sm p-2 w-full min-h-16"
+                                            className="border border-[#AAAAAA] rounded-sm p-2 w-full min-h-16"
                                         />
                                     </td>
 
@@ -474,7 +474,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                     <button
                         type="button"
                         onClick={addRowAdiwarna}
-                        className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded"
+                        className="mt-4 px-4 py-2 bg-[#31C6D4] text-white rounded"
                     >
                         + Add Row
                     </button>
@@ -501,7 +501,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                             onChange={(e) =>
                                                 updateRowClient(index, "details", e.target.value)
                                             }
-                                            className="border rounded-sm p-2 w-full min-h-16"
+                                            className="border border-[#AAAAAA] rounded-sm p-2 w-full min-h-16"
                                         />
                                     </td>
 
@@ -522,7 +522,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                     <button
                         type="button"
                         onClick={addRowClient}
-                        className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded"
+                        className="mt-4 px-4 py-2 bg-[#31C6D4] text-white rounded"
                     >
                         + Add Row
                     </button>
@@ -534,7 +534,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                 <div className="flex flex-row mt-1 items-center">
                                     <input
                                         id="top"
-                                        className="border rounded-sm h-9 px-2 flex-1"
+                                        className="border border-[#AAAAAA] rounded-sm h-9 px-2 flex-1"
                                         type="text"
                                         value={formData.top}
                                         onChange={handleFormChange}
@@ -548,7 +548,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                 <div className="flex flex-row mt-1 items-center">
                                     <input
                                         id="valid_until"
-                                        className="border rounded-sm h-9 px-2 flex-1"
+                                        className="border border-[#AAAAAA] rounded-sm h-9 px-2 flex-1"
                                         type="date"
                                         value={formData.valid_until}
                                         onChange={handleFormChange}
@@ -562,7 +562,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                             <label className="font-bold">Clause</label>
                             <input
                                 id="clause"
-                                className="border rounded-sm h-9 px-2 w-full mt-1"
+                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                 value={formData.clause}
                                 onChange={handleFormChange}
                             />
@@ -572,7 +572,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                             <label className="font-bold">Workday</label>
                             <input
                                 id="workday"
-                                className="border rounded-sm h-9 px-2 w-full mt-1"
+                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                 value={formData.workday}
                                 onChange={handleFormChange}
                             />
@@ -583,7 +583,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                 <label className="font-bold">Authorized By</label>
                                 <input
                                     id="auth_name"
-                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                     value={formData.auth_name}
                                     onChange={handleFormChange}
                                 />
@@ -593,7 +593,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                 <label className="font-bold">Position</label>
                                 <input
                                     id="auth_position"
-                                    className="border rounded-sm h-9 px-2 w-full mt-1"
+                                    className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                     value={formData.auth_position}
                                     onChange={handleFormChange}
                                 />
@@ -605,7 +605,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                             <div className="flex flex-row items-center space-x-2">
                                 <input
                                     id="discount"
-                                    className="border rounded-sm h-9 px-2 w-1/4 mt-1"
+                                    className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-1/4 mt-1"
                                     value={formData.discount}
                                     onChange={handleFormChange}
                                 />
@@ -626,7 +626,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
 
                         <button
                             type="submit"
-                            className="bg-[#17a2b8] text-white h-10 rounded-sm"
+                            className="bg-[#31C6D4] text-white h-10 rounded-sm"
                         >
                             {loading ? "loading..." : "Save"}
                         </button>

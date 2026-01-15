@@ -87,16 +87,19 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                         <p className="text-base">Equipment Project</p>
                     </Link>
                     <Link href={"/admin/surat-jalan"} className="h-10 flex flex-row items-center cursor-pointer">
-                        <SlEnvolopeLetter className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                        {/* <SlEnvolopeLetter className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} /> */}
+                        <Image src={"/icons/icon-surat-jalan.svg"} className="" alt="icon work order" width={23} height={23} />
                         <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Surat Jalan</h1>
                     </Link>
-                    <Link href={"/admin/material-receiving"} className="h-10 flex flex-row items-center cursor-pointer">
-                        <RiFolderReceivedFill className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
-                        <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Material Receiving</h1>
-                    </Link>
                     <Link href={"/admin/purchase-requisition"} className="h-10 flex flex-row items-center cursor-pointer">
-                        <BiSolidPurchaseTag className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                        {/* <BiSolidPurchaseTag className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} /> */}
+                        <Image src={"/icons/icon-pr.svg"} className="" alt="icon work order" width={23} height={23} />
                         <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Purchase Requisition</h1>
+                    </Link>
+                    <Link href={"/admin/material-receiving"} className="h-10 flex flex-row items-center cursor-pointer">
+                        {/* <RiFolderReceivedFill className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} /> */}
+                        <Image src={"/icons/icon-mr.svg"} className="" alt="icon work order" width={23} height={23} />
+                        <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Material Receiving</h1>
                     </Link>
                 </div>
             </div>

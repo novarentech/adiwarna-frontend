@@ -309,7 +309,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                 <select id="customer_id"
                                     value={formData.customer_id}
                                     onChange={handleFormChange}
-                                    className="border rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
+                                    className="border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
                                 >
                                     <option value="" className="font-light" hidden>---Pilih Customer---</option>
                                     {customers.map(customer => (
@@ -325,7 +325,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                 <input type="date" id="project_date"
                                     value={formData.project_date}
                                     onChange={(e) => setFormData(prev => ({ ...prev, project_date: e.target.value }))}
-                                    className="border rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
+                                    className="border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
                                 />
                                 <p className="text-sm text-gray-500">Format: mm/dd/yyyy</p>
                             </div>
@@ -335,7 +335,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                 <input type="text" id="prepared_by"
                                     value={formData.prepared_by}
                                     onChange={handleFormChange}
-                                    className="border rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
+                                    className="border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
                                     placeholder="Prepared By Name"
                                 />
                             </div>
@@ -350,7 +350,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                     value={formData.customer_location_id}
                                     onChange={handleFormChange}
                                     disabled={!formData.customer_id || customersLocation.length === 0}
-                                    className={`border rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8] ${!formData.customer_id ? 'bg-gray-100 text-gray-500' : ''}`}
+                                    className={`border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8] ${!formData.customer_id ? 'bg-gray-100 text-gray-500' : ''}`}
                                 >
                                     <option value="" className="font-light" hidden>---Pilih Customer Dulu---</option>
                                     {customersLocation.map(location => (
@@ -366,7 +366,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                 <input type="text" id="verified_by"
                                     value={formData.verified_by}
                                     onChange={handleFormChange}
-                                    className="border rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
+                                    className="border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
                                     placeholder="Verified By Name"
                                 />
                             </div>
@@ -481,7 +481,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                 >
                                     Previous
                                 </button>
-                                <span className="px-3 py-1 border rounded bg-[#17A2B8] text-white">
+                                <span className="px-3 py-1 border rounded bg-[#31C6D4] text-white">
                                     {equipmentPage}
                                 </span>
                                 <button
@@ -501,7 +501,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                     {/* ACTION BUTTONS */}
                     <div className="ml-auto w-1/4 grid grid-cols-2 space-x-4">
                         <Link href={"/admin/equipment-project"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm hover:bg-red-600 transition">Cancel</Link>
-                        <button type="submit" disabled={loading} className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm hover:bg-[#1593A5] transition disabled:opacity-50">
+                        <button type="submit" disabled={loading} className="bg-[#31C6D4] flex justify-center items-center text-white h-10 rounded-sm hover:bg-[#1593A5] transition disabled:opacity-50">
                             {loading ? "Updating..." : "Update"}
                         </button>
                     </div>

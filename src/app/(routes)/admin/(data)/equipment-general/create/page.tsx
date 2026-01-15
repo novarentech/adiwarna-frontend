@@ -102,7 +102,7 @@ export default function CreateEquipmentGeneral() {
                             type="text"
                             id="description"
                             name="description"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             placeholder="Masukkan deskripsi equipment"
                             value={formData.description}
                             onChange={handleInputChange}
@@ -117,7 +117,7 @@ export default function CreateEquipmentGeneral() {
                             type="text"
                             id="merk_type"
                             name="merk_type"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             placeholder="Masukkan merk/type"
                             value={formData.merk_type}
                             onChange={handleInputChange}
@@ -131,7 +131,7 @@ export default function CreateEquipmentGeneral() {
                             type="text"
                             id="serial_number"
                             name="serial_number"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             placeholder="Masukkan serial number"
                             value={formData.serial_number}
                             onChange={handleInputChange}
@@ -148,7 +148,7 @@ export default function CreateEquipmentGeneral() {
                                 type="date"
                                 id="calibration_date"
                                 name="calibration_date"
-                                className="border rounded-sm h-9 px-2"
+                                className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 value={formData.calibration_date}
                                 onChange={handleInputChange}
                                 required
@@ -161,7 +161,7 @@ export default function CreateEquipmentGeneral() {
                             <select
                                 id="duration_months"
                                 name="duration_months"
-                                className="border rounded-sm h-9 px-2"
+                                className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 value={formData.duration_months}
                                 onChange={handleInputChange}
                                 required
@@ -179,7 +179,7 @@ export default function CreateEquipmentGeneral() {
                         <select
                             id="calibration_agency"
                             name="calibration_agency"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             value={formData.calibration_agency}
                             onChange={handleInputChange}
                             required
@@ -196,7 +196,7 @@ export default function CreateEquipmentGeneral() {
                         <select
                             id="condition"
                             name="condition"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             value={formData.condition}
                             onChange={handleInputChange}
                             required
@@ -221,7 +221,7 @@ export default function CreateEquipmentGeneral() {
 
                         <button
                             type="submit"
-                            className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm disabled:bg-gray-400"
+                            className="bg-[#31C6D4] flex justify-center items-center text-white h-10 rounded-sm disabled:bg-gray-400"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? 'Saving...' : 'Save'}

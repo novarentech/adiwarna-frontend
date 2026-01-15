@@ -186,10 +186,10 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="po-no" className="font-bold">PO No.</label>
                                 <div className="flex items-center">
                                     <input type="text" id="po_no" value={formData.po_no}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add number" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add number" />
                                     <p className="mx-4 font-bold">/PO/AWS-INS/</p>
                                     <input type="text" id="po_year" value={formData.po_year}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="year" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="year" />
                                 </div>
                             </div>
                         </div>
@@ -200,7 +200,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="date" className="font-bold">Date</label>
                                 <div className="flex">
                                     <input type="date" id="date" value={formData.date}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                 </div>
                             </div>
                         </div>
@@ -216,7 +216,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="customer" className="font-bold">Customer</label>
                                 <div className="flex">
                                     <select id="customer_id" value={formData.customer_id}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2">
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2">
                                         <option value="" className="font-light" hidden>---Choose Customer's Name---</option>
                                         {customers.map(customer => (
                                             <option key={customer.id} value={customer.id}>
@@ -230,14 +230,14 @@ export default function CreatePurchaseOrderPage() {
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="customer-address" className="font-bold">Customer's Address</label>
                                 <div className="flex">
-                                    <input type="text" value={customerAddress} id="customer-address" className="flex-1 border rounded-sm h-9 px-2 bg-[#e9ecef]" placeholder="" disabled />
+                                    <input type="text" value={customerAddress} id="customer-address" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2 bg-[#e9ecef]" placeholder="" disabled />
                                 </div>
                             </div>
                             {/* customer address */}
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="customer-phone" className="font-bold">Customer's Phone Number</label>
                                 <div className="flex">
-                                    <input type="text" id="customer-phone" value={customerPhoneNumber} className="flex-1 border rounded-sm h-9 px-2 bg-[#e9ecef]" placeholder="" disabled />
+                                    <input type="text" id="customer-phone" value={customerPhoneNumber} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2 bg-[#e9ecef]" placeholder="" disabled />
                                 </div>
                             </div>
                         </div>
@@ -248,7 +248,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="pic_name" className="font-bold">Person in Charge (PIC)</label>
                                 <div className="flex">
                                     <input type="text" id="pic_name" value={formData.pic_name}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add PIC'S name" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add PIC'S name" />
                                 </div>
                             </div>
                             {/* PIC phone */}
@@ -256,7 +256,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="pic-phone" className="font-bold">PIC's Phone number</label>
                                 <div className="flex">
                                     <input type="text" id="pic_phone" value={formData.pic_phone}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add PIC'S telephone number" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add PIC'S telephone number" />
                                 </div>
                             </div>
                         </div>
@@ -271,7 +271,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="required_date" className="font-bold">Required Delivery Date</label>
                                 <div className="flex items-center">
                                     <input type="date" id="required_date" value={formData.required_date}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                 </div>
                             </div>
                         </div>
@@ -282,7 +282,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="term-of-payment" className="font-bold">Terms of Payment</label>
                                 <div className="flex items-center">
                                     <input type="text" id="top_dp" value={formData.top_dp}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="50" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="50" />
                                     <p className="mx-2 font-bold">% DP;</p>
                                 </div>
                             </div>
@@ -293,7 +293,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="quotations-valid" className="font-bold text-transparent">.</label>
                                 <div className="flex items-center">
                                     <input type="text" id="top_cod" value={formData.top_cod}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="50" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="50" />
                                     <p className="mx-4 font-bold">% COD</p>
                                 </div>
                             </div>
@@ -307,7 +307,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="quotation-ref" className="font-bold">Quotation Ref.</label>
                                 <div className="flex items-center">
                                     <input type="text" id="quotation_ref" value={formData.quotation_ref}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                 </div>
                             </div>
                         </div>
@@ -317,7 +317,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="pr-no" className="font-bold">PR No.</label>
                                 <div className="flex items-center">
                                     <input type="text" id="purchase_requisition_no" value={formData.purchase_requisition_no}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="50" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="50" />
                                     <p className="mx-2 font-bold">/PR/</p>
                                 </div>
                             </div>
@@ -328,7 +328,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="purchase_requisition_year" className="font-bold text-transparent">.</label>
                                 <div className="flex items-center">
                                     <input type="number" id="purchase_requisition_year" value={formData.purchase_requisition_year}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Year" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Year" />
                                 </div>
                             </div>
                         </div>
@@ -358,7 +358,7 @@ export default function CreatePurchaseOrderPage() {
                                                 type="number"
                                                 value={row.qty}
                                                 onChange={(e) => updateRowScope(index, "qty", e.target.value)}
-                                                className="border rounded-sm h-9 px-2 w-full mx-auto appearance-none"
+                                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mx-auto appearance-none"
                                                 placeholder="0"
                                             />
                                         </td>
@@ -367,7 +367,7 @@ export default function CreatePurchaseOrderPage() {
                                             <input
                                                 value={row.unit}
                                                 onChange={(e) => updateRowScope(index, "unit", e.target.value)}
-                                                className="border rounded-sm h-9 px-2 w-full"
+                                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full"
                                                 placeholder="Unit"
                                             />
                                         </td>
@@ -379,7 +379,7 @@ export default function CreatePurchaseOrderPage() {
                                                 onChange={(e) =>
                                                     updateRowScope(index, "description", e.target.value)
                                                 }
-                                                className="border rounded-sm h-9 px-2 w-full"
+                                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full"
                                                 placeholder="Add Description"
                                             />
                                         </td>
@@ -389,7 +389,7 @@ export default function CreatePurchaseOrderPage() {
                                                 type="number"
                                                 value={row.unitRate}
                                                 onChange={(e) => updateRowScope(index, "unitRate", e.target.value)}
-                                                className="border rounded-sm h-9 px-2 w-full"
+                                                className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full"
                                                 placeholder="0"
                                             />
                                         </td>
@@ -410,7 +410,7 @@ export default function CreatePurchaseOrderPage() {
                         {/* Button Add Row */}
                         <div
                             onClick={addRowScope}
-                            className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
+                            className="mt-4 px-4 py-2 bg-[#31C6D4] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
                         >
                             + Add Row
                         </div>
@@ -426,7 +426,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="req_name" className="font-bold">Requested By</label>
                                 <div className="flex items-center">
                                     <input type="text" id="req_name" value={formData.req_name}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama anda" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan nama anda" />
                                 </div>
                             </div>
                             {/* approved */}
@@ -434,7 +434,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="app_name" className="font-bold">Approved By</label>
                                 <div className="flex">
                                     <input type="text" id="app_name" value={formData.app_name}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan nama" />
                                 </div>
                             </div>
                             {/* author */}
@@ -442,7 +442,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="auth_name" className="font-bold">Authorized By</label>
                                 <div className="flex">
                                     <input type="text" id="auth_name" value={formData.auth_name}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan nama" />
                                 </div>
                             </div>
                         </div>
@@ -453,7 +453,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="req_pos" className="font-bold">Position</label>
                                 <div className="flex">
                                     <input type="text" id="req_pos" value={formData.req_pos}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi Anda" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan Posisi Anda" />
                                 </div>
                             </div>
                             {/* position approved by */}
@@ -461,7 +461,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="app_pos" className="font-bold">Position</label>
                                 <div className="flex">
                                     <input type="text" id="app_pos" value={formData.app_pos}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
                                 </div>
                             </div>
                             {/* position authorized by */}
@@ -469,7 +469,7 @@ export default function CreatePurchaseOrderPage() {
                                 <label htmlFor="auth_pos" className="font-bold">Position</label>
                                 <div className="flex">
                                     <input type="text" id="auth_pos" value={formData.auth_pos}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
                                 </div>
                             </div>
                         </div>
@@ -483,7 +483,7 @@ export default function CreatePurchaseOrderPage() {
                             <label htmlFor="discount" className="font-bold">Discount</label>
                             <div className="flex">
                                 <input type="text" id="discount" value={formData.discount}
-                                    onChange={handleFormChange} className="w-2/6 border rounded-sm h-9 px-2" />
+                                    onChange={handleFormChange} className="w-2/6 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                 <p className="my-auto ml-2">{"(%)"}</p>
                             </div>
                         </div>
@@ -491,7 +491,7 @@ export default function CreatePurchaseOrderPage() {
                     <hr className="border-b my-6" />
                     <div className="ml-auto w-1/4 grid grid-cols-2 space-x-4">
                         <Link href={"/admin/purchase-order"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm">Cancel</Link>
-                        <button type="submit" className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm">{loading ? "loading..." : "Save"}</button>
+                        <button type="submit" className="bg-[#31C6D4] flex justify-center items-center text-white h-10 rounded-sm">{loading ? "loading..." : "Save"}</button>
                     </div>
                 </form>
                 {/* end form */}

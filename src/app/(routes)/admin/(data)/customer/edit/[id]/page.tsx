@@ -145,7 +145,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                                 id="customer-num"
                                 value={customerNo}
                                 onChange={(e) => setCustomerNo(e.target.value)}
-                                className="flex-1 border rounded-sm h-9 px-2"
+                                className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 placeholder="Add customer number"
                             />
                         </div>
@@ -160,7 +160,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                                 id="customer-name"
                                 value={customerName}
                                 onChange={(e) => setCustomerName(e.target.value)}
-                                className="flex-1 border rounded-sm h-9 px-2"
+                                className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 placeholder="Add customer name"
                             />
                         </div>
@@ -181,7 +181,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                                             <input
                                                 value={row.workLocation}
                                                 onChange={(e) => updateRowWorkLocation(index, "workLocation", e.target.value)}
-                                                className="border rounded-sm h-10 px-2 w-full p-2"
+                                                className="border border-[#AAAAAA] rounded-sm h-10 px-2 w-full p-2"
                                                 placeholder="Add work location"
                                             />
                                         </td>
@@ -203,7 +203,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                         {/* Button Add Row */}
                         <div
                             onClick={addRowWorkLocation}
-                            className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
+                            className="mt-4 px-4 py-2 bg-[#31C6D4] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
                         >
                             + Add Row
                         </div>
@@ -218,7 +218,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                                 id="telephone"
                                 value={telephone}
                                 onChange={(e) => setTelephone(e.target.value)}
-                                className="flex-1 border rounded-sm h-9 px-2"
+                                className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 placeholder="Add telephone"
                             />
                         </div>
@@ -231,7 +231,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                                 id="office-address"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
-                                className="flex-1 border rounded-sm h-9 px-2"
+                                className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 placeholder="Add office address"
                             />
                         </div>
@@ -242,7 +242,7 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                     {/* Action buttons */}
                     <div className="ml-auto w-1/5 grid grid-cols-2 space-x-4">
                         <Link href={"/admin/customer"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm">Cancel</Link>
-                        <button type="submit" className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
+                        <button type="submit" className="bg-[#31C6D4] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
                     </div>
                 </form>
             </div>

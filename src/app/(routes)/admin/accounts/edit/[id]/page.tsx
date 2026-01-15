@@ -85,7 +85,7 @@ export default function EditAccountPage({ params }: { params: Promise<{ id: stri
                         <label className="font-bold">Name</label>
                         <input
                             type="text"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             value={user?.name || ""}
                             onChange={(e) => setUser({ ...(user as IUser), name: e.target.value })}
                         />
@@ -96,7 +96,7 @@ export default function EditAccountPage({ params }: { params: Promise<{ id: stri
                         <label className="font-bold">Phone Number</label>
                         <input
                             type="text"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             value={user?.phone || ""}
                             onChange={(e) => setUser({ ...(user as IUser), phone: e.target.value })}
                         />
@@ -106,7 +106,7 @@ export default function EditAccountPage({ params }: { params: Promise<{ id: stri
                     <div className="flex flex-col space-y-1 mt-4">
                         <label className="font-bold">Role</label>
                         <select
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             value={user?.usertype || ""}
                             onChange={(e) => setUser({ ...(user as IUser), usertype: e.target.value as any })}
                         >
@@ -120,7 +120,7 @@ export default function EditAccountPage({ params }: { params: Promise<{ id: stri
                         <label className="font-bold">Email</label>
                         <input
                             type="email"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             value={user?.email || ""}
                             onChange={(e) => setUser({ ...(user as IUser), email: e.target.value })}
                         />
@@ -129,7 +129,7 @@ export default function EditAccountPage({ params }: { params: Promise<{ id: stri
                     {/* Password */}
                     <div className="flex flex-col space-y-1 mt-4">
                         <label className="font-bold">Password</label>
-                        <div className="flex items-center border rounded-sm h-9 px-2">
+                        <div className="flex items-center border border-[#AAAAAA] rounded-sm h-9 px-2">
                             <input
                                 type={showPass ? "text" : "password"}
                                 className="flex-1 outline-none"
@@ -146,7 +146,7 @@ export default function EditAccountPage({ params }: { params: Promise<{ id: stri
 
                     <div className="ml-auto w-1/4 grid grid-cols-2 gap-4">
                         <Link href="/admin/accounts" className="bg-red-500 text-white h-10 flex items-center justify-center rounded-sm">Cancel</Link>
-                        <button type="submit" className="bg-[#17a2b8] text-white h-10 rounded-sm">Save</button>
+                        <button type="submit" className="bg-[#31C6D4] text-white h-10 rounded-sm">Save</button>
                     </div>
                 </form>
             </div>

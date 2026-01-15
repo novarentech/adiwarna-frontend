@@ -23,6 +23,9 @@ import { deleteEquipmentproject, getAllEquipmentproject } from "@/lib/equipment-
 import { EquipmentProjectData } from "@/lib/equipment-project"; // Sesuaikan path interface Anda
 import { ImWrench } from "react-icons/im";
 import { toast } from "sonner";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { LuEye } from "react-icons/lu";
+import { LiaEdit } from "react-icons/lia";
 
 
 export default function EquipmentProjectPage() {
@@ -105,7 +108,7 @@ export default function EquipmentProjectPage() {
                 <div className="py-3 px-4 flex justify-between border-b rounded-t-lg">
                     {/* create equipment project button */}
                     {/* Sesuaikan link ke halaman pembuatan equipment project */}
-                    <Link href={"/admin/equipment-project/create"} className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm">
+                    <Link href={"/admin/equipment-project/create"} className="bg-[#31C6D4] text-white px-2 h-10 flex justify-center items-center rounded-sm">
                         Add Project Data <FiPlus className="w-4 h-4 ml-1" />
                     </Link>
                     {/* search bar */}
@@ -123,14 +126,14 @@ export default function EquipmentProjectPage() {
                     <Table className="min-w-full">
                         <TableHeader>
                             {/* Sesuaikan kolom tabel sesuai gambar */}
-                            <TableRow className="bg-[#f2f2f2] hover:bg-[#f2f2f2]">
+                            <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
                                 <TableHead className="text-[#212529] font-bold w-12 text-center">No.</TableHead>
-                                <TableHead className="text-[#212529] font-bold w-32">Project Date</TableHead>
+                                <TableHead className="text-[#212529] font-bold">Project Date</TableHead>
                                 <TableHead className="text-[#212529] font-bold">Customer</TableHead>
-                                <TableHead className="text-[#212529] font-bold">Location</TableHead>
-                                <TableHead className="text-[#212529] font-bold w-32">Prepared By</TableHead>
-                                <TableHead className="text-[#212529] font-bold w-32">Verified By</TableHead>
-                                <TableHead className="text-[#212529] font-bold text-center w-24">Action</TableHead>
+                                <TableHead className="text-[#212529] font-bold ">Location</TableHead>
+                                <TableHead className="text-[#212529] font-bold">Prepared By</TableHead>
+                                <TableHead className="text-[#212529] font-bold">Verified By</TableHead>
+                                <TableHead className="text-[#212529] font-bold text-center">Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -149,7 +152,7 @@ export default function EquipmentProjectPage() {
                             ) : (
                                 equipmentProjects.map((project, index) => (
                                     // Ganti key dari q.id ke project.id
-                                    <TableRow key={project.id} className="even:bg-white odd:bg-[#fafafa] hover:bg-gray-50">
+                                    <TableRow key={project.id} className="hover:bg-gray-50 border-[#E5E7EB]">
                                         <TableCell className="text-center font-medium">{getNo(index)}</TableCell>
                                         <TableCell className="py-6 text-sm">{(project.project_date)}</TableCell>
                                         <TableCell className="text-sm">{project.customer}</TableCell>
@@ -161,15 +164,18 @@ export default function EquipmentProjectPage() {
                                             <div className="w-fit flex space-x-1 items-center mx-auto">
                                                 {/* Edit Button */}
                                                 <Link href={`/admin/equipment-project/edit/${project.id}`} className="p-1 text-gray-600 hover:text-blue-600">
-                                                    <MdEdit className="w-4 h-4" />
+                                                    {/* <MdEdit className="w-4 h-4" /> */}
+                                                    <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                                 </Link>
                                                 {/* Delete Button */}
                                                 <button onClick={() => handleDelete(project.id)} className="p-1 text-red-500 hover:text-red-700">
-                                                    <FaTrash className="w-3.5 h-3.5" />
+                                                    {/* <FaTrash className="w-3.5 h-3.5" /> */}
+                                                    <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
                                                 </button>
                                                 {/* View/Detail Button */}
                                                 <Link href={`/admin/equipment-project/print/${project.id}`} className="p-1 text-[#31C6D4] hover:text-[#17A2B8] bg-blue-50/50 rounded-full">
-                                                    <IoMdEye className="w-4 h-4" />
+                                                    {/* <IoMdEye className="w-4 h-4" /> */}
+                                                    <LuEye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
                                                 </Link>
                                             </div>
                                         </TableCell>

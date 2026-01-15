@@ -88,7 +88,7 @@ export default function CreateCustomerPage() {
                     <div className="flex flex-col space-y-1">
                         <label htmlFor="customer-num" className="font-bold">No</label>
                         <div className="flex">
-                            <input type="text" id="customer-num" className="flex-1 border rounded-sm h-9 px-2" value={customerNo}
+                            <input type="text" id="customer-num" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={customerNo}
                                 onChange={(e) => setCustomerNo(e.target.value)} placeholder="add customer number" />
                         </div>
                     </div>
@@ -96,7 +96,7 @@ export default function CreateCustomerPage() {
                     <div className="flex flex-col space-y-1 mt-4">
                         <label htmlFor="customer-name" className="font-bold">Name</label>
                         <div className="flex">
-                            <input type="text" id="customer-name" className="flex-1 border rounded-sm h-9 px-2" value={name}
+                            <input type="text" id="customer-name" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={name}
                                 onChange={(e) => setName(e.target.value)} placeholder="Add customer name" />
                         </div>
                     </div>
@@ -117,7 +117,7 @@ export default function CreateCustomerPage() {
                                                 onChange={(e) =>
                                                     updateRowWorkLocation(index, "workLocation", e.target.value)
                                                 }
-                                                className="border rounded-sm h-10 px-2 w-full p-2"
+                                                className="border border-[#AAAAAA] rounded-sm h-10 px-2 w-full p-2"
                                                 placeholder="Add work location"
                                             />
                                         </td>
@@ -152,7 +152,7 @@ export default function CreateCustomerPage() {
                         <div className="flex flex-col space-y-1">
                             <label htmlFor="telephone" className="font-bold">Telephone</label>
                             <div className="flex">
-                                <input type="text" id="telephone" className="flex-1 border rounded-sm h-9 px-2" value={phone}
+                                <input type="text" id="telephone" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={phone}
                                     onChange={(e) => setPhone(e.target.value)} placeholder="Add telephone" />
                             </div>
                         </div>
@@ -160,7 +160,7 @@ export default function CreateCustomerPage() {
                         <div className="flex flex-col space-y-1">
                             <label htmlFor="office-address" className="font-bold">office address</label>
                             <div className="flex">
-                                <input type="text" id="office-address" className="flex-1 border rounded-sm h-9 px-2" value={address}
+                                <input type="text" id="office-address" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={address}
                                     onChange={(e) => setAddress(e.target.value)} placeholder="Add office address" />
                             </div>
                         </div>

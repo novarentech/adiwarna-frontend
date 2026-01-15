@@ -184,10 +184,10 @@ export default function CreateWorkAssignmentPage() {
                                 <label htmlFor="assignment_no" className="font-bold">No.</label>
                                 <div className="flex items-center">
                                     <input type="text" id="assignment_no" value={formData.assignment_no}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add number" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add number" />
                                     <p className="mx-4 font-bold">/AWP-INS/</p>
                                     <input type="text" id="assignment_year" value={formData.assignment_year}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="year" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="year" />
                                 </div>
                             </div>
                         </div>
@@ -198,7 +198,7 @@ export default function CreateWorkAssignmentPage() {
                                 <label htmlFor="date" className="font-bold">Date</label>
                                 <div className="flex">
                                     <input type="date" id="date" value={formData.date}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                 </div>
                             </div>
                         </div>
@@ -230,7 +230,7 @@ export default function CreateWorkAssignmentPage() {
                                                 onChange={(e) =>
                                                     updateRowDataWorker(index, "details", e.target.value)
                                                 }
-                                                className="border rounded-sm min-h-12 px-2 w-full p-2"
+                                                className="border border-[#AAAAAA] rounded-sm min-h-12 px-2 w-full p-2"
                                                 id="Worker-name"
                                                 placeholder="Add Worker's Name"
                                             />
@@ -243,7 +243,7 @@ export default function CreateWorkAssignmentPage() {
                                                 onChange={(e) =>
                                                     updateRowDataWorker(index, "position", e.target.value)
                                                 }
-                                                className="border rounded-sm min-h-12 px-2 w-full p-2"
+                                                className="border border-[#AAAAAA] rounded-sm min-h-12 px-2 w-full p-2"
                                                 id="Worker-position"
                                                 placeholder="Add Worker's position"
                                             />
@@ -265,7 +265,7 @@ export default function CreateWorkAssignmentPage() {
                         {/* Button Add Row */}
                         <div
                             onClick={addRowDataWorker}
-                            className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
+                            className="mt-4 px-4 py-2 bg-[#31C6D4] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
                         >
                             + Add Row
                         </div>
@@ -283,7 +283,7 @@ export default function CreateWorkAssignmentPage() {
                                 <label htmlFor="ref_no" className="font-bold">Ref. AWP WO No.</label>
                                 <div className="flex items-center">
                                     <input type="text" id="ref_no" value={formData.ref_no}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                     <p className="mx-2 font-bold">/AWP-INS/JKT/</p>
                                 </div>
                             </div>
@@ -295,7 +295,7 @@ export default function CreateWorkAssignmentPage() {
                                 <label htmlFor="ref_year" className="font-bold text-transparent">.</label>
                                 <div className="flex items-center">
                                     <input type="text" id="ref_year" value={formData.ref_year}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Year" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Year" />
                                 </div>
                             </div>
                         </div>
@@ -306,7 +306,7 @@ export default function CreateWorkAssignmentPage() {
                                 <div className="flex items-center">
                                     {/* ini nanti fetch dari customerr */}
                                     <input type="text" id="ref_po_no_instruction" value={formData.ref_po_no_instruction}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add Ref. PO No./Instruction" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Ref. PO No./Instruction" />
                                 </div>
                             </div>
                         </div>
@@ -319,7 +319,7 @@ export default function CreateWorkAssignmentPage() {
                         <div className="flex">
                             <select id="customer_id"
                                 value={formData.customer_id}
-                                onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2">
+                                onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2">
                                 <option value="" className="font-light" hidden>---Choose Customer's Name---</option>
                                 {customers.map(customer => (
                                     <option key={customer.id} value={customer.id}>
@@ -342,7 +342,7 @@ export default function CreateWorkAssignmentPage() {
                                 <div className="flex">
                                     <select id="customer_location_id"
                                         value={formData.customer_location_id}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2">
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2">
                                         <option value="" className="font-light" hidden>---Choose work location---</option>
                                         {customersLocation.map(location => (
                                             <option key={location.id} value={location.id}>
@@ -357,7 +357,7 @@ export default function CreateWorkAssignmentPage() {
                                 <label htmlFor="scope" className="font-bold">Scope of Work</label>
                                 <div className="flex">
                                     <input type="text" id="scope" value={formData.scope}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add Scope of Work" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Scope of Work" />
                                 </div>
                             </div>
                             {/* author */}
@@ -365,7 +365,7 @@ export default function CreateWorkAssignmentPage() {
                                 <label htmlFor="auth_name" className="font-bold">Authorized By</label>
                                 <div className="flex">
                                     <input type="text" id="auth_name" value={formData.auth_name}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Masukkan nama" />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan nama" />
                                 </div>
                             </div>
                         </div>
@@ -376,7 +376,7 @@ export default function CreateWorkAssignmentPage() {
                                 <label htmlFor="estimation" className="font-bold">Estimate Duration</label>
                                 <div className="flex">
                                     <input type="text" value={formData.estimation}
-                                        onChange={handleFormChange} id="estimation" className="flex-1 border rounded-sm h-9 px-2" placeholder="Add estimate duration (days)" />
+                                        onChange={handleFormChange} id="estimation" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add estimate duration (days)" />
                                 </div>
                             </div>
                             {/* Mobilization */}
@@ -384,7 +384,7 @@ export default function CreateWorkAssignmentPage() {
                                 <label htmlFor="mobilization" className="font-bold">Mobilization</label>
                                 <div className="flex">
                                     <input type="date" id="mobilization" value={formData.mobilization}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add Mobilization " />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Mobilization " />
                                 </div>
                             </div>
                             {/* position authorized by */}
@@ -392,7 +392,7 @@ export default function CreateWorkAssignmentPage() {
                                 <label htmlFor="auth_pos" className="font-bold">Position</label>
                                 <div className="flex">
                                     <input type="text" id="auth_pos" value={formData.auth_pos}
-                                        onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Add Postion " />
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Postion " />
                                 </div>
                             </div>
                         </div>
@@ -402,7 +402,7 @@ export default function CreateWorkAssignmentPage() {
 
                     <div className="ml-auto w-1/4 grid grid-cols-2 space-x-4">
                         <Link href={"/admin/work-assignment"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm">Cancel</Link>
-                        <button type="submit" className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
+                        <button type="submit" className="bg-[#31C6D4] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
                     </div>
                 </form>
                 {/* end form */}

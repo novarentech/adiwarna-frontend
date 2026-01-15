@@ -18,6 +18,8 @@ import {
 import { deleteUser, getUsersList } from "@/lib/account";
 import { IUser } from "@/lib/auth";
 import { toast } from "sonner";
+import { LiaEdit } from "react-icons/lia";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 export default function AccountsPage() {
     const [users, setUsers] = useState<IUser[]>([]);
@@ -73,15 +75,15 @@ export default function AccountsPage() {
             <div className="bg-white mt-12">
                 <div className="py-3 px-4 flex justify-between border rounded-t-sm">
                     {/* create user */}
-                    <Link href={"/admin/accounts/create"} className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm">
+                    <Link href={"/admin/accounts/create"} className="bg-[#31C6D4] text-white px-2 h-10 flex justify-center items-center rounded-sm">
                         Add Data <FiPlus className="w-5 h-5 ml-1" />
                     </Link>
                 </div>
 
                 <div className="py-5 px-4 flex flex-col border-b border-x rounded-b-sm">
-                    <Table className="bg-[#f2f2f2]">
+                    <Table className="">
                         <TableHeader>
-                            <TableRow className="bg-[#dadada] hover:bg-[#dadada]">
+                            <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
                                 <TableHead className="text-center"><input type="checkbox" /></TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead className="text-center">Phone</TableHead>
@@ -93,7 +95,7 @@ export default function AccountsPage() {
 
                         <TableBody>
                             {users.map((user) => (
-                                <TableRow key={user.id}>
+                                <TableRow key={user.id} className="hover:bg-gray-50 border-[#E5E7EB]">
                                     <TableCell className="text-center py-6"><input type="checkbox" /></TableCell>
 
                                     <TableCell className="font-medium text-left">
@@ -101,15 +103,17 @@ export default function AccountsPage() {
                                     </TableCell>
 
                                     <TableCell className="text-center">{user.phone}</TableCell>
-                                    <TableCell className="text-center capitalize">{user.usertype}</TableCell>
+                                    <TableCell className="capitalize"><p className={`${user.usertype === "admin" ? "bg-[#DBEAFE] text-[#1E40AF]" : "bg-[#FEF3C7] text-[#92400E]"} rounded-full w-fit py-1 px-3 mx-auto`}>{user.usertype}</p></TableCell>
                                     <TableCell className="text-left">{user.email}</TableCell>
 
                                     <TableCell className="text-center">
                                         <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
                                             <Link href={`/admin/accounts/edit/${user.id}`}>
-                                                <MdEdit className="w-7 h-7" />
+                                                {/* <MdEdit className="w-7 h-7" /> */}
+                                                <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>
-                                            <FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(user.id)} />
+                                            {/* <FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(user.id)} /> */}
+                                            <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" onClick={() => handleDelete(user.id)} />
                                         </div>
                                     </TableCell>
                                 </TableRow>
