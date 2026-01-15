@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { FaGear } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
-import { FaCircle, FaToolbox } from "react-icons/fa";
+import { FaCircle, FaToolbox, FaWrench } from "react-icons/fa";
 import { TbReceiptFilled } from "react-icons/tb";
 import { usePathname } from "next/navigation";
 import { MdSupervisorAccount, MdViewTimeline } from "react-icons/md";
@@ -83,7 +83,9 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                         <p className="text-base">Daily Activity Report</p>
                     </Link> */}
                     <Link href={"/admin/equipment-project"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
-                        <FaCircle className="w-[23px] h-[23px]" />
+                        {/* <FaCircle className="w-[23px] h-[23px]" /> */}
+                        <FaWrench className="w-[23px] h-[23px]" />
+
                         <p className="text-base">Equipment Project</p>
                     </Link>
                     <Link href={"/admin/surat-jalan"} className="h-10 flex flex-row items-center cursor-pointer">
