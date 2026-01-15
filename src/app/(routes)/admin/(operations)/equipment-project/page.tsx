@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table"
 
 import { MdEdit } from "react-icons/md";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaWrench } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
 import { useEffect, useState } from "react";
 // Ganti import fungsi dan interface dari quotations ke equipment project
@@ -99,7 +99,7 @@ export default function EquipmentProjectPage() {
             <div className="flex flex-row items-center space-x-2 mt-2">
                 {/* Ganti Ikon dan Judul */}
                 {/* Asumsi Anda memiliki ikon lain, jika tidak, gunakan ikon yang sama atau hapus tag Image */}
-                <ImWrench className="text-black w-10 h-10" />
+                <FaWrench className="text-black w-10 h-10" />
                 <h1 className="text-3xl font-normal">Data Equipment Projects</h1>
             </div>
 
