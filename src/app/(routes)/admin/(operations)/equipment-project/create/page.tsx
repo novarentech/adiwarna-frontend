@@ -22,6 +22,7 @@ import { Customer, getCustomerById, getCustomersAllForDropdown } from "@/lib/cus
 import { getAllAvailableEquipment, createEquipmentproject } from "@/lib/equipment-project"; // Asumsi createEquipmentproject & getAllAvailableEquipment ada di sini
 import { EquipmentItem, CreateEquipmentProjectPayload } from "@/lib/equipment-project";
 import { toast } from "sonner";
+import { FaToolbox, FaWrench } from "react-icons/fa";
 
 
 interface CustomerLocation {
@@ -218,7 +219,7 @@ export default function CreateEquipmentProjectPage() {
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
             {/* title container */}
             <div className="flex flex-row items-center space-x-2 mt-2">
-                <MdWorkHistory className="w-10 h-10" />
+                <FaWrench className="w-10 h-10" />
                 <h1 className="text-3xl font-normal">Add Equipment Project</h1>
             </div>
 
