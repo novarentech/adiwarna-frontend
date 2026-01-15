@@ -141,13 +141,13 @@ export default function SuratJalanCreatePage() {
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="customer_id" className="text-sm">Kepada (Customer/Shipper)</label>
-                                {/* <input id="customer" required value={formData.customer} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" /> */}
+                                {/* <input id="customer" required value={formData.customer} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" /> */}
 
                                 {/* ini nanti fetch dari customerr */}
                                 <div className="flex">
                                     <select
                                         id="customer_id"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-10 px-2"
                                         value={formData.customer_id}
                                         onChange={handleCustomerChange}
                                         required
@@ -162,11 +162,11 @@ export default function SuratJalanCreatePage() {
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="customer_address" className="text-sm">Address</label>
-                                <textarea id="customer_address" required value={selectedCustomerAddress} onChange={handleInputChange} disabled className="w-full h-[110px] border p-2 rounded-sm bg-[#e9ecef] border-[#D1D5DC] resize-none" />
+                                <textarea id="customer_address" required value={selectedCustomerAddress} onChange={handleInputChange} disabled className="w-full h-[110px] border p-2 rounded-sm bg-[#e9ecef] border-[#AAAAAA] resize-none" />
                             </div>
                             <div className="flex flex-col space-y-4 mt-[37px]">
                                 <label htmlFor="status" className="text-sm">Status Pengiriman</label>
-                                <select id="status" value={formData.status} onChange={handleInputChange} className="w-full h-10 border px-3 rounded-sm border-[#D1D5DC] bg-white">
+                                <select id="status" value={formData.status} onChange={handleInputChange} className="w-full h-10 border px-3 rounded-sm border-[#AAAAAA] bg-white">
                                     <option value="pending">Pending</option>
                                     <option value="delivered">Delivered</option>
                                     <option value="cancelled">Cancelled</option>
@@ -177,23 +177,23 @@ export default function SuratJalanCreatePage() {
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="dn_no" className="text-sm">No Surat</label>
-                                <input id="dn_no" required value={formData.dn_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="dn_no" required value={formData.dn_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="date" className="text-sm">Tanggal</label>
-                                <input id="date" required value={formData.date} onChange={handleInputChange} type="date" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="date" required value={formData.date} onChange={handleInputChange} type="date" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="wo_no" className="text-sm">No WO</label>
-                                <input id="wo_no" required value={formData.wo_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="wo_no" required value={formData.wo_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="delivered_with" className="text-sm">Dalam Dengan</label>
-                                <input id="delivered_with" required value={formData.delivered_with} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="delivered_with" required value={formData.delivered_with} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="vehicle_plate" className="text-sm">Plat Kendaraan</label>
-                                <input id="vehicle_plate" required value={formData.vehicle_plate} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="vehicle_plate" required value={formData.vehicle_plate} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                         </div>
                     </div>
@@ -224,9 +224,9 @@ export default function SuratJalanCreatePage() {
                                     {items.map((item, index) => (
                                         <TableRow key={index}>
                                             <TableCell className="py-6">{index + 1}</TableCell>
-                                            <TableCell><input required type="text" value={item.item_name} onChange={(e) => handleItemChange(index, "item_name", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
-                                            <TableCell><input type="text" value={item.serial_number} onChange={(e) => handleItemChange(index, "serial_number", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
-                                            <TableCell><input required type="number" min="1" value={item.qty} onChange={(e) => handleItemChange(index, "qty", parseInt(e.target.value) || 0)} className="w-8/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" /></TableCell>
+                                            <TableCell><input required type="text" value={item.item_name} onChange={(e) => handleItemChange(index, "item_name", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#AAAAAA]" /></TableCell>
+                                            <TableCell><input type="text" value={item.serial_number} onChange={(e) => handleItemChange(index, "serial_number", e.target.value)} className="w-10/12 h-10 border px-2 rounded-sm border-[#AAAAAA]" /></TableCell>
+                                            <TableCell><input required type="number" min="1" value={item.qty} onChange={(e) => handleItemChange(index, "qty", parseInt(e.target.value) || 0)} className="w-8/12 h-10 border px-2 rounded-sm border-[#AAAAAA]" /></TableCell>
                                             <TableCell className="text-center"><div onClick={() => removeItem(index)} className="cursor-pointer hover:contrast-75 flex"><RiDeleteBinLine className="w-6 h-6 mx-auto text-[#E7000B]" /></div></TableCell>
                                         </TableRow>
                                     ))}
@@ -237,17 +237,17 @@ export default function SuratJalanCreatePage() {
 
                     <div className="flex flex-col space-y-4 mt-6">
                         <label htmlFor="notes" className="text-sm">Note</label>
-                        <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#D1D5DC] resize-none" placeholder="Harapan S/N, RA 219-06207 dan silan S/N, 291905 biaya arca" />
+                        <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#AAAAAA] resize-none" placeholder="Harapan S/N, RA 219-06207 dan silan S/N, 291905 biaya arca" />
                     </div>
 
                     <div className="w-full grid grid-cols-2 gap-x-8 mt-6">
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="received_by" className="text-sm">Diterima / Diserahkan Oleh</label>
-                            <input id="received_by" required value={formData.received_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
+                            <input id="received_by" required value={formData.received_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" placeholder="Name" />
                         </div>
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="delivered_by" className="text-sm">Diserahkan Oleh PT. Adiwarna Pratama</label>
-                            <input id="delivered_by" required value={formData.delivered_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
+                            <input id="delivered_by" required value={formData.delivered_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" placeholder="Name" />
                         </div>
                     </div>
 

@@ -484,8 +484,8 @@ export default function TrackRecordPage() {
                 </div>
 
                 {/* start of copy, csv,, excel, pdf, print, column visibility*/}
-                <div className="w-2/6 flex pl-4 border-x">
-                    <div className="bg-[#6c757d] w-full h-[38px] rounded-sm flex flex-row items-center text-white">
+                <div className="flex pr-6 border-x">
+                    {/* <div className="bg-[#6c757d] w-full h-[38px] rounded-sm flex flex-row items-center text-white">
                         <button onClick={handleCopy} disabled={isCopying} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">{isCopying ? "Loading..." : "Copy"}</button>
                         <button onClick={handleExportCsv} disabled={isExportingCsv} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingCsv ? "Exporting..." : "CSV"}</button>
                         <button onClick={handleExportExcel} disabled={isExportingExcel} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingExcel ? "Exporting..." : "Excel"}</button>
@@ -517,6 +517,40 @@ export default function TrackRecordPage() {
                                 </div>
                             )}
                         </div>
+                    </div> */}
+                    <div className="grid grid-cols-5 gap-x-2 h-10 ml-auto">
+                        <button
+                            onClick={handleCopy}
+                            disabled={isCopying}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                        >
+                            Copy
+                        </button>
+                        <button
+                            onClick={handleExportCsv}
+                            disabled={isExportingCsv}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                        >
+                            CSV
+                        </button>
+                        <button
+                            onClick={handleExportExcel}
+                            disabled={isExportingExcel}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                        >
+                            Excel
+                        </button>
+                        <button
+                            onClick={handleExportPdf}
+                            disabled={isExportingPdf}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                            PDF
+                        </button>
+                        <button
+                            onClick={handlePrint}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                            Print
+                        </button>
                     </div>
                 </div>
 
@@ -525,9 +559,9 @@ export default function TrackRecordPage() {
                     {loading ? (
                         <p>Loading track records...</p>
                     ) : (
-                        <Table className="bg-[#f2f2f2] z-10">
+                        <Table className="z-10">
                             <TableHeader>
-                                <TableRow className="bg-[#dadada] hover:bg-[#dadada]">
+                                <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
                                     <TableHead className="text-[#212529] font-bold py-6"><input type="checkbox" /></TableHead>
                                     {columns.noWorkOrder && (
                                         <TableHead className="text-[#212529] font-bold text-center w-20">No. Work <br /> Order</TableHead>
@@ -561,7 +595,7 @@ export default function TrackRecordPage() {
                                     </TableRow>
                                 ) : (
                                     trackRecords.map((item, index) => (
-                                        <TableRow key={index} className="hover:bg-gray-100">
+                                        <TableRow key={index} className="hover:bg-gray-50 border-[#E5E7EB]">
                                             <TableCell className="font-medium"><input type="checkbox" /></TableCell>
                                             {columns.noWorkOrder && (
                                                 <TableCell className="py-4 text-sm">

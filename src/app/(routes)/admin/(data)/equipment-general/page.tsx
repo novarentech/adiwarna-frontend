@@ -26,6 +26,8 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { LiaEdit } from "react-icons/lia";
 
 
 export default function DataEquipmentGeneral() {
@@ -129,12 +131,12 @@ export default function DataEquipmentGeneral() {
     // Helper untuk menentukan warna kondisi
     const getConditionColor = (condition: string) => {
         switch (condition) {
-            case 'OK':
-                return 'bg-green-500';
-            case 'Expired':
-                return 'bg-red-500';
-            case 'Need Repair':
-                return 'bg-yellow-500';
+            case 'ok':
+                return 'bg-lime-400 text-green-800';
+            case 'reject':
+                return 'bg-red-500 text-white';
+            case 'repair':
+                return 'bg-yellow-200 text-yellow-900';
             default:
                 return 'bg-gray-500';
         }
@@ -496,7 +498,7 @@ export default function DataEquipmentGeneral() {
             {/* list track record */}
             <div className="bg-white mt-12">
                 <div className="py-3 px-4 flex justify-between border rounded-t-sm">
-                    <Link href={"/admin/equipment-general/create"} className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Equipment Data <FiPlus className="w-5 h-5 ml-1" /> </Link>
+                    <Link href={"/admin/equipment-general/create"} className="bg-[#31C6D4] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Equipment Data <FiPlus className="w-5 h-5 ml-1" /> </Link>
                 </div>
 
                 {/* ini untuk nampilin berapa */}
@@ -533,18 +535,17 @@ export default function DataEquipmentGeneral() {
                 </div>
 
                 {/* start of copy, csv,, excel, pdf, print, column visibility*/}
-                <div className="w-2/6 flex pl-4 border-x">
-                    {/* ... Tombol Export/Visibility (tidak diubah) ... */}
-                    <div className="bg-[#6c757d] w-full h-[38px] rounded-sm flex flex-row items-center text-white">
-                        <button onClick={handleCopy} disabled={isCopying} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">{isCopying ? "Copying..." : "Copy"}</button>
+                <div className="flex pr-6 border-x">
+                    {/* <div className="bg-[#6c757d] w-full h-[38px] rounded-sm flex flex-row items-center text-white">
+                        <button onClick={handleCopy} disabled={isCopying} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-l-sm">{isCopying ? "Loading..." : "Copy"}</button>
                         <button onClick={handleExportCsv} disabled={isExportingCsv} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingCsv ? "Exporting..." : "CSV"}</button>
-                        <button onClick={handleExportExcel} disabled={loadingExcel} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{loadingExcel ? "Exporting..." : "Excel"}</button>
+                        <button onClick={handleExportExcel} disabled={isExportingExcel} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingExcel ? "Exporting..." : "Excel"}</button>
                         <button onClick={handleExportPdf} disabled={isExportingPdf} className="flex-1 h-full hover:brightness-125 bg-[#6c757d]">{isExportingPdf ? "..." : "PDF"}</button>
                         <button onClick={handlePrint} className="flex-1 h-full hover:brightness-125 bg-[#6c757d] rounded-r-sm">Print</button>
                         <div className="relative">
                             <button
-                                type="button" // Tambahkan type="button" untuk mencegah submit form
-                                className="flex-2 h-full px-3 bg-[#6c757d] hover:brightness-125 text-white"
+                                type="button"
+                                className="flex-2 h-full px-3 bg-[#6c757d]  hover:brightness-125 text-white"
                                 onClick={() => setOpenDropdown(!openDropdown)}
                             >
                                 Column Visibility
@@ -567,6 +568,39 @@ export default function DataEquipmentGeneral() {
                                 </div>
                             )}
                         </div>
+                    </div> */}
+                    <div className="grid grid-cols-5 gap-x-2 h-10 ml-auto">
+                        <button
+                            onClick={handleCopy}
+                            disabled={isCopying}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                        >
+                            Copy
+                        </button>
+                        <button
+                            onClick={handleExportCsv}
+                            disabled={isExportingCsv}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                        >
+                            CSV
+                        </button>
+                        <button
+                            onClick={handleExportExcel}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                        >
+                            Excel
+                        </button>
+                        <button
+                            onClick={handleExportPdf}
+                            disabled={isExportingPdf}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                            PDF
+                        </button>
+                        <button
+                            onClick={handlePrint}
+                            className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                            Print
+                        </button>
                     </div>
                 </div>
 
@@ -575,9 +609,9 @@ export default function DataEquipmentGeneral() {
                     {loading ? (
                         <p>Loading equipment data...</p>
                     ) : (
-                        <Table className="bg-[#f2f2f2] z-10">
+                        <Table className="z-10">
                             <TableHeader>
-                                <TableRow className="bg-[#dadada] hover:bg-[#dadada]">
+                                <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
                                     <TableHead className="text-[#212529] font-bold py-6 "><input type="checkbox" /></TableHead>
                                     {columns.no && (<TableHead className="text-[#212529] font-bold text-center">No</TableHead>)}
                                     {columns.deskripsi && (<TableHead className="text-[#212529] font-bold text-center">Deskripsi</TableHead>)}
@@ -601,7 +635,7 @@ export default function DataEquipmentGeneral() {
                                     </TableRow>
                                 ) : (
                                     (equipmentItem).map((item, index) => (
-                                        <TableRow key={item.id} className="hover:bg-gray-100">
+                                        <TableRow key={item.id} className="hover:bg-gray-50 border-[#E5E7EB]">
                                             <TableCell className="font-medium"><input type="checkbox" /></TableCell>
                                             {columns.no && (
                                                 <TableCell className="py-4"><p className="text-sm">
@@ -632,7 +666,7 @@ export default function DataEquipmentGeneral() {
                                             )}
                                             {columns.kondisi && (
                                                 <TableCell className="text-center capitalize">
-                                                    <span className={`${getConditionColor(item.condition)} p-1 rounded font-semibold text-white`}>
+                                                    <span className={`${getConditionColor(item.condition)} p-1 rounded-full px-2 py-1 font-semibold`}>
                                                         {item.condition}
                                                     </span>
                                                 </TableCell>
@@ -640,9 +674,15 @@ export default function DataEquipmentGeneral() {
                                             {columns.action && (
                                                 <TableCell className="text-center w-1/12">
                                                     <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
-                                                        <Link href={`/admin/equipment-general/edit/${item.id}`} title="Edit"><MdEdit className="w-7 h-7 text-green-500" /></Link>
+                                                        <Link href={`/admin/equipment-general/edit/${item.id}`} title="Edit">
+                                                            {/* <MdEdit className="w-7 h-7 text-green-500" /> */}
+                                                            <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
+                                                        </Link>
                                                         {/* Tambahkan logic delete nanti, saat ini hanya tampilan */}
-                                                        <div title="Delete"><FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(item.id)} /></div>
+                                                        <div title="Delete">
+                                                            {/* <FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(item.id)} /> */}
+                                                            <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" onClick={() => handleDelete(item.id)} />
+                                                        </div>
                                                     </div>
                                                 </TableCell>
                                             )}

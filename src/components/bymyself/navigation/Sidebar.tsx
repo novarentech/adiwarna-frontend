@@ -5,10 +5,10 @@ import { useState } from "react";
 
 import { FaGear } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
-import { FaCircle } from "react-icons/fa";
+import { FaCircle, FaToolbox } from "react-icons/fa";
 import { TbReceiptFilled } from "react-icons/tb";
 import { usePathname } from "next/navigation";
-import { MdSupervisorAccount } from "react-icons/md";
+import { MdSupervisorAccount, MdViewTimeline } from "react-icons/md";
 import { SlEnvolopeLetter } from "react-icons/sl";
 import { BiSolidPurchaseTag } from "react-icons/bi";
 import { RiFolderReceivedFill } from "react-icons/ri";
@@ -87,16 +87,19 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                         <p className="text-base">Equipment Project</p>
                     </Link>
                     <Link href={"/admin/surat-jalan"} className="h-10 flex flex-row items-center cursor-pointer">
-                        <SlEnvolopeLetter className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                        {/* <SlEnvolopeLetter className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} /> */}
+                        <Image src={"/icons/icon-surat-jalan.svg"} className="" alt="icon work order" width={23} height={23} />
                         <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Surat Jalan</h1>
                     </Link>
-                    <Link href={"/admin/material-receiving"} className="h-10 flex flex-row items-center cursor-pointer">
-                        <RiFolderReceivedFill className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
-                        <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Material Receiving</h1>
-                    </Link>
                     <Link href={"/admin/purchase-requisition"} className="h-10 flex flex-row items-center cursor-pointer">
-                        <BiSolidPurchaseTag className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} />
+                        {/* <BiSolidPurchaseTag className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} /> */}
+                        <Image src={"/icons/icon-pr.svg"} className="" alt="icon work order" width={23} height={23} />
                         <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Purchase Requisition</h1>
+                    </Link>
+                    <Link href={"/admin/material-receiving"} className="h-10 flex flex-row items-center cursor-pointer">
+                        {/* <RiFolderReceivedFill className={`text-white w-[23px] h-[23px] ${collapsed ? 'mx-auto' : ''}`} /> */}
+                        <Image src={"/icons/icon-mr.svg"} className="" alt="icon work order" width={23} height={23} />
+                        <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Material Receiving</h1>
                     </Link>
                 </div>
             </div>
@@ -121,11 +124,14 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                         <p className="text-base">Employee</p>
                     </Link>
                     <Link href={"/admin/track-record"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
-                        <FaCircle className="w-[23px] h-[23px]" />
+                        {/* <FaCircle className="w-[23px] h-[23px]" /> */}
+                        <MdViewTimeline className="w-[23px] h-[23px]" />
                         <p className="text-base">Track Record</p>
                     </Link>
                     <Link href={"/admin/equipment-general"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
-                        <FaCircle className="w-[23px] h-[23px]" />
+                        {/* <FaCircle className="w-[23px] h-[23px]" /> */}
+                        <FaToolbox className="w-[23px] h-[23px]"/>
+
                         <p className="text-base">equipment general</p>
                     </Link>
                 </div>

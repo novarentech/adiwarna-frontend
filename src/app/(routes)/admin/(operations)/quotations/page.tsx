@@ -20,6 +20,9 @@ import { IoMdEye } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { deleteQuotations, GetAllQuotation, getAllQuotations } from "@/lib/quotations";
 import { toast } from "sonner";
+import { LuEye } from "react-icons/lu";
+import { LiaEdit } from "react-icons/lia";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 
 
@@ -80,7 +83,7 @@ export default function QuotationsPage() {
             <div className="bg-white mt-12">
                 <div className="py-3 px-4 flex justify-between border rounded-t-sm">
                     {/* create quotations button */}
-                    <Link href={"/admin/quotations/create"} className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Data <FiPlus className="w-5 h-5 ml-1" /> </Link>
+                    <Link href={"/admin/quotations/create"} className="bg-[#31C6D4] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Data <FiPlus className="w-5 h-5 ml-1" /> </Link>
                     {/* search bar */}
                     <form onSubmit={handleSearch} className="flex flex-row">
                         <input value={search}
@@ -93,9 +96,9 @@ export default function QuotationsPage() {
                     </form>
                 </div>
                 <div className="py-5 px-4 flex justify-between border-b border-x rounded-b-sm">
-                    <Table className="bg-[#f2f2f2]">
+                    <Table className="">
                         <TableHeader>
-                            <TableRow className="bg-[#dadada] hover:bg-[#dadada]">
+                            <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
                                 <TableHead className="text-[#212529] font-bold"><input type="checkbox" /></TableHead>
                                 <TableHead className="text-[#212529] font-bold">Ref</TableHead>
                                 <TableHead className="text-[#212529] font-bold">Date</TableHead>
@@ -120,7 +123,7 @@ export default function QuotationsPage() {
                                 </TableRow>
                             ) : (
                                 quotations.map((q) => (
-                                    <TableRow key={q.id}>
+                                    <TableRow key={q.id} className="hover:bg-gray-50 border-[#E5E7EB]">
                                         <TableCell><input type="checkbox" /></TableCell>
                                         <TableCell className="py-6">{q.ref_no}/AWP-INS/{q.ref_year}</TableCell>
                                         <TableCell>{new Date(q.date).toLocaleDateString()}</TableCell>
@@ -128,15 +131,18 @@ export default function QuotationsPage() {
                                         <TableCell>{q.pic_name}</TableCell>
                                         <TableCell>{q.subject}</TableCell>
                                         <TableCell className="text-center">
-                                            <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
+                                            <div className="bg-white w-fit flex space-x-3 items-center justify-center mx-auto">
                                                 <Link href={`/admin/quotations/edit/${q.id}`}>
-                                                    <MdEdit className="w-7 h-7 cursor-pointer" />
+                                                    {/* <MdEdit className="w-7 h-7 cursor-pointer" /> */}
+                                                    <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                                 </Link>
                                                 <button>
-                                                    <FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(q.id)} />
+                                                    {/* <FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(q.id)} /> */}
+                                                    <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
                                                 </button>
                                                 <Link href={`/admin/quotations/print/${q.id}`}>
-                                                    <IoMdEye className="w-7 h-7 text-[#31C6D4] cursor-pointer" />
+                                                    {/* <IoMdEye className="w-7 h-7 text-[#31C6D4] cursor-pointer" /> */}
+                                                    <LuEye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
                                                 </Link>
                                             </div>
                                         </TableCell>

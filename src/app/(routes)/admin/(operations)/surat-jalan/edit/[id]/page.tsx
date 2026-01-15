@@ -12,12 +12,12 @@ import {
 import { RiDeleteBinLine } from "react-icons/ri";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
-import { 
-    DeliveryNoteItemUpdate, 
-    GetbyIdDeliveryNoteItemDetails, 
-    getDeliveryNoteById, 
-    updateDeliveryNote, 
-    UpdateDeliveryNoteRequest 
+import {
+    DeliveryNoteItemUpdate,
+    GetbyIdDeliveryNoteItemDetails,
+    getDeliveryNoteById,
+    updateDeliveryNote,
+    UpdateDeliveryNoteRequest
 } from "@/lib/delivery-notes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -53,7 +53,7 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
     useEffect(() => {
         const fetchInitialData = async () => {
             setFetching(true);
-            
+
             // Fetch list customer untuk dropdown
             const resCust = await getCustomersAllForDropdown();
             if (resCust.success) {
@@ -81,7 +81,7 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                 setSelectedCustomerAddress(d.customer?.address || "");
 
                 // Map items
-                const mappedItems = d.items.map((item : GetbyIdDeliveryNoteItemDetails)  => ({
+                const mappedItems = d.items.map((item: GetbyIdDeliveryNoteItemDetails) => ({
                     id: item.id,
                     item_name: item.item_name,
                     serial_number: item.serial_number || "",
@@ -178,7 +178,7 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                                 <label htmlFor="customer_id" className="text-sm">Kepada (Customer/Shipper)</label>
                                 <select
                                     id="customer_id"
-                                    className="w-full border rounded-sm h-10 px-2 bg-white"
+                                    className="w-full border rounded-sm h-10 px-2 bg-white border-[#AAAAAA]"
                                     value={formData.customer_id}
                                     onChange={handleCustomerChange}
                                     required
@@ -191,17 +191,17 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="customer_address" className="text-sm">Address</label>
-                                <textarea 
-                                    id="customer_address" 
-                                    required 
-                                    value={selectedCustomerAddress} 
-                                    disabled 
-                                    className="w-full h-[110px] border p-2 rounded-sm bg-[#e9ecef] border-[#D1D5DC] resize-none" 
+                                <textarea
+                                    id="customer_address"
+                                    required
+                                    value={selectedCustomerAddress}
+                                    disabled
+                                    className="w-full h-[110px] border p-2 rounded-sm bg-[#e9ecef] border-[#AAAAAA] resize-none"
                                 />
                             </div>
                             <div className="flex flex-col space-y-4 mt-[37px]">
                                 <label htmlFor="status" className="text-sm">Status Pengiriman</label>
-                                <select id="status" value={formData.status} onChange={handleInputChange} className="w-full h-10 border px-3 rounded-sm border-[#D1D5DC] bg-white">
+                                <select id="status" value={formData.status} onChange={handleInputChange} className="w-full h-10 border px-3 rounded-sm border-[#AAAAAA] bg-white">
                                     <option value="pending">Pending</option>
                                     <option value="delivered">Delivered</option>
                                     <option value="cancelled">Cancelled</option>
@@ -213,23 +213,23 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="dn_no" className="text-sm">No Surat</label>
-                                <input id="dn_no" required value={formData.dn_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="dn_no" required value={formData.dn_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="date" className="text-sm">Tanggal</label>
-                                <input id="date" required value={formData.date} onChange={handleInputChange} type="date" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="date" required value={formData.date} onChange={handleInputChange} type="date" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="wo_no" className="text-sm">No WO</label>
-                                <input id="wo_no" required value={formData.wo_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="wo_no" required value={formData.wo_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="delivered_with" className="text-sm">Dalam Dengan</label>
-                                <input id="delivered_with" required value={formData.delivered_with} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="delivered_with" required value={formData.delivered_with} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="vehicle_plate" className="text-sm">Plat Kendaraan</label>
-                                <input id="vehicle_plate" required value={formData.vehicle_plate} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                <input id="vehicle_plate" required value={formData.vehicle_plate} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                         </div>
                     </div>
@@ -258,13 +258,13 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                                         <TableRow key={index}>
                                             <TableCell className="py-6">{index + 1}</TableCell>
                                             <TableCell>
-                                                <input required type="text" value={item.item_name} onChange={(e) => handleItemChange(index, "item_name", e.target.value)} className="w-11/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                                <input required type="text" value={item.item_name} onChange={(e) => handleItemChange(index, "item_name", e.target.value)} className="w-11/12 h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                                             </TableCell>
                                             <TableCell>
-                                                <input type="text" value={item.serial_number} onChange={(e) => handleItemChange(index, "serial_number", e.target.value)} className="w-11/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                                <input type="text" value={item.serial_number} onChange={(e) => handleItemChange(index, "serial_number", e.target.value)} className="w-11/12 h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                                             </TableCell>
                                             <TableCell>
-                                                <input required type="number" min="1" value={item.qty} onChange={(e) => handleItemChange(index, "qty", parseInt(e.target.value) || 0)} className="w-10/12 h-10 border px-2 rounded-sm border-[#D1D5DC]" />
+                                                <input required type="number" min="1" value={item.qty} onChange={(e) => handleItemChange(index, "qty", parseInt(e.target.value) || 0)} className="w-10/12 h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <div onClick={() => removeItem(index)} className="cursor-pointer hover:contrast-75 flex">
@@ -280,17 +280,17 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
 
                     <div className="flex flex-col space-y-4 mt-6">
                         <label htmlFor="notes" className="text-sm">Note</label>
-                        <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#D1D5DC] resize-none" placeholder="Masukkan catatan tambahan..." />
+                        <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#AAAAAA] resize-none" placeholder="Masukkan catatan tambahan..." />
                     </div>
 
                     <div className="w-full grid grid-cols-2 gap-x-8 mt-6">
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="received_by" className="text-sm">Diterima Oleh</label>
-                            <input id="received_by" value={formData.received_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
+                            <input id="received_by" value={formData.received_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" placeholder="Name" />
                         </div>
                         <div className="flex flex-col space-y-4">
                             <label htmlFor="delivered_by" className="text-sm">Diserahkan Oleh</label>
-                            <input id="delivered_by" required value={formData.delivered_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
+                            <input id="delivered_by" required value={formData.delivered_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" placeholder="Name" />
                         </div>
                     </div>
 

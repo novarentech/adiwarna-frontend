@@ -22,6 +22,9 @@ import { IoMdEye } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { deleteDocTrans, getAllDocTrans, GetAllDocTransmittalData } from "@/lib/document-transmittals";
 import { toast } from "sonner";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { LuEye } from "react-icons/lu";
+import { LiaEdit } from "react-icons/lia";
 
 export default function DocumentTransmittalPage() {
     const [docTrans, setDocTrans] = useState<GetAllDocTransmittalData[]>([]);
@@ -79,7 +82,7 @@ export default function DocumentTransmittalPage() {
             <div className="bg-white mt-12">
                 <div className="py-3 px-4 flex justify-between border rounded-t-sm">
                     {/* create quotations button */}
-                    <Link href={"/admin/document-transmittal/create"} className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Document Transmittal<FiPlus className="w-5 h-5 ml-1" /> </Link>
+                    <Link href={"/admin/document-transmittal/create"} className="bg-[#31C6D4] text-white px-2 h-10 flex justify-center items-center rounded-sm">Add Document Transmittal<FiPlus className="w-5 h-5 ml-1" /> </Link>
                     {/* search bar */}
                     <form onSubmit={handleSearch} className="flex flex-row">
                         <input value={search}
@@ -88,9 +91,9 @@ export default function DocumentTransmittalPage() {
                     </form>
                 </div>
                 <div className="py-5 px-4 flex justify-between border-b border-x rounded-b-sm">
-                    <Table className="bg-[#f2f2f2]">
+                    <Table className="">
                         <TableHeader>
-                            <TableRow className="bg-[#dadada] hover:bg-[#dadada]">
+                            <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
                                 <TableHead className="text-[#212529] font-bold"><input type="checkbox" /></TableHead>
                                 <TableHead className="text-[#212529] font-bold">TA No.</TableHead>
                                 <TableHead className="text-[#212529] font-bold">Date</TableHead>
@@ -123,9 +126,19 @@ export default function DocumentTransmittalPage() {
                                         <TableCell className="text-center">{doc.pic}</TableCell>
                                         <TableCell className="text-center">
                                             <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
-                                                <Link href={`/admin/document-transmittal/edit/${doc.id}`}><MdEdit className="w-7 h-7" /></Link>
-                                                <div><FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(doc.id)} /></div>
-                                                <Link href={`/admin/document-transmittal/print/${doc.id}`}><IoMdEye className="w-7 h-7 text-[#31C6D4]" /></Link>
+                                                <Link href={`/admin/document-transmittal/edit/${doc.id}`}>
+                                                    {/* <MdEdit className="w-7 h-7" /> */}
+                                                    <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
+                                                </Link>
+                                                <div onClick={() => handleDelete(doc.id)}>
+                                                    {/* <FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(doc.id)} /> */}
+                                                    <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
+
+                                                </div>
+                                                <Link href={`/admin/document-transmittal/print/${doc.id}`}>
+                                                    {/* <IoMdEye className="w-7 h-7 text-[#31C6D4]" /> */}
+                                                    <LuEye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
+                                                </Link>
                                             </div>
                                         </TableCell>
                                     </TableRow>

@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/table";
 import { Customer, CustomerLocation, deleteCustomer, getCustomers } from "@/lib/customer";
 import { toast } from "sonner";
+import { LiaEdit } from "react-icons/lia";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 export default function CustomerPage() {
     const [customers, setCustomers] = useState<Customer[]>([]);
@@ -84,7 +86,7 @@ export default function CustomerPage() {
 
                     <Link
                         href={"/admin/customer/create"}
-                        className="bg-[#17A2B8] text-white px-2 h-10 flex justify-center items-center rounded-sm"
+                        className="bg-[#31C6D4] text-white px-2 h-10 flex justify-center items-center rounded-sm"
                     >
                         Add Customer Data <FiPlus className="w-5 h-5 ml-1" />
                     </Link>
@@ -109,9 +111,9 @@ export default function CustomerPage() {
 
                 {/* table */}
                 <div className="py-5 px-4 border-b border-x rounded-b-sm">
-                    <Table className="bg-[#f2f2f2]">
+                    <Table>
                         <TableHeader>
-                            <TableRow className="bg-[#dadada] hover:bg-[#dadada]">
+                            <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
                                 <TableHead className="text-center"><input type="checkbox" /></TableHead>
                                 <TableHead className="text-center font-bold">No</TableHead>
                                 <TableHead className="text-center font-bold">Customer Info</TableHead>
@@ -122,7 +124,7 @@ export default function CustomerPage() {
 
                         <TableBody>
                             {customers.map((c, index) => (
-                                <TableRow key={c.id}>
+                                <TableRow key={c.id} className="hover:bg-gray-50 border-[#E5E7EB]">
                                     <TableCell className="text-center">
                                         <input type="checkbox" />
                                     </TableCell>
@@ -149,10 +151,12 @@ export default function CustomerPage() {
                                     <TableCell className="text-center">
                                         <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
                                             <Link href={`/admin/customer/edit/${c.id}`}>
-                                                <MdEdit className="w-7 h-7" />
+                                                {/* <MdEdit className="w-7 h-7" /> */}
+                                                <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>
-                                            <div>
-                                                <FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(c.id)} />
+                                            <div onClick={() => handleDelete(c.id)}>
+                                                {/* <FaTrash className="w-5 h-5 text-red-500 cursor-pointer" onClick={() => handleDelete(c.id)} /> */}
+                                                <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
                                             </div>
                                         </div>
                                     </TableCell>

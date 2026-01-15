@@ -175,7 +175,7 @@ export default function CreateDocTransmittal() {
                                     <input
                                         type="text"
                                         id="name"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         placeholder="Add your name"
                                         value={formData.name}
                                         onChange={handleInputChange}
@@ -195,7 +195,7 @@ export default function CreateDocTransmittal() {
                                     <input
                                         type="text"
                                         id="ta_no"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         placeholder="Number/month/year, ex: 000/VII/2024"
                                         value={formData.ta_no}
                                         onChange={handleInputChange}
@@ -213,7 +213,7 @@ export default function CreateDocTransmittal() {
                                     <input
                                         type="date"
                                         id="date"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         value={formData.date}
                                         onChange={handleInputChange}
                                         required
@@ -236,7 +236,7 @@ export default function CreateDocTransmittal() {
                                 <div className="flex">
                                     <select
                                         id="customer_id"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         value={formData.customer_id}
                                         onChange={handleCustomerChange}
                                         required
@@ -255,7 +255,7 @@ export default function CreateDocTransmittal() {
                                     <input
                                         type="text"
                                         id="customer-address"
-                                        className="flex-1 border rounded-sm h-9 px-2 bg-[#e9ecef]"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2 bg-[#e9ecef]"
                                         disabled
                                         value={selectedCustomerAddress}
                                         placeholder="Address will appear here..."
@@ -272,7 +272,7 @@ export default function CreateDocTransmittal() {
                                     <input
                                         type="text"
                                         id="pic_name"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         placeholder="Add PIC'S name"
                                         value={formData.pic_name}
                                         onChange={handleInputChange}
@@ -288,7 +288,7 @@ export default function CreateDocTransmittal() {
                                     <input
                                         type="text"
                                         id="customer_district"
-                                        className="flex-1 border rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         placeholder="Add Customer's District"
                                         value={formData.customer_district}
                                         onChange={handleInputChange}
@@ -309,7 +309,7 @@ export default function CreateDocTransmittal() {
                                 <input
                                     type="text"
                                     id="report_type"
-                                    className="flex-1 border rounded-sm h-9 px-2"
+                                    className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                     placeholder="Add report type"
                                     value={formData.report_type}
                                     onChange={handleInputChange}
@@ -342,7 +342,7 @@ export default function CreateDocTransmittal() {
                                                 onChange={(e) =>
                                                     updateRowDataReport(index, "wo", e.target.value)
                                                 }
-                                                className="border rounded-sm h-12 px-2 w-full p-2 flex-1"
+                                                className="border border-[#AAAAAA] rounded-sm h-12 px-2 w-full p-2 flex-1"
                                                 placeholder="Number"
                                                 required
                                             />
@@ -353,7 +353,7 @@ export default function CreateDocTransmittal() {
                                                 onChange={(e) =>
                                                     updateRowDataReport(index, "year", Number(e.target.value))
                                                 }
-                                                className="border rounded-sm h-12 px-2 w-full p-2 flex-1"
+                                                className="border border-[#AAAAAA] rounded-sm h-12 px-2 w-full p-2 flex-1"
                                                 placeholder="Year"
                                                 required
                                             />
@@ -366,7 +366,7 @@ export default function CreateDocTransmittal() {
                                                 onChange={(e) =>
                                                     updateRowDataReport(index, "location", e.target.value)
                                                 }
-                                                className="border rounded-sm min-h-12 px-2 w-full p-2"
+                                                className="border border-[#AAAAAA] rounded-sm min-h-12 px-2 w-full p-2"
                                                 placeholder="Add work location"
                                                 required
                                             />
@@ -391,7 +391,7 @@ export default function CreateDocTransmittal() {
                         {/* Button Add Row */}
                         <div
                             onClick={addRowDataReport}
-                            className="mt-4 px-4 py-2 bg-[#17a2b8] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
+                            className="mt-4 px-4 py-2 bg-[#31C6D4] text-white rounded flex justify-center items-center mx-4 cursor-pointer"
                         >
                             + Add Row
                         </div>
@@ -401,7 +401,7 @@ export default function CreateDocTransmittal() {
 
                     <div className="ml-auto w-1/4 grid grid-cols-2 space-x-4">
                         <Link href={"/admin/document-transmittal"} className="bg-red-500 flex justify-center items-center text-white h-10 rounded-sm">Cancel</Link>
-                        <button type="submit" className="bg-[#17a2b8] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
+                        <button type="submit" className="bg-[#31C6D4] flex justify-center items-center text-white h-10 rounded-sm">Save</button>
                     </div>
                 </form>
                 {/* end form */}

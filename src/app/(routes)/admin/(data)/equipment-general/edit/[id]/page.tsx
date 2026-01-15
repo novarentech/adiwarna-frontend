@@ -171,7 +171,7 @@ export default function EditEquipmentGeneral() {
                             type="text"
                             id="description"
                             name="description"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             placeholder="Masukkan deskripsi equipment"
                             value={formData.description}
                             onChange={handleInputChange}
@@ -186,7 +186,7 @@ export default function EditEquipmentGeneral() {
                             type="text"
                             id="merk_type"
                             name="merk_type"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             placeholder="Masukkan merk/type"
                             value={formData.merk_type}
                             onChange={handleInputChange}
@@ -200,7 +200,7 @@ export default function EditEquipmentGeneral() {
                             type="text"
                             id="serial_number"
                             name="serial_number"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             placeholder="Masukkan serial number"
                             value={formData.serial_number}
                             onChange={handleInputChange}
@@ -217,7 +217,7 @@ export default function EditEquipmentGeneral() {
                                 type="date"
                                 id="calibration_date"
                                 name="calibration_date"
-                                className="border rounded-sm h-9 px-2"
+                                className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 value={formData.calibration_date}
                                 onChange={handleInputChange}
                                 required
@@ -230,7 +230,7 @@ export default function EditEquipmentGeneral() {
                             <select
                                 id="duration_months"
                                 name="duration_months"
-                                className="border rounded-sm h-9 px-2"
+                                className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                                 // Pastikan value sesuai dengan tipe Number (6 atau 12)
                                 value={formData.duration_months}
                                 onChange={handleInputChange}
@@ -249,7 +249,7 @@ export default function EditEquipmentGeneral() {
                         <select
                             id="calibration_agency"
                             name="calibration_agency"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             value={formData.calibration_agency}
                             onChange={handleInputChange}
                             required
@@ -266,7 +266,7 @@ export default function EditEquipmentGeneral() {
                         <select
                             id="condition"
                             name="condition"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             value={formData.condition}
                             onChange={handleInputChange}
                             required

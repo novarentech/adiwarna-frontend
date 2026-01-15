@@ -66,7 +66,7 @@ export default function CreateAccountPage() {
                         <label className="font-bold">Name</label>
                         <input
                             type="text"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             placeholder="Enter name"
                             value={form.name}
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -78,7 +78,7 @@ export default function CreateAccountPage() {
                         <label className="font-bold">Phone Number</label>
                         <input
                             type="text"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             placeholder="Enter phone"
                             value={form.phone}
                             onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -89,7 +89,7 @@ export default function CreateAccountPage() {
                     <div className="flex flex-col space-y-1 mt-4">
                         <label className="font-bold">Position</label>
                         <select
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             value={form.usertype}
                             onChange={(e) => setForm({ ...form, usertype: e.target.value })}
                         >
@@ -104,7 +104,7 @@ export default function CreateAccountPage() {
                         <label className="font-bold">Email</label>
                         <input
                             type="email"
-                            className="border rounded-sm h-9 px-2"
+                            className="border border-[#AAAAAA] rounded-sm h-9 px-2"
                             placeholder="Enter email"
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -114,7 +114,7 @@ export default function CreateAccountPage() {
                     {/* password */}
                     <div className="flex flex-col space-y-1 mt-4">
                         <label className="font-bold">Password</label>
-                        <div className="flex items-center border rounded-sm h-9 px-2">
+                        <div className="flex items-center border border-[#AAAAAA] rounded-sm h-9 px-2">
                             <input
                                 type={showPass ? "text" : "password"}
                                 className="flex-1 outline-none"
@@ -135,7 +135,7 @@ export default function CreateAccountPage() {
                     {/* confirm password */}
                     <div className="flex flex-col space-y-1 mt-4">
                         <label className="font-bold">Confirm Password</label>
-                        <div className="flex items-center border rounded-sm h-9 px-2">
+                        <div className="flex items-center border border-[#AAAAAA] rounded-sm h-9 px-2">
 
                             <input
                                 type={showPass2 ? "text" : "password"}
@@ -164,7 +164,7 @@ export default function CreateAccountPage() {
                         </Link>
                         <button
                             type="submit"
-                            className="bg-[#17a2b8] text-white h-10 rounded-sm flex items-center justify-center"
+                            className="bg-[#31C6D4] text-white h-10 rounded-sm flex items-center justify-center"
                         >
                             Save
                         </button>
