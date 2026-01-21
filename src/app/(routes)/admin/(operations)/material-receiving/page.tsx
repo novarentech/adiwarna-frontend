@@ -22,6 +22,7 @@ import { AllMaterialReceivingData, deleteMaterialReceiving, GetAll999MaterialRec
 
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function MaterialReceivingPage() {
     const [search, setSearch] = useState("");
@@ -200,7 +201,11 @@ export default function MaterialReceivingPage() {
             )}
 
             <div className="flex flex-row justify-between items-center space-x-2 mt-14">
-                <h1 className="text-3xl font-normal">Daftar Material Receiving</h1>
+                <div className="flex flex-row items-center space-x-2 mt-2">
+                    <Image src={"/icons/icon-mr-black.svg"} className="text-black" alt="icon quotations" width={40} height={40} />
+                    <h1 className="text-3xl font-normal">Material Receiving  </h1>
+                </div>
+                {/* <h1 className="text-3xl font-normal">Daftar Material Receiving</h1> */}
                 <Link href={"/admin/material-receiving/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
                     <FiPlus className="w-5 h-5 mr-1" /> Add New Record
                 </Link>
@@ -262,7 +267,7 @@ export default function MaterialReceivingPage() {
                             <TableHead className="text-[#212529] font-bold">Received By</TableHead>
                             <TableHead className="text-[#212529] font-bold">Status</TableHead>
                             <TableHead className="w-1/5 text-[#212529] font-bold text-center">Actions</TableHead>
-                        </TableRow> 
+                        </TableRow>
                     </TableHeader>
                     <TableBody>
                         {loading ? (

@@ -20,6 +20,7 @@ import * as XLSX from "xlsx";
 // Import API & Interfaces
 import { GetAllDeliveryNote, GetAllDeliveryNoteResponse, GetAllDeliveryNoteData, deleteDeliveryNote, GetAll999DeliveryNote } from "@/lib/delivery-notes";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function SuratJalanPage() {
     const [search, setSearch] = useState("");
@@ -215,7 +216,11 @@ export default function SuratJalanPage() {
             )}
 
             <div className="flex flex-row justify-between items-center space-x-2 mt-14">
-                <h1 className="text-3xl font-normal text-[#212529]">Daftar Surat Jalan</h1>
+                <div className="flex flex-row items-center space-x-4 mt-2">
+                    <Image src={"/icons/icon-surat-jalan-black.svg"} className="text-black contrast-200" alt="icon quotations" width={40} height={40} />
+                    <h1 className="text-3xl font-normal">Surat Jalan  </h1>
+                </div>
+                {/* <h1 className="text-3xl font-normal text-[#212529]">Daftar Surat Jalan</h1> */}
                 <Link href={"/admin/surat-jalan/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75 transition-all shadow-sm">
                     <FiPlus className="w-5 h-5 mr-1" /> Add New Surat Jalan
                 </Link>
@@ -301,9 +306,9 @@ export default function SuratJalanPage() {
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex flex-row items-center justify-center gap-x-6">
-                                            <Link href={`/admin/surat-jalan/detail/${sj.id}`}>
+                                            {/* <Link href={`/admin/surat-jalan/detail/${sj.id}`}>
                                                 <LuEye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
-                                            </Link>
+                                            </Link> */}
                                             <Link href={`/admin/surat-jalan/edit/${sj.id}`}>
                                                 <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>

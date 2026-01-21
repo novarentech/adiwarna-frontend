@@ -20,6 +20,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { GetAllPurchaseRequisition, GetAllPurchaseRequisitionResponse, GetAllPurchaseRequisitionData, deletePurchaseRequisition, GetAll999PurchaseRequisition } from "@/lib/purchase-requisitions";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function PurchaseRequisitionPage() {
     const [search, setSearch] = useState("");
@@ -230,7 +231,11 @@ export default function PurchaseRequisitionPage() {
             )}
 
             <div className="flex flex-row justify-between items-center space-x-2 mt-14">
-                <h1 className="text-3xl font-normal">Daftar Purchase Requisition</h1>
+                <div className="flex flex-row items-center space-x-4 mt-2">
+                    <Image src={"/icons/icon-pr-black.svg"} className="text-black contrast-200" alt="icon quotations" width={40} height={40} />
+                    <h1 className="text-3xl font-normal">Purchase Requisition  </h1>
+                </div>
+                {/* <h1 className="text-3xl font-normal">Daftar Purchase Requisition</h1> */}
                 <Link href={"/admin/purchase-requisition/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
                     <FiPlus className="w-5 h-5 mr-1" /> Add New PR
                 </Link>
