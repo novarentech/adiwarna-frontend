@@ -163,32 +163,7 @@ export default function QuotationsPage() {
     return (
 
         <div className="w-full h-full px-8 py-4 bg-[#f4f6f9]">
-            {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs">
-                    <div className="bg-white rounded-md shadow-2xl p-6 w-80 transform transition-all scale-110 animate-in fade-in zoom-in duration-100">
-                        <div className="flex flex-col items-center text-center">
-                            {/* Icon Centang */}
-                            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>
-                            </div>
-
-                            <h3 className="text-lg font-bold text-gray-900">Successfully copied!</h3>
-                            <p className="text-sm text-gray-600 mt-2">
-                                Copied to clipboard
-                            </p>
-
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="mt-6 w-full py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors"
-                            >
-                                Tutup
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            
             {/* title container */}
             <div className="flex flex-row justify-between items-center space-x-2 mt-14">
 
