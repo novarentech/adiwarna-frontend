@@ -294,7 +294,6 @@ export default function MaterialReceivingPage() {
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex flex-row items-center justify-center gap-x-5">
-                                            <Link href={`/admin/material-receiving/detail/${item.id}`} className="cursor-pointer hover:opacity-70"><LuEye className="w-5 h-5 text-[#155DFC]" /></Link>
                                             <Link href={`/admin/material-receiving/edit/${item.id}`} className="cursor-pointer hover:opacity-70"><LiaEdit className="w-6 h-6 text-[#00A63E]" /></Link>
                                             <Link href={`/admin/material-receiving/print/${item.id}`} className="cursor-pointer hover:opacity-70"><LuPrinter className="w-5 h-5 text-[#4A5565]" /></Link>
                                             <button onClick={() => handleDelete(item.id)} className="cursor-pointer hover:opacity-70 text-[#E7000B]"><RiDeleteBinLine className="w-5 h-5" /></button>

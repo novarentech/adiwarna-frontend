@@ -16,9 +16,9 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import { MdEdit } from "react-icons/md";
-import { FaTrash } from "react-icons/fa";
-import { IoMdEye } from "react-icons/io";
+// import { MdEdit } from "react-icons/md";
+// import { FaTrash } from "react-icons/fa";
+// import { IoMdEye } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { deleteDocTrans, getAllDocTrans, GetAllDocTransmittalData } from "@/lib/document-transmittals";
 import { toast } from "sonner";

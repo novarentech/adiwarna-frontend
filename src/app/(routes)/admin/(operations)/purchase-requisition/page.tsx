@@ -322,9 +322,9 @@ export default function PurchaseRequisitionPage() {
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex flex-row items-center justify-center gap-x-5">
-                                            <Link href={`/admin/purchase-requisition/detail/${pr.id}`} title="View">
+                                            {/* <Link href={`/admin/purchase-requisition/detail/${pr.id}`} title="View">
                                                 <LuEye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
-                                            </Link>
+                                            </Link> */}
                                             <Link href={`/admin/purchase-requisition/edit/${pr.id}`} title="Edit">
                                                 <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>
