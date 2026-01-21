@@ -163,6 +163,16 @@ export async function getAllQuotations(page = 1, search = "") {
     }
 }
 
+export async function getAll999Quotations(page = 1, search = "") {
+    try {
+        const res = await fetch(`/api/quotations/all?page=${page}&search=${search}`);
+
+        return await res.json();
+    } catch (err: any) {
+        return { success: false, message: err.message || "Error fetch quotations" };
+    }
+}
+
 
 export async function createQuotation(payload: CreateQuotationPayload) {
     try {
