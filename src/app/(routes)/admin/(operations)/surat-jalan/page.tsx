@@ -121,7 +121,7 @@ export default function SuratJalanPage() {
         }
 
         const formatted = res.data.map((sj: any) => ({
-            "No. Surat Jalan": sj.delivery_note_no,
+            "No. Surat Jalan": `${sj.dn_no}/AWP/${sj.dn_date}`,
             "Tanggal": sj.date,
             "Customer (Kepada)": sj.customer,
             "No. Work Order": sj.wo_no,
@@ -241,7 +241,7 @@ export default function SuratJalanPage() {
                     </style>
                 </head>
                 <body>
-                    <h2>Equipment Project</h2>
+                    <h2>Delivery Note</h2>
                     <table>
                         <thead>
                             <tr>

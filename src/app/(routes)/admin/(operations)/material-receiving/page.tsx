@@ -21,6 +21,8 @@ import { AllMaterialReceivingData, deleteMaterialReceiving, GetAll999MaterialRec
 // Import service API dan Interface
 
 import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
 import Image from "next/image";
 
@@ -91,6 +93,7 @@ export default function MaterialReceivingPage() {
 
     const [isExporting, setIsExporting] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [isExportingPdf, setIsExportingPdf] = useState(false);
     const [exportCount, setExportCount] = useState(0);
 
     // --- HELPER: FORMAT DATA UNTUK EKSPOR ---
@@ -105,7 +108,7 @@ export default function MaterialReceivingPage() {
         }
 
         const formatted = res.data.map((item: any) => ({
-            "P.O./INV./PR No.": item.po_inv_pr_no,
+            "P.O./INV./PR No.": `${item.po_no}/PR/AWP-${item.po_date}`,
             "Supplier": item.supplier,
             "Receiving Date": item.receiving_date,
             "Order By": item.order_by,
@@ -171,6 +174,89 @@ export default function MaterialReceivingPage() {
         setTimeout(() => setShowModal(false), 3000);
     };
 
+    const handleExportPdf = async () => {
+        setIsExportingPdf(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const doc = new jsPDF("l", "mm", "a4");
+
+            doc.setFontSize(16);
+            doc.text("Material receiving", 14, 15);
+
+            doc.setFontSize(10);
+            doc.text(`Generated: ${new Date().toLocaleString("id-ID")}`, 14, 22);
+
+            autoTable(doc, {
+                startY: 30,
+                head: [Object.keys(data[0])],
+                body: data.map((d: any) => Object.values(d)),
+                styles: { fontSize: 9 },
+            });
+
+            doc.save(`material_receiving_${Date.now()}.pdf`);
+        } catch {
+            toast.error("Export PDF gagal");
+        } finally {
+            setIsExportingPdf(false);
+        }
+    };
+
+
+    const handlePrint = async () => {
+        // 1. Ambil data lengkap (bukan hanya yang ada di halaman saat ini)
+        const data = await getExportData();
+        if (!data) return;
+
+        // 2. Buat elemen temporary untuk menampung tabel cetak
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const tableHtml = `
+                        <html>
+                        <head>
+                            <title>Print Material Receiving</title>
+                            <style>
+                                body { font-family: sans-serif; padding: 20px; }
+                                        h1 { text-align: center; margin-bottom: 20px; }
+                                        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
+                                        th { bg-color: #f2f2f2; font-bold: true; }
+                                        @page { size: landscape; }
+                            </style>
+                        </head>
+                        <body>
+                            <h2>Material Receiving</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        ${Object.keys(data[0]).map(h => `<th>${h}</th>`).join("")}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.map((r: AllMaterialReceivingData) => `
+                                        <tr>
+                                            ${Object.values(r).map(v => `<td>${v}</td>`).join("")}
+                                        </tr>
+                                    `).join("")}
+                                </tbody>
+                            </table>
+                        </body>
+                        </html>
+                    `;
+
+        printWindow.document.write(tableHtml);
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Beri sedikit jeda agar browser sempat merender tabel sebelum dialog print muncul
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    };
+
     return (
         <div className="w-full h-full px-8 py-4 bg-[#f4f6f9]">
             {showModal && (
@@ -224,7 +310,7 @@ export default function MaterialReceivingPage() {
                     <button type="submit" className="hidden">Search</button>
                 </form>
 
-                <div className="grid grid-cols-3 gap-x-2 h-10">
+                <div className="grid grid-cols-5 gap-x-2 h-10">
                     <button
                         onClick={handleCopy}
                         disabled={isExporting}
@@ -246,12 +332,17 @@ export default function MaterialReceivingPage() {
                     >
                         Excel
                     </button>
-                    {/* <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                    <button
+                        onClick={handleExportPdf}
+                        disabled={isExportingPdf}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
                         PDF
                     </button>
-                    <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                    <button
+                        onClick={handlePrint}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
                         Print
-                    </button> */}
+                    </button>
                 </div>
             </div>
 

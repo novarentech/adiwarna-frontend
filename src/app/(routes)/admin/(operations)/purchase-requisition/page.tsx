@@ -264,7 +264,7 @@ export default function PurchaseRequisitionPage() {
                         </style>
                     </head>
                     <body>
-                        <h2>Equipment Project</h2>
+                        <h2>Purchase Requisition</h2>
                         <table>
                             <thead>
                                 <tr>
