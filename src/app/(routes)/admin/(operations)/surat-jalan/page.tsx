@@ -16,10 +16,13 @@ import { LuEye, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
 import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 // Import API & Interfaces
 import { GetAllDeliveryNote, GetAllDeliveryNoteResponse, GetAllDeliveryNoteData, deleteDeliveryNote, GetAll999DeliveryNote } from "@/lib/delivery-notes";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function SuratJalanPage() {
     const [search, setSearch] = useState("");
@@ -104,6 +107,7 @@ export default function SuratJalanPage() {
     const [isExporting, setIsExporting] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [exportCount, setExportCount] = useState(0);
+    const [isExportingPdf, setIsExportingPdf] = useState(false);
 
     // --- HELPER: FORMAT DATA UNTUK EKSPOR ---
     const getExportData = async () => {
@@ -117,7 +121,7 @@ export default function SuratJalanPage() {
         }
 
         const formatted = res.data.map((sj: any) => ({
-            "No. Surat Jalan": sj.delivery_note_no,
+            "No. Surat Jalan": `${sj.dn_no}/AWP/${sj.dn_date}`,
             "Tanggal": sj.date,
             "Customer (Kepada)": sj.customer,
             "No. Work Order": sj.wo_no,
@@ -184,6 +188,90 @@ export default function SuratJalanPage() {
         setTimeout(() => setShowModal(false), 3000);
     };
 
+    const handleExportPdf = async () => {
+        setIsExportingPdf(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const doc = new jsPDF("l", "mm", "a4");
+
+            doc.setFontSize(16);
+            doc.text("Delivery Note", 14, 15);
+
+            doc.setFontSize(10);
+            doc.text(`Generated: ${new Date().toLocaleString("id-ID")}`, 14, 22);
+
+            autoTable(doc, {
+                startY: 30,
+                head: [Object.keys(data[0])],
+                body: data.map((d: any) => Object.values(d)),
+                styles: { fontSize: 9 },
+            });
+
+            doc.save(`delivery_note_${Date.now()}.pdf`);
+        } catch {
+            toast.error("Export PDF gagal");
+        } finally {
+            setIsExportingPdf(false);
+        }
+    };
+
+
+    const handlePrint = async () => {
+        // 1. Ambil data lengkap (bukan hanya yang ada di halaman saat ini)
+        const data = await getExportData();
+        if (!data) return;
+
+        // 2. Buat elemen temporary untuk menampung tabel cetak
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const tableHtml = `
+                <html>
+                <head>
+                    <title>Print Delivery Note</title>
+                    <style>
+                        body { font-family: sans-serif; padding: 20px; }
+                                h1 { text-align: center; margin-bottom: 20px; }
+                                table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
+                                th { bg-color: #f2f2f2; font-bold: true; }
+                                @page { size: landscape; }
+                    </style>
+                </head>
+                <body>
+                    <h2>Delivery Note</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                ${Object.keys(data[0]).map(h => `<th>${h}</th>`).join("")}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map((r: GetAllDeliveryNoteData) => `
+                                <tr>
+                                    ${Object.values(r).map(v => `<td>${v}</td>`).join("")}
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+        printWindow.document.write(tableHtml);
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Beri sedikit jeda agar browser sempat merender tabel sebelum dialog print muncul
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    };
+
+
     return (
         <div className="w-full h-full px-8 py-4 bg-[#f4f6f9]">
             {/* Modal Notifikasi */}
@@ -215,7 +303,11 @@ export default function SuratJalanPage() {
             )}
 
             <div className="flex flex-row justify-between items-center space-x-2 mt-14">
-                <h1 className="text-3xl font-normal text-[#212529]">Daftar Surat Jalan</h1>
+                <div className="flex flex-row items-center space-x-4 mt-2">
+                    <Image src={"/icons/icon-surat-jalan-black.svg"} className="text-black contrast-200" alt="icon quotations" width={40} height={40} />
+                    <h1 className="text-3xl font-normal">Surat Jalan  </h1>
+                </div>
+                {/* <h1 className="text-3xl font-normal text-[#212529]">Daftar Surat Jalan</h1> */}
                 <Link href={"/admin/surat-jalan/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75 transition-all shadow-sm">
                     <FiPlus className="w-5 h-5 mr-1" /> Add New Surat Jalan
                 </Link>
@@ -234,7 +326,7 @@ export default function SuratJalanPage() {
                     <IoIosSearch className="w-6 h-6 m-auto absolute top-2 left-3 text-[#99A1AF]" />
                 </form>
 
-                <div className="grid grid-cols-3 gap-x-2 h-10">
+                <div className="grid grid-cols-5 gap-x-2 h-10">
                     <button
                         onClick={handleCopy}
                         disabled={isExporting}
@@ -256,12 +348,17 @@ export default function SuratJalanPage() {
                     >
                         Excel
                     </button>
-                    {/* <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                    <button
+                        onClick={handleExportPdf}
+                        disabled={isExportingPdf}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
                         PDF
                     </button>
-                    <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                    <button
+                        onClick={handlePrint}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
                         Print
-                    </button> */}
+                    </button>
                 </div>
             </div>
 
@@ -301,9 +398,9 @@ export default function SuratJalanPage() {
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex flex-row items-center justify-center gap-x-6">
-                                            <Link href={`/admin/surat-jalan/detail/${sj.id}`}>
+                                            {/* <Link href={`/admin/surat-jalan/detail/${sj.id}`}>
                                                 <LuEye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
-                                            </Link>
+                                            </Link> */}
                                             <Link href={`/admin/surat-jalan/edit/${sj.id}`}>
                                                 <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>

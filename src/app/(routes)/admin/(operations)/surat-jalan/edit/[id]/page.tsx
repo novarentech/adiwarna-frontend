@@ -175,7 +175,7 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                         {/* Left Side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="customer_id" className="text-sm">Kepada (Customer/Shipper)</label>
+                                <label htmlFor="customer_id" className="text-sm font-bold">Kepada (Customer/Shipper)</label>
                                 <select
                                     id="customer_id"
                                     className="w-full border rounded-sm h-10 px-2 bg-white border-[#AAAAAA]"
@@ -190,7 +190,7 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                                 </select>
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="customer_address" className="text-sm">Address</label>
+                                <label htmlFor="customer_address" className="text-sm font-bold">Address</label>
                                 <textarea
                                     id="customer_address"
                                     required
@@ -200,7 +200,7 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                                 />
                             </div>
                             <div className="flex flex-col space-y-4 mt-[37px]">
-                                <label htmlFor="status" className="text-sm">Status Pengiriman</label>
+                                <label htmlFor="status" className="text-sm font-bold">Status Pengiriman</label>
                                 <select id="status" value={formData.status} onChange={handleInputChange} className="w-full h-10 border px-3 rounded-sm border-[#AAAAAA] bg-white">
                                     <option value="pending">Pending</option>
                                     <option value="delivered">Delivered</option>
@@ -212,23 +212,23 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                         {/* Right Side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="dn_no" className="text-sm">No Surat</label>
+                                <label htmlFor="dn_no" className="text-sm font-bold">No Surat</label>
                                 <input id="dn_no" required value={formData.dn_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="date" className="text-sm">Tanggal</label>
+                                <label htmlFor="date" className="text-sm font-bold">Tanggal</label>
                                 <input id="date" required value={formData.date} onChange={handleInputChange} type="date" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="wo_no" className="text-sm">No WO</label>
+                                <label htmlFor="wo_no" className="text-sm font-bold">No WO</label>
                                 <input id="wo_no" required value={formData.wo_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="delivered_with" className="text-sm">Dalam Dengan</label>
+                                <label htmlFor="delivered_with" className="text-sm font-bold">Dalam Dengan</label>
                                 <input id="delivered_with" required value={formData.delivered_with} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="vehicle_plate" className="text-sm">Plat Kendaraan</label>
+                                <label htmlFor="vehicle_plate" className="text-sm font-bold">Plat Kendaraan</label>
                                 <input id="vehicle_plate" required value={formData.vehicle_plate} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                         </div>
@@ -279,17 +279,17 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                     </div>
 
                     <div className="flex flex-col space-y-4 mt-6">
-                        <label htmlFor="notes" className="text-sm">Note</label>
+                        <label htmlFor="notes" className="text-sm font-bold">Note</label>
                         <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#AAAAAA] resize-none" placeholder="Masukkan catatan tambahan..." />
                     </div>
 
                     <div className="w-full grid grid-cols-2 gap-x-8 mt-6">
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="received_by" className="text-sm">Diterima Oleh</label>
+                            <label htmlFor="received_by" className="text-sm font-bold">Diterima Oleh</label>
                             <input id="received_by" value={formData.received_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" placeholder="Name" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="delivered_by" className="text-sm">Diserahkan Oleh</label>
+                            <label htmlFor="delivered_by" className="text-sm font-bold">Diserahkan Oleh</label>
                             <input id="delivered_by" required value={formData.delivered_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" placeholder="Name" />
                         </div>
                     </div>

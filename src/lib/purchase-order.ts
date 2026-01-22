@@ -168,6 +168,16 @@ export async function getAllPurchaseOrders(page = 1, search = "") {
     }
 }
 
+export async function getAll999PurchaseOrders(page = 1, search = "") {
+    try {
+        const res = await fetch(`/api/purchase-orders/all?page=${page}&search=${search}`);
+
+        return await res.json();
+    } catch (err: any) {
+        return { success: false, message: err.message || "Error fetch purchase-orders" };
+    }
+}
+
 
 export async function createPurchaseOrder(payload: CreatePurchaseOrderPayload) {
     try {

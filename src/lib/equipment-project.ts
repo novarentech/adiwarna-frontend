@@ -112,6 +112,18 @@ export async function getAllEquipmentproject(page = 1, perPage = 15, search = ""
     }
 }
 
+export async function getAll999Equipmentproject(page = 1, perPage = 99999, search = ""): Promise<GetAllEquipmentProjectResponse> {
+    try {
+        // Request ke API dengan page, perPage, dan search
+        const res = await fetch(`/api/equipment/project?page=${page}&per_page=${perPage}&search=${search}`);
+
+        return await res.json() as GetAllEquipmentProjectResponse;
+    } catch (err: any) {
+        // Return tipe yang sesuai dengan response yang diharapkan
+        return { success: false, data: [], meta: { current_page: 1, last_page: 1, per_page: 15, total: 0 } };
+    }
+}
+
 
 export async function createEquipmentproject(payload: CreateEquipmentProjectPayload) {
     try {

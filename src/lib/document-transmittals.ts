@@ -88,6 +88,16 @@ export async function getAllDocTrans(page = 1, search = "") {
     }
 }
 
+export async function getAll999DocTrans(page = 1, search = "") {
+    try {
+        const res = await fetch(`/api/document-transmittals/all?page=${page}&search=${search}`);
+
+        return await res.json();
+    } catch (err: any) {
+        return { success: false, message: err.message || "Error fetch document-transmittals" };
+    }
+}
+
 export async function createDocumentTransmittal(payload: CreateDocTransmittalPayload) {
     try {
         const res = await fetch("/api/document-transmittals", {
