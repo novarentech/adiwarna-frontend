@@ -132,9 +132,9 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
                     </Link>
                     <Link href={"/admin/equipment-general"} className="flex flex-row items-center h-10 space-x-3 hover:contrast-90">
                         {/* <FaCircle className="w-[23px] h-[23px]" /> */}
-                        <FaToolbox className="w-[23px] h-[23px]"/>
+                        <FaToolbox className="w-[23px] h-[23px]" />
 
-                        <p className="text-base">equipment general</p>
+                        <p className="text-base">Equipment General</p>
                     </Link>
                 </div>
             </div>

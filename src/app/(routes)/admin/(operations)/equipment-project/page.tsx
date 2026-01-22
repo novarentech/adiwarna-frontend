@@ -19,13 +19,17 @@ import { FaTrash, FaWrench } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
 import { useEffect, useState } from "react";
 // Ganti import fungsi dan interface dari quotations ke equipment project
-import { deleteEquipmentproject, getAllEquipmentproject } from "@/lib/equipment-project";
+import { deleteEquipmentproject, getAll999Equipmentproject, getAllEquipmentproject } from "@/lib/equipment-project";
 import { EquipmentProjectData } from "@/lib/equipment-project"; // Sesuaikan path interface Anda
 import { ImWrench } from "react-icons/im";
 import { toast } from "sonner";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { LuEye } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
+
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 
 export default function EquipmentProjectPage() {
@@ -93,98 +97,321 @@ export default function EquipmentProjectPage() {
         return (page - 1) * 15 + index + 1; // Asumsi per_page = 15
     }
 
+    // 
+    // 
+    // 
+
+    const [isCopying, setIsCopying] = useState(false);
+    const [isExportingCsv, setIsExportingCsv] = useState(false);
+    const [isExportingExcel, setIsExportingExcel] = useState(false);
+    const [isExportingPdf, setIsExportingPdf] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [exportCount, setExportCount] = useState(0);
+
+    const getExportData = async () => {
+        try {
+            // page besar supaya ambil semua
+            const res = await getAll999Equipmentproject(1, 99999, search);
+
+            if (!res.success || !res.data) {
+                toast.error("Gagal mengambil data untuk ekspor");
+                return null;
+            }
+
+            const formatted = res.data.map((item: EquipmentProjectData, index) => ({
+                "No": getNo(index),
+                "Project Date": item.project_date,
+                "Customer": item.customer,
+                "Location": item.location,
+                "Prepared By": item.prepared_by,
+                "Verified By": item.verified_by,
+            }));
+
+            setExportCount(formatted.length);
+            return formatted;
+        } catch (error) {
+            console.error(error);
+            toast.error("Terjadi kesalahan saat mengambil data");
+            return null;
+        }
+    };
+
+    const handleCopy = async () => {
+        setIsCopying(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const headers = Object.keys(data[0]);
+            const rows = data.map((row: any) =>
+                headers.map(h => row[h]).join("\t")
+            );
+
+            const content = [headers.join("\t"), ...rows].join("\n");
+            await navigator.clipboard.writeText(content);
+
+            toast.success(`Copied Successfully`);
+        } catch (err) {
+            toast.error("Gagal copy data");
+        } finally {
+            setIsCopying(false);
+        }
+    };
+
+    const handleExportCsv = async () => {
+        setIsExportingCsv(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const headers = Object.keys(data[0]);
+            const rows = data.map((row: any) =>
+                headers.map(h => `"${row[h]}"`).join(",")
+            );
+
+            const csv = [headers.join(","), ...rows].join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `equipment_project_${Date.now()}.csv`;
+            link.click();
+        } catch {
+            toast.error("Export CSV gagal");
+        } finally {
+            setIsExportingCsv(false);
+        }
+    };
+
+    const handleExportExcel = async () => {
+        setIsExportingExcel(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Document Transmittal");
+
+            XLSX.writeFile(wb, `equipment_project_${Date.now()}.xlsx`);
+        } catch {
+            toast.error("Export Excel gagal");
+        } finally {
+            setIsExportingExcel(false);
+        }
+    };
+
+    const handleExportPdf = async () => {
+        setIsExportingPdf(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const doc = new jsPDF("l", "mm", "a4");
+
+            doc.setFontSize(16);
+            doc.text("Equipment Project", 14, 15);
+
+            doc.setFontSize(10);
+            doc.text(`Generated: ${new Date().toLocaleString("id-ID")}`, 14, 22);
+
+            autoTable(doc, {
+                startY: 30,
+                head: [Object.keys(data[0])],
+                body: data.map((d: any) => Object.values(d)),
+                styles: { fontSize: 9 },
+            });
+
+            doc.save(`equipment_project_${Date.now()}.pdf`);
+        } catch {
+            toast.error("Export PDF gagal");
+        } finally {
+            setIsExportingPdf(false);
+        }
+    };
+
+
+    const handlePrint = async () => {
+        // 1. Ambil data lengkap (bukan hanya yang ada di halaman saat ini)
+        const data = await getExportData();
+        if (!data) return;
+
+        // 2. Buat elemen temporary untuk menampung tabel cetak
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const tableHtml = `
+            <html>
+            <head>
+                <title>Print Equipment general</title>
+                <style>
+                    body { font-family: sans-serif; padding: 20px; }
+                            h1 { text-align: center; margin-bottom: 20px; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
+                            th { bg-color: #f2f2f2; font-bold: true; }
+                            @page { size: landscape; }
+                </style>
+            </head>
+            <body>
+                <h2>Equipment Project</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            ${Object.keys(data[0]).map(h => `<th>${h}</th>`).join("")}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map((r) => `
+                            <tr>
+                                ${Object.values(r).map(v => `<td>${v}</td>`).join("")}
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            </body>
+            </html>
+        `;
+
+        printWindow.document.write(tableHtml);
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Beri sedikit jeda agar browser sempat merender tabel sebelum dialog print muncul
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    };
+
     return (
-        <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
+        <div className="w-full h-full px-8 py-4 bg-[#f4f6f9]">
             {/* title container */}
-            <div className="flex flex-row items-center space-x-2 mt-2">
-                {/* Ganti Ikon dan Judul */}
-                {/* Asumsi Anda memiliki ikon lain, jika tidak, gunakan ikon yang sama atau hapus tag Image */}
-                <FaWrench className="text-black w-10 h-10" />
-                <h1 className="text-3xl font-normal">Data Equipment Projects</h1>
+            <div className="flex flex-row justify-between items-center space-x-2 mt-14">
+
+                <div className="flex flex-row items-center space-x-2 mt-2">
+                    <FaWrench className="text-black w-10 h-10" />
+                    <h1 className="text-3xl font-normal">Equipment Project  </h1>
+                </div>
+                {/* create quotations button */}
+                <Link href={"/admin/equipment-project/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75 transition-all shadow-sm"><FiPlus className="w-5 h-5 mr-1" /> Add Document Transmittal</Link>
+            </div>
+
+            {/* Search & Export Container */}
+            <div className="bg-white rounded-[10px] shadow-sm w-full h-32 mt-6 flex flex-row justify-between items-center p-6 border border-[#E5E7EB]">
+                <form className="flex flex-row relative" onSubmit={handleSearch}>
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-[400px] rounded-sm h-10 border border-[#D1D5DC] my-auto pl-12 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-[#31C6D4]"
+                        placeholder="Search Project..."
+                    />
+                    <IoIosSearch className="w-6 h-6 m-auto absolute top-2 left-3 text-[#99A1AF]" />
+                </form>
+
+                <div className="grid grid-cols-5 gap-x-2 h-10">
+                    <button
+                        onClick={handleCopy}
+                        disabled={isCopying}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                        Copy
+                    </button>
+                    <button
+                        onClick={handleExportCsv}
+                        disabled={isExportingCsv}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                        CSV
+                    </button>
+                    <button
+                        onClick={handleExportExcel}
+                        disabled={isExportingExcel}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                        Excel
+                    </button>
+                    <button
+                        onClick={handleExportPdf}
+                        disabled={isExportingPdf}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                        PDF
+                    </button>
+                    <button
+                        onClick={handlePrint} 
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                        Print
+                    </button>
+                </div>
             </div>
 
             {/* list equipment projects */}
-            <div className="bg-white mt-12 shadow-md rounded-lg"> {/* Tambahkan shadow dan rounded untuk kesan modern */}
-                <div className="py-3 px-4 flex justify-between border-b rounded-t-lg">
-                    {/* create equipment project button */}
-                    {/* Sesuaikan link ke halaman pembuatan equipment project */}
-                    <Link href={"/admin/equipment-project/create"} className="bg-[#31C6D4] text-white px-2 h-10 flex justify-center items-center rounded-sm">
-                        Add Project Data <FiPlus className="w-4 h-4 ml-1" />
-                    </Link>
-                    {/* search bar */}
-                    <form onSubmit={handleSearch} className="flex flex-row">
-                        <input value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            id="search-input"
-                            type="text"
-                            className="w-[200px] rounded-l-sm h-8 border my-auto px-2 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
-                            placeholder="Search Projects..." />
-                        <button className="border-r border-t border-b h-8 w-8 my-auto flex rounded-r-sm bg-gray-50 hover:bg-gray-100" type="submit"><IoIosSearch className="w-5 m-auto text-gray-600" /></button>
-                    </form>
-                </div>
-                <div className="py-2 px-4 border-b rounded-b-lg overflow-x-auto"> {/* Tambahkan overflow-x-auto */}
-                    <Table className="min-w-full">
-                        <TableHeader>
-                            {/* Sesuaikan kolom tabel sesuai gambar */}
-                            <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                                <TableHead className="text-[#212529] font-bold w-12 text-center">No.</TableHead>
-                                <TableHead className="text-[#212529] font-bold">Project Date</TableHead>
-                                <TableHead className="text-[#212529] font-bold">Customer</TableHead>
-                                <TableHead className="text-[#212529] font-bold ">Location</TableHead>
-                                <TableHead className="text-[#212529] font-bold">Prepared By</TableHead>
-                                <TableHead className="text-[#212529] font-bold">Verified By</TableHead>
-                                <TableHead className="text-[#212529] font-bold text-center">Action</TableHead>
+            <div className="bg-white mt-10 rounded-[10px] overflow-hidden shadow-sm border border-[#E5E7EB]">
+                {/* <div className="py-2 px-4 border-b rounded-b-lg overflow-x-auto"> Tambahkan overflow-x-auto */}
+                <Table className="min-w-full">
+                    <TableHeader>
+                        {/* Sesuaikan kolom tabel sesuai gambar */}
+                        <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
+                            <TableHead className="text-[#212529] font-bold w-12 text-center py-8">No.</TableHead>
+                            <TableHead className="text-[#212529] font-bold">Project Date</TableHead>
+                            <TableHead className="text-[#212529] font-bold">Customer</TableHead>
+                            <TableHead className="text-[#212529] font-bold ">Location</TableHead>
+                            <TableHead className="text-[#212529] font-bold">Prepared By</TableHead>
+                            <TableHead className="text-[#212529] font-bold">Verified By</TableHead>
+                            <TableHead className="text-[#212529] font-bold text-center">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {loading ? (
+                            <TableRow>
+                                <TableCell colSpan={7} className="text-center py-10">
+                                    Loading...
+                                </TableCell>
                             </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {loading ? (
-                                <TableRow>
-                                    <TableCell colSpan={7} className="text-center py-10">
-                                        Loading...
+                        ) : equipmentProjects.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={7} className="text-center py-10">
+                                    No data found.
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            equipmentProjects.map((project, index) => (
+                                // Ganti key dari q.id ke project.id
+                                <TableRow key={project.id} className="hover:bg-gray-50 border-[#E5E7EB]">
+                                    <TableCell className="text-center font-medium">{getNo(index)}</TableCell>
+                                    <TableCell className="py-6 text-sm">{(project.project_date)}</TableCell>
+                                    <TableCell className="text-sm">{project.customer}</TableCell>
+                                    <TableCell className="text-sm">{project.location}</TableCell>
+                                    <TableCell className="text-sm">{project.prepared_by}</TableCell>
+                                    <TableCell className="text-sm">{project.verified_by}</TableCell>
+                                    <TableCell className="text-center">
+                                        {/* Sesuaikan style action buttons agar mirip gambar */}
+                                        <div className="w-fit flex space-x-1 items-center mx-auto">
+                                            {/* Edit Button */}
+                                            <Link href={`/admin/equipment-project/edit/${project.id}`} className="p-1 text-gray-600 hover:text-blue-600">
+                                                {/* <MdEdit className="w-4 h-4" /> */}
+                                                <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
+                                            </Link>
+                                            {/* Delete Button */}
+                                            <button onClick={() => handleDelete(project.id)} className="p-1 text-red-500 hover:text-red-700">
+                                                {/* <FaTrash className="w-3.5 h-3.5" /> */}
+                                                <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
+                                            </button>
+                                            {/* View/Detail Button */}
+                                            <Link href={`/admin/equipment-project/print/${project.id}`} className="p-1 text-[#31C6D4] hover:text-[#17A2B8] bg-blue-50/50 rounded-full">
+                                                {/* <IoMdEye className="w-4 h-4" /> */}
+                                                <LuEye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
+                                            </Link>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
-                            ) : equipmentProjects.length === 0 ? (
-                                <TableRow>
-                                    <TableCell colSpan={7} className="text-center py-10">
-                                        No data found.
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                equipmentProjects.map((project, index) => (
-                                    // Ganti key dari q.id ke project.id
-                                    <TableRow key={project.id} className="hover:bg-gray-50 border-[#E5E7EB]">
-                                        <TableCell className="text-center font-medium">{getNo(index)}</TableCell>
-                                        <TableCell className="py-6 text-sm">{(project.project_date)}</TableCell>
-                                        <TableCell className="text-sm">{project.customer}</TableCell>
-                                        <TableCell className="text-sm">{project.location}</TableCell>
-                                        <TableCell className="text-sm">{project.prepared_by}</TableCell>
-                                        <TableCell className="text-sm">{project.verified_by}</TableCell>
-                                        <TableCell className="text-center">
-                                            {/* Sesuaikan style action buttons agar mirip gambar */}
-                                            <div className="w-fit flex space-x-1 items-center mx-auto">
-                                                {/* Edit Button */}
-                                                <Link href={`/admin/equipment-project/edit/${project.id}`} className="p-1 text-gray-600 hover:text-blue-600">
-                                                    {/* <MdEdit className="w-4 h-4" /> */}
-                                                    <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
-                                                </Link>
-                                                {/* Delete Button */}
-                                                <button onClick={() => handleDelete(project.id)} className="p-1 text-red-500 hover:text-red-700">
-                                                    {/* <FaTrash className="w-3.5 h-3.5" /> */}
-                                                    <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
-                                                </button>
-                                                {/* View/Detail Button */}
-                                                <Link href={`/admin/equipment-project/print/${project.id}`} className="p-1 text-[#31C6D4] hover:text-[#17A2B8] bg-blue-50/50 rounded-full">
-                                                    {/* <IoMdEye className="w-4 h-4" /> */}
-                                                    <LuEye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
-                                                </Link>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+                {/* </div> */}
 
                 {/* Pagination */}
                 <div className="flex justify-center items-center py-4 space-x-4">
