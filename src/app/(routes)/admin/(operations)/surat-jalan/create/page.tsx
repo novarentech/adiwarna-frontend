@@ -140,7 +140,7 @@ export default function SuratJalanCreatePage() {
                         {/* left side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="customer_id" className="text-sm">Kepada (Customer/Shipper)</label>
+                                <label htmlFor="customer_id" className="text-sm font-bold">Kepada (Customer/Shipper)</label>
                                 {/* <input id="customer" required value={formData.customer} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" /> */}
 
                                 {/* ini nanti fetch dari customerr */}
@@ -161,11 +161,11 @@ export default function SuratJalanCreatePage() {
 
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="customer_address" className="text-sm">Address</label>
+                                <label htmlFor="customer_address" className="text-sm font-bold">Address</label>
                                 <textarea id="customer_address" required value={selectedCustomerAddress} onChange={handleInputChange} disabled className="w-full h-[110px] border p-2 rounded-sm bg-[#e9ecef] border-[#AAAAAA] resize-none" />
                             </div>
                             <div className="flex flex-col space-y-4 mt-[37px]">
-                                <label htmlFor="status" className="text-sm">Status Pengiriman</label>
+                                <label htmlFor="status" className="text-sm font-bold">Status Pengiriman</label>
                                 <select id="status" value={formData.status} onChange={handleInputChange} className="w-full h-10 border px-3 rounded-sm border-[#AAAAAA] bg-white">
                                     <option value="pending">Pending</option>
                                     <option value="delivered">Delivered</option>
@@ -176,23 +176,23 @@ export default function SuratJalanCreatePage() {
                         {/* right side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="dn_no" className="text-sm">No Surat</label>
+                                <label htmlFor="dn_no" className="text-sm font-bold">No Surat</label>
                                 <input id="dn_no" required value={formData.dn_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="date" className="text-sm">Tanggal</label>
+                                <label htmlFor="date" className="text-sm font-bold">Tanggal</label>
                                 <input id="date" required value={formData.date} onChange={handleInputChange} type="date" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="wo_no" className="text-sm">No WO</label>
+                                <label htmlFor="wo_no" className="text-sm font-bold">No WO</label>
                                 <input id="wo_no" required value={formData.wo_no} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="delivered_with" className="text-sm">Dalam Dengan</label>
+                                <label htmlFor="delivered_with" className="text-sm font-bold">Dalam Dengan</label>
                                 <input id="delivered_with" required value={formData.delivered_with} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="vehicle_plate" className="text-sm">Plat Kendaraan</label>
+                                <label htmlFor="vehicle_plate" className="text-sm font-bold">Plat Kendaraan</label>
                                 <input id="vehicle_plate" required value={formData.vehicle_plate} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" />
                             </div>
                         </div>
@@ -202,7 +202,7 @@ export default function SuratJalanCreatePage() {
                     {/* item list (nanti bisa add item) */}
                     <div className="flex flex-col mt-6">
                         <div className="w-full flex flex-row justify-between">
-                            <h1>Items Details</h1>
+                            <h1 className="font-bold">Items Details</h1>
                             {/* button nambah item */}
                             <div onClick={addItem} className=" bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
                                 <FiPlus className="w-5 h-5 mr-1" /> Add Item
@@ -236,17 +236,17 @@ export default function SuratJalanCreatePage() {
                     </div>
 
                     <div className="flex flex-col space-y-4 mt-6">
-                        <label htmlFor="notes" className="text-sm">Note</label>
+                        <label htmlFor="notes" className="text-sm font-bold">Note</label>
                         <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full h-[110px] border p-2 rounded-sm border-[#AAAAAA] resize-none" placeholder="Harapan S/N, RA 219-06207 dan silan S/N, 291905 biaya arca" />
                     </div>
 
                     <div className="w-full grid grid-cols-2 gap-x-8 mt-6">
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="received_by" className="text-sm">Diterima / Diserahkan Oleh</label>
+                            <label htmlFor="received_by" className="text-sm font-bold">Diterima / Diserahkan Oleh</label>
                             <input id="received_by" required value={formData.received_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" placeholder="Name" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="delivered_by" className="text-sm">Diserahkan Oleh PT. Adiwarna Pratama</label>
+                            <label htmlFor="delivered_by" className="text-sm font-bold">Diserahkan Oleh PT. Adiwarna Pratama</label>
                             <input id="delivered_by" required value={formData.delivered_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" placeholder="Name" />
                         </div>
                     </div>
