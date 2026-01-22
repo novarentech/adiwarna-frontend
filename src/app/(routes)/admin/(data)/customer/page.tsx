@@ -5,8 +5,8 @@ import Link from "next/link";
 import { IoIosSearch } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
 import { FaUser } from "react-icons/fa6";
-import { MdEdit } from "react-icons/md";
-import { FaTrash } from "react-icons/fa";
+// import { MdEdit } from "react-icons/md";
+// import { FaTrash } from "react-icons/fa";
 // import { IoMdEye } from "react-icons/io";
 
 
@@ -113,42 +113,47 @@ export default function CustomerPage() {
                 <div className="py-5 px-4 border-b border-x rounded-b-sm">
                     <Table>
                         <TableHeader>
-                            <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                                <TableHead className="text-center"><input type="checkbox" /></TableHead>
-                                <TableHead className="text-center font-bold">No</TableHead>
-                                <TableHead className="text-center font-bold">Customer Info</TableHead>
-                                <TableHead className="text-center font-bold">Work Location</TableHead>
-                                <TableHead className="text-center font-bold">Action</TableHead>
+                            <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-black">
+                                <TableHead className="border-black border text-center"><input type="checkbox" /></TableHead>
+                                <TableHead className="border-black border text-center font-bold">No</TableHead>
+                                <TableHead className="border-black border text-center font-bold max-w-[200px]">Customer Info</TableHead>
+                                <TableHead className="border-black border text-center font-bold max-w-[300px]">Work Location</TableHead>
+                                <TableHead className="border-black border text-center font-bold">Action</TableHead>
                             </TableRow>
                         </TableHeader>
 
                         <TableBody>
                             {customers.map((c, index) => (
-                                <TableRow key={c.id} className="hover:bg-gray-50 border-[#E5E7EB]">
-                                    <TableCell className="text-center">
+                                <TableRow key={c.id} className="hover:bg-gray-50 border-black">
+                                    <TableCell className="text-center border-black border">
                                         <input type="checkbox" />
                                     </TableCell>
 
-                                    <TableCell className="text-center">
+                                    <TableCell className="text-center border-black border">
                                         {/* {(page - 1) * 15 + (index + 1)} */}
                                         {c.customer_no}
                                     </TableCell>
 
-                                    <TableCell className="text-left whitespace-normal wrap-break-words">
+                                    <TableCell className="text-left whitespace-normal wrap-break-words border-black border max-w-[300px]">
                                         <p className="font-bold">{c.name}</p>
                                         <p>{c.phone_number}</p>
                                         <p>{c.address}</p>
                                     </TableCell>
 
-                                    <TableCell className="text-center whitespace-normal wrap-break-words">
-                                        <ul>
+                                    <TableCell className="p-0 align-top border-x border-black border">
+                                        <div className="divide-y divide-black">
                                             {c.customer_locations.map((loc: CustomerLocation) => (
-                                                <li key={loc.id}>{loc.location_name}</li>
+                                                <div
+                                                    key={loc.id}
+                                                    className="px-3 py-2 text-left wrap-break-words"
+                                                >
+                                                    {loc.location_name}
+                                                </div>
                                             ))}
-                                        </ul>
+                                        </div>
                                     </TableCell>
 
-                                    <TableCell className="text-center">
+                                    <TableCell className="text-center border-black border   ">
                                         <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
                                             <Link href={`/admin/customer/edit/${c.id}`}>
                                                 {/* <MdEdit className="w-7 h-7" /> */}
