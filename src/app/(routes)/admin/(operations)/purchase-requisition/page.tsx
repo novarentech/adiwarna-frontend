@@ -19,6 +19,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 // Import API and Interfaces
 import { GetAllPurchaseRequisition, GetAllPurchaseRequisitionResponse, GetAllPurchaseRequisitionData, deletePurchaseRequisition, GetAll999PurchaseRequisition } from "@/lib/purchase-requisitions";
 import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
 import Image from "next/image";
 
@@ -119,8 +121,10 @@ export default function PurchaseRequisitionPage() {
         fetchData(search, page);
     };
 
+    const [isCopying, setIsCopying] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [isExportingPdf, setIsExportingPdf] = useState(false);
     const [exportCount, setExportCount] = useState(0);
 
     // --- HELPER: FORMAT DATA UNTUK EKSPOR ---
@@ -135,11 +139,9 @@ export default function PurchaseRequisitionPage() {
         }
 
         const formatted = res.data.map((pr: any) => ({
-            "P.R. No.": pr.pr_no,
-            "Rev. No.": pr.rev_no || "-",
-            "Required Delivery": pr.required_delivery,
+            "P.R. No.": `${pr.pr_no}/PR/AWP-${pr.pr_date}`,
+            "Date": pr.date,
             "Supplier": pr.supplier,
-            "Place of Delivery": pr.place_of_delivery,
             "Total Amount": pr.total_amount,
             "Status": pr.status,
         }));
@@ -150,17 +152,25 @@ export default function PurchaseRequisitionPage() {
 
     // --- HANDLER: COPY ---
     const handleCopy = async () => {
-        const data = await getExportData();
-        if (!data) return;
+        setIsCopying(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
 
-        const headers = Object.keys(data[0]);
-        const rows = data.map((obj: any) =>
-            headers.map(header => obj[header]).join("\t")
-        );
+            const headers = Object.keys(data[0]);
+            const rows = data.map((row: any) =>
+                headers.map(h => row[h]).join("\t")
+            );
 
-        const content = [headers.join("\t"), ...rows].join("\n");
-        await navigator.clipboard.writeText(content);
-        triggerSuccess();
+            const content = [headers.join("\t"), ...rows].join("\n");
+            await navigator.clipboard.writeText(content);
+
+            toast.success(`Copied Successfully`);
+        } catch (err) {
+            toast.error("Gagal copy data");
+        } finally {
+            setIsCopying(false);
+        }
     };
 
     // --- HANDLER: CSV ---
@@ -199,6 +209,89 @@ export default function PurchaseRequisitionPage() {
         setShowModal(true);
         setIsExporting(false);
         setTimeout(() => setShowModal(false), 3000);
+    };
+
+    const handleExportPdf = async () => {
+        setIsExportingPdf(true);
+        try {
+            const data = await getExportData();
+            if (!data) return;
+
+            const doc = new jsPDF("l", "mm", "a4");
+
+            doc.setFontSize(16);
+            doc.text("Purchase Requisition", 14, 15);
+
+            doc.setFontSize(10);
+            doc.text(`Generated: ${new Date().toLocaleString("id-ID")}`, 14, 22);
+
+            autoTable(doc, {
+                startY: 30,
+                head: [Object.keys(data[0])],
+                body: data.map((d: any) => Object.values(d)),
+                styles: { fontSize: 9 },
+            });
+
+            doc.save(`purchase_requisition_${Date.now()}.pdf`);
+        } catch {
+            toast.error("Export PDF gagal");
+        } finally {
+            setIsExportingPdf(false);
+        }
+    };
+
+
+    const handlePrint = async () => {
+        // 1. Ambil data lengkap (bukan hanya yang ada di halaman saat ini)
+        const data = await getExportData();
+        if (!data) return;
+
+        // 2. Buat elemen temporary untuk menampung tabel cetak
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const tableHtml = `
+                    <html>
+                    <head>
+                        <title>Print Purchase Requisition</title>
+                        <style>
+                            body { font-family: sans-serif; padding: 20px; }
+                                    h1 { text-align: center; margin-bottom: 20px; }
+                                    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
+                                    th { bg-color: #f2f2f2; font-bold: true; }
+                                    @page { size: landscape; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2>Equipment Project</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    ${Object.keys(data[0]).map(h => `<th>${h}</th>`).join("")}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.map((r: GetAllPurchaseRequisitionData) => `
+                                    <tr>
+                                        ${Object.values(r).map(v => `<td>${v}</td>`).join("")}
+                                    </tr>
+                                `).join("")}
+                            </tbody>
+                        </table>
+                    </body>
+                    </html>
+                `;
+
+        printWindow.document.write(tableHtml);
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Beri sedikit jeda agar browser sempat merender tabel sebelum dialog print muncul
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
     };
 
     return (
@@ -255,10 +348,10 @@ export default function PurchaseRequisitionPage() {
                     <button type="submit" className="hidden">Search</button>
                 </form>
 
-                <div className="grid grid-cols-3 gap-x-2 h-10">
+                <div className="grid grid-cols-5 gap-x-2 h-10">
                     <button
                         onClick={handleCopy}
-                        disabled={isExporting}
+                        disabled={isCopying}
                         className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                     >
                         Copy
@@ -277,12 +370,17 @@ export default function PurchaseRequisitionPage() {
                     >
                         Excel
                     </button>
-                    {/* <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                    <button
+                        onClick={handleExportPdf}
+                        disabled={isExportingPdf}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
                         PDF
                     </button>
-                    <button className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
+                    <button
+                        onClick={handlePrint}
+                        className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors">
                         Print
-                    </button> */}
+                    </button>
                 </div>
             </div>
 
