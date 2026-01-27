@@ -32,8 +32,6 @@ export async function proxy(req: NextRequest) {
         // ❌ token sudah mati / login di device lain
         if (!check.ok) {
         const res = NextResponse.redirect(new URL("/", req.url));
-        res.cookies.delete("token");
-        res.cookies.delete("role");
         return res;
         }
     }
