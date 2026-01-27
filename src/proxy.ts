@@ -19,19 +19,22 @@ export async function proxy(req: NextRequest) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
-    // 🔥 CEK KE BACKEND
-    const check = await fetch(`${BASE_URL}/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    // check dulu token ada atau tidak
+    if(token) {
+        // 🔥 CEK KE BACKEND untuk mencari tahu token valid atau tidak (401 or not)
+        const check = await fetch(`${BASE_URL}/auth/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        });
 
-    // ❌ token sudah mati / logout di device lain
-    if (!check.ok) {
-      const res = NextResponse.redirect(new URL("/", req.url));
-      res.cookies.delete("token");
-      res.cookies.delete("role");
-      return res;
+        // ❌ token sudah mati / login di device lain
+        if (!check.ok) {
+        const res = NextResponse.redirect(new URL("/", req.url));
+        res.cookies.delete("token");
+        res.cookies.delete("role");
+        return res;
+        }
     }
 
     // Jika bukan admin
