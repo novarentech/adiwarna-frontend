@@ -31,14 +31,14 @@ export async function POST(req: Request) {
             httpOnly: true,
             secure: true,
             path: "/",
-            // maxAge: 60 * 60 * 24, // 1 hari
+            maxAge: 60 * 60 * 24, // 1 hari
         });
 
         (await cookies()).set("role", result.data.user.usertype, {
             httpOnly: true,
             secure: true,
             path: "/",
-            // maxAge: 60 * 60 * 24,
+            maxAge: 60 * 60 * 24,
         });
 
         return NextResponse.json({
