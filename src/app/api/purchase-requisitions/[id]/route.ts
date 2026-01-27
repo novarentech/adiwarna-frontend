@@ -15,7 +15,8 @@ export async function GET(_req: Request, context: { params: Promise<{ id: string
         }
 
         const res = await fetch(`${apiBaseUrl}/purchase-requisitions/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
+            cache: "no-store",
         });
 
         const data: PurchaseRequisitionGetByIdResponse = await res.json();

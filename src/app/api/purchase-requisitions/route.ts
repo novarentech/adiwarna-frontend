@@ -56,6 +56,7 @@ export async function POST(req: Request) {
                 Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(body),
+            cache: "no-store",
         });
 
         const data = await res.json();

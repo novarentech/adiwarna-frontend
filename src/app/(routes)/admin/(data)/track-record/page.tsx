@@ -613,7 +613,7 @@ export default function TrackRecordPage() {
                                                 </TableCell>
                                             )}
                                             {columns.scopeOfWork && (
-                                                <TableCell className="text-left whitespace-normal wrap-break-words overflow-hidden">
+                                                <TableCell className="text-left max-w-[400px] whitespace-normal wrap-break-words overflow-hidden">
                                                     {item.scope_of_work}
                                                 </TableCell>
                                             )}
@@ -623,7 +623,7 @@ export default function TrackRecordPage() {
                                                 </TableCell>
                                             )}
                                             {columns.workLocation && (
-                                                <TableCell className="text-center">
+                                                <TableCell className="text-center wrap-break-words max-w-[300px] whitespace-normal">
                                                     {item.work_location}
                                                 </TableCell>
                                             )}

@@ -333,11 +333,11 @@ export default function EditPurchaseRequisitionPage({ params }: { params: Promis
                     </div>
 
                     <hr className="border-b border-[#e6e6e6] my-6" />
-
+{/* 
                     <div className="flex flex-col space-y-2">
                         <label htmlFor="notes" className="text-sm font-bold">Notes</label>
                         <textarea id="notes" value={formData.notes} onChange={handleInputChange} className="w-full border p-3 rounded-sm min-h-[100px]" placeholder="Add extra notes here..." />
-                    </div>
+                    </div> */}
 
                     <div className="w-full grid grid-cols-2 gap-x-8 gap-y-4 mt-6">
                         <div className="flex flex-col space-y-4">

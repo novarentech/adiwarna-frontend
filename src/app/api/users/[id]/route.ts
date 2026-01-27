@@ -25,6 +25,7 @@ export async function GET(
                 Authorization: `Bearer ${token.value}`,
                 "Content-Type": "application/json",
             },
+            cache: "no-store"
         });
 
         const data = await res.json();

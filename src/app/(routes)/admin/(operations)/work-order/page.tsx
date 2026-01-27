@@ -360,16 +360,24 @@ export default function WorkOrderPage() {
                                     <TableCell className="py-4"><p className="text-sm">{wo.work_order_no}/AWP-INS/JKT/{wo.work_order_year}</p></TableCell>
                                     <TableCell className="text-center">{wo.date}</TableCell>
                                     {/* ini worker name */}
-                                    <TableCell className="text-center whitespace-normal wrap-break-words overflow-hidden">{wo.employees.map((w, index) => (
-                                        <span key={index}>{w}, </span>
-                                    ))}</TableCell>
-                                    <TableCell className="text-left max-w-[500px] whitespace-normal wrap-break-words overflow-hidden">
+                                    <TableCell className="text-center whitespace-normal wrap-break-words overflow-hidden">
+                                        {wo.employees.map((w, index) => (
+                                            <span key={index}>
+                                                {w}
+                                                {index !== wo.employees.length - 1 && ", "}
+                                            </span>
+                                        ))}
+                                    </TableCell>
+                                    <TableCell className="text-left max-w-[400px] whitespace-normal wrap-break-words overflow-hidden">
                                         {wo.scope_of_work.map((w, index) => (
-                                            <span key={index}>{w},</span>
+                                            <span key={index}>
+                                                {w}
+                                                {index !== wo.scope_of_work.length - 1 && ", "}
+                                            </span>
                                         ))}
                                     </TableCell>
                                     <TableCell className="text-center w-14">{wo.customer}</TableCell>
-                                    <TableCell className="text-center">{wo.work_location}	</TableCell>
+                                    <TableCell className="text-center wrap-break-words max-w-[250px] whitespace-normal">{wo.work_location}	</TableCell>
                                     <TableCell className="text-center">
                                         <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
                                             <Link href={`/admin/work-order/edit/${wo.id}`}>

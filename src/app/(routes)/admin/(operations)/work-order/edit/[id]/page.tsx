@@ -59,6 +59,10 @@ export default function EditWorkOrderPage({ params }: { params: Promise<{ id: st
     const [showOther, setShowOther] = useState(false);
     const [otherValue, setOtherValue] = useState("");
 
+
+    // check known scope
+    const isKnownScope = (scope: string) => SCOPE_OPTIONS.includes(scope);
+
     // --- LOAD DATA ---
     useEffect(() => {
         // Helper untuk unwrap params
@@ -121,14 +125,17 @@ export default function EditWorkOrderPage({ params }: { params: Promise<{ id: st
                 setRowsDataWorker(mappedWorkers);
 
                 // D. Set Scopes
-                const scopesFromApi = new Set<string>(data.scope_of_work || []);
-                setSelectedScopes(scopesFromApi);
+                const scopesFromApi: string[] = data.scope_of_work || [];
 
-                // Cek apakah ada "Other"
-                if (scopesFromApi.has("Other")) {
+                const knownScopes = scopesFromApi.filter(isKnownScope);
+                const unknownScopes = scopesFromApi.filter(s => !isKnownScope(s));
+
+                setSelectedScopes(new Set(knownScopes));
+
+                if (unknownScopes.length > 0) {
                     setShowOther(true);
-                    // Jika API menyimpan text custom scope di field lain, set di sini.
-                    // Karena di array cuma string "Other", text input mungkin kosong atau user isi ulang.
+                    // Kalau cuma 1 value, langsung isi
+                    setOtherValue(unknownScopes.join(", "));
                 }
             }
         };
@@ -198,13 +205,9 @@ export default function EditWorkOrderPage({ params }: { params: Promise<{ id: st
 
         // 2. Prepare Scope
         const finalScopes = Array.from(selectedScopes);
-        if (showOther && !finalScopes.includes("Other")) {
-            finalScopes.push("Other");
-        }
-        // Jika user uncheck "Other" tapi text input masih ada isi, hapus "Other" dari array
-        if (!showOther) {
-            const index = finalScopes.indexOf("Other");
-            if (index > -1) finalScopes.splice(index, 1);
+
+        if (showOther && otherValue.trim()) {
+            finalScopes.push(otherValue.trim());
         }
 
         // 3. Prepare Employees (Format Update Body)
