@@ -25,6 +25,7 @@ export async function proxy(req: NextRequest) {
         const check = await fetch(`${BASE_URL}/auth/me`, {
         headers: {
             Authorization: `Bearer ${token}`,
+            cookie: `token=${token}`,
         },
         });
 

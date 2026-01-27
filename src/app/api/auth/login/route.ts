@@ -31,18 +31,18 @@ export async function POST(req: Request) {
         // Simpan token ke cookie (HTTP-only)
         (await cookies()).set("token", result.data.token, {
             httpOnly: true,
-            secure: isSecure, // Hanya true jika HTTPS
+            secure: isSecure,                 // WAJIB true di production (HTTPS)
+            sameSite: isSecure ? "none" : "lax",
             path: "/",
             maxAge: 60 * 60 * 24, // 1 hari
-            sameSite: "lax",
         });
 
         (await cookies()).set("role", result.data.user.usertype, {
             httpOnly: true,
-            secure: isSecure,
+            secure: isSecure,                 // WAJIB true di production (HTTPS)
+            sameSite: isSecure ? "none" : "lax",
             path: "/",
-            maxAge: 60 * 60 * 24,
-            sameSite: "lax",
+            maxAge: 60 * 60 * 24, // 1 hari
         });
 
         return NextResponse.json({
