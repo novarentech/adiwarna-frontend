@@ -1,36 +1,35 @@
-# Build stage
-FROM node:20-alpine AS builder
-
+# 1. Build stage
+FROM node:22-alpine AS builder
 WORKDIR /app
 
-# Copy package files
-COPY package.json ./
+# Install dependencies with cache optimization
+COPY package*.json ./
+RUN npm ci
 
-# Install dependencies
-RUN npm i
-
-# Copy source code
+# Copy source and build Next.js
 COPY . .
 
-# Build application
 RUN npm run build
 
-# Production stage
-FROM node:20-alpine
-
+# 2. Production stage
+FROM node:22-alpine AS runner
 WORKDIR /app
+ENV NODE_ENV=production
 
-# Install dumb-init to handle signals properly
-RUN apk add --no-cache dumb-init
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs \
+    && adduser -S nextjs -u 1001 -G nodejs
 
-# Copy built application from builder stage
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+# Copy only standalone output (super small image)
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Set permission
+RUN chown -R nextjs:nodejs /app
+USER nextjs
 
 EXPOSE 3000
 
-# Use dumb-init to properly handle signals
-ENTRYPOINT ["dumb-init", "--"]
-CMD ["npm", "start"]
+# Run Next.js in standalone mode
+CMD ["node", "server.js"]
