@@ -34,6 +34,7 @@ export async function POST(req: Request) {
             secure: isSecure, // Hanya true jika HTTPS
             path: "/",
             maxAge: 60 * 60 * 24, // 1 hari
+            sameSite: "lax",
         });
 
         (await cookies()).set("role", result.data.user.usertype, {
@@ -41,6 +42,7 @@ export async function POST(req: Request) {
             secure: isSecure,
             path: "/",
             maxAge: 60 * 60 * 24,
+            sameSite: "lax",
         });
 
         return NextResponse.json({
