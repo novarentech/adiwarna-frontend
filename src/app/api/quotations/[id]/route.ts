@@ -14,7 +14,8 @@ export async function GET(_req: Request, context: { params: Promise<{ id: string
         }
 
         const res = await fetch(`${apiBaseUrl}/quotations/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
+            cache: "no-store"
         });
 
         const data = await res.json();

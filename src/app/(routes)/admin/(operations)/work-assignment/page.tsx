@@ -341,7 +341,7 @@ export default function WorkAssignmentPage() {
                                     <TableCell className="font-medium">	{wa.ref_no}/AWP-INS/JKT/{wa.ref_year}</TableCell>
                                     <TableCell>	{wa.date}</TableCell>
                                     <TableCell>{wa.customer}</TableCell>
-                                    <TableCell className="">{wa.work_location}</TableCell>
+                                    <TableCell className="wrap-break-words max-w-[250px] whitespace-normal">{wa.work_location}</TableCell>
                                     <TableCell className="text-center">
                                         <div className="bg-white w-fit flex space-x-3 items-center mx-auto">
                                             <Link href={`/admin/work-assignment/edit/${wa.id}`}>

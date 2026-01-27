@@ -132,7 +132,7 @@ export default function CreateWorkOrderPage() {
         // 2. Siapkan Scope of Work array
         const finalScopes = Array.from(selectedScopes);
         if (showOther && otherValue.trim() !== "") {
-            finalScopes.push("Other");
+            finalScopes.push(otherValue);
         }
 
         // 3. Siapkan Employees array (filter yang kosong)

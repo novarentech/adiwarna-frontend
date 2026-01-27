@@ -17,6 +17,7 @@ export async function GET(_req: Request, context: { params: Promise<{ id: string
             headers: {
                 Authorization: `Bearer ${token}`
             },
+            cache: "no-store",
         });
 
         const data = await res.json();

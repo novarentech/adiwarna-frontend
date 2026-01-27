@@ -22,7 +22,8 @@ export async function GET(req: Request) {
         const res = await fetch(
             `${apiBaseUrl}/customers?search=${search}&page=${page}`,
             {
-                headers: { Authorization: `Bearer ${token.value}` }
+                headers: { Authorization: `Bearer ${token.value}` },
+                cache: "no-store"
             }
         );
 

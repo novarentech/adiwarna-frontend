@@ -25,6 +25,7 @@ export async function GET(req: Request) {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
+            cache: "no-store",
         });
 
         // Parse response JSON

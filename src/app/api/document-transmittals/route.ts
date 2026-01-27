@@ -19,6 +19,7 @@ export async function GET(req: Request) {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
+            cache: "no-store"
         });
 
         const data: GetAllDocumentTransmittalResponse = await res.json();

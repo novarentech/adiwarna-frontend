@@ -354,7 +354,7 @@ export default function QuotationsPage() {
                                     <TableCell>{new Date(q.date).toLocaleDateString()}</TableCell>
                                     <TableCell>{q.customer}</TableCell>
                                     <TableCell>{q.pic_name}</TableCell>
-                                    <TableCell>{q.subject}</TableCell>
+                                    <TableCell className="wrap-break-words max-w-[250px] whitespace-normal">{q.subject}</TableCell>
                                     <TableCell className="text-center">
                                         <div className="bg-white w-fit flex space-x-3 items-center justify-center mx-auto">
                                             <Link href={`/admin/quotations/edit/${q.id}`}>

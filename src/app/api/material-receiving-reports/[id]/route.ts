@@ -15,10 +15,11 @@ export async function GET(_req: Request, context: { params: Promise<{ id: string
         }
 
         const res = await fetch(`${apiBaseUrl}/material-receiving-reports/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
+            cache: "no-store",
         });
 
-        const data : GetMaterialReceivingReportResponseById = await res.json();
+        const data: GetMaterialReceivingReportResponseById = await res.json();
         return NextResponse.json(data, { status: res.status });
     } catch (err: any) {
         return NextResponse.json(

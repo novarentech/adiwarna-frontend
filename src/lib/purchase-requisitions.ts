@@ -127,7 +127,11 @@ export interface PurchaseRequisitionItemUpdate {
 export async function GetAllPurchaseRequisition(page = 1, perPage = 15, search = "") {
     try {
         // Request ke API dengan page, perPage, dan search
-        const res = await fetch(`/api/purchase-requisitions?page=${page}&per_page=${perPage}&search=${search}`);
+        const res = await fetch(`/api/purchase-requisitions?page=${page}&per_page=${perPage}&search=${search}`,
+            {
+                cache: "no-store"
+            }
+        );
 
         return await res.json();
     } catch (err: any) {
