@@ -26,17 +26,19 @@ export async function POST(req: Request) {
             return NextResponse.json(fail, { status: 401 });
         }
 
+        const isSecure = process.env.USE_SECURE_COOKIES === "true";
+
         // Simpan token ke cookie (HTTP-only)
         (await cookies()).set("token", result.data.token, {
             httpOnly: true,
-            secure: true,
+            secure: isSecure, // Hanya true jika HTTPS
             path: "/",
             maxAge: 60 * 60 * 24, // 1 hari
         });
 
         (await cookies()).set("role", result.data.user.usertype, {
             httpOnly: true,
-            secure: true,
+            secure: isSecure,
             path: "/",
             maxAge: 60 * 60 * 24,
         });
