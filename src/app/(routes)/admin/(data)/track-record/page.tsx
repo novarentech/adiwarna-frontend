@@ -201,7 +201,7 @@ export default function TrackRecordPage() {
                  
             } else {
                 // Default: Fetch ALL data (existing logic)
-                const res = await getAll999TrackRecords(1, 999999, search, startDate, endDate);
+                const res = await getAll999TrackRecords(1, 999999, search, startDate, endDate, sortBy, sortOrder);
                 if (!res.success || !res.data) {
                     toast.error("Gagal mengambil data untuk ekspor");
                     return null;
