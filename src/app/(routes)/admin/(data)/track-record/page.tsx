@@ -59,11 +59,15 @@ export default function TrackRecordPage() {
     const [tempStartDate, setTempStartDate] = useState(""); // Input
     const [tempEndDate, setTempEndDate] = useState(""); // Input
 
+    // Sorting State
+    const [sortBy, setSortBy] = useState("work_order_no");
+    const [sortOrder, setSortOrder] = useState("asc");
+
 
     // --- FUNGSI FETCH DATA ---
     const fetchData = async () => {
         setLoading(true);
-        const res: TrackRecordResponse = await getAllTrackRecords(page, perPage, search, startDate, endDate);
+        const res: TrackRecordResponse = await getAllTrackRecords(page, perPage, search, startDate, endDate, sortBy, sortOrder);
 
         if (res.success) {
             setTrackRecords(res.data);
@@ -80,7 +84,7 @@ export default function TrackRecordPage() {
     // --- USE EFFECT: Trigger fetch data saat filter/pagination berubah ---
     useEffect(() => {
         fetchData();
-    }, [page, perPage, search, startDate, endDate]);
+    }, [page, perPage, search, startDate, endDate, sortBy, sortOrder]);
     // Data akan di-fetch ulang jika salah satu dependensi ini berubah
 
     // --- HANDLER: SEARCH SUBMIT ---
@@ -145,6 +149,19 @@ export default function TrackRecordPage() {
     const [isExportingExcel, setIsExportingExcel] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [exportCount, setExportCount] = useState(0);
+
+    // --- HANDLER: SORTING ---
+    const handleSort = (field: string) => {
+        if (sortBy === field) {
+            // Jika field sama, toggle order
+            setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+        } else {
+            // Jika field berbeda, set field baru dan reset order ke asc
+            setSortBy(field);
+            setSortOrder("asc");
+        }
+    };
+
 
     // --- SELECTION STATE ---
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -612,22 +629,52 @@ export default function TrackRecordPage() {
                                         />
                                     </TableHead>
                                     {columns.noWorkOrder && (
-                                        <TableHead className="text-[#212529] font-bold text-center w-20">No. Work <br /> Order</TableHead>
+                                        <TableHead 
+                                            className="text-[#212529] font-bold text-center w-20 cursor-pointer hover:bg-gray-100"
+                                            onClick={() => handleSort("work_order_no")}
+                                        >
+                                            No. Work <br /> Order {sortBy === "work_order_no" && (sortOrder === "asc" ? "↑" : "↓")}
+                                        </TableHead>
                                     )}
                                     {columns.dateStarted && (
-                                        <TableHead className="text-[#212529] font-bold text-center w-20">Date <br /> Started</TableHead>
+                                        <TableHead 
+                                            className="text-[#212529] font-bold text-center w-20 cursor-pointer hover:bg-gray-100"
+                                            onClick={() => handleSort("date_started")}
+                                        >
+                                            Date <br /> Started {sortBy === "date_started" && (sortOrder === "asc" ? "↑" : "↓")}
+                                        </TableHead>
                                     )}
                                     {columns.workerName && (
-                                        <TableHead className="text-[#212529] font-bold text-center w-20">Worker's Name</TableHead>
+                                        <TableHead 
+                                            className="text-[#212529] font-bold text-center w-20 cursor-pointer hover:bg-gray-100"
+                                            onClick={() => handleSort("workers_name")}
+                                        >
+                                            Worker's Name {sortBy === "workers_name" && (sortOrder === "asc" ? "↑" : "↓")}
+                                        </TableHead>
                                     )}
                                     {columns.scopeOfWork && (
-                                        <TableHead className="text-[#212529] font-bold text-center max-w-[100px]">Scope of Work</TableHead>
+                                        <TableHead 
+                                            className="text-[#212529] font-bold text-center max-w-[100px] cursor-pointer hover:bg-gray-100"
+                                            onClick={() => handleSort("scope_of_work")}
+                                        >
+                                            Scope of Work {sortBy === "scope_of_work" && (sortOrder === "asc" ? "↑" : "↓")}
+                                        </TableHead>
                                     )}
                                     {columns.customer && (
-                                        <TableHead className="text-[#212529] font-bold text-center">Customer</TableHead>
+                                        <TableHead 
+                                            className="text-[#212529] font-bold text-center cursor-pointer hover:bg-gray-100"
+                                            onClick={() => handleSort("customer")}
+                                        >
+                                            Customer {sortBy === "customer" && (sortOrder === "asc" ? "↑" : "↓")}
+                                        </TableHead>
                                     )}
                                     {columns.workLocation && (
-                                        <TableHead className="text-[#212529] font-bold text-center">Work Location</TableHead>
+                                        <TableHead 
+                                            className="text-[#212529] font-bold text-center cursor-pointer hover:bg-gray-100"
+                                            onClick={() => handleSort("work_location")}
+                                        >
+                                            Work Location {sortBy === "work_location" && (sortOrder === "asc" ? "↑" : "↓")}
+                                        </TableHead>
                                     )}
                                     {/* {columns.action && (
                                         <TableHead className="text-[#212529] font-bold text-center">Action</TableHead>

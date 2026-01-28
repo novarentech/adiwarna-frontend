@@ -20,13 +20,15 @@ export async function GET(req: Request) {
         // Ambil parameter tanggal dari searchParams
         const startDate = searchParams.get("start_date") || "";  // Default start_date = ""
         const endDate = searchParams.get("end_date") || "";      // Default end_date = ""
+        const sortBy = searchParams.get("sort_by") || "";        // Default sort_by = ""
+        const sortOrder = searchParams.get("sort_order") || "asc"; // Default sort_order = "asc"
 
         // Menggunakan encodeURIComponent untuk parameter search
         const encodedSearch = encodeURIComponent(search);
 
-        // Fetch data dari API dengan semua parameter (termasuk tanggal) menggunakan template literals
-        // URL Target: {{base_url}}/track-records?per_page=15&page=1&start_date=...&end_date=...&search=...
-        const res = await fetch(`${apiBaseUrl}/track-records?per_page=${perPage}&page=${page}&start_date=${startDate}&end_date=${endDate}&search=${encodedSearch}`, {
+        // Fetch data dari API dengan semua parameter (termasuk tanggal dan sorting) menggunakan template literals
+        // URL Target: {{base_url}}/track-records?per_page=15&page=1&start_date=...&end_date=...&search=...&sortBy=field:order
+        const res = await fetch(`${apiBaseUrl}/track-records?per_page=${perPage}&page=${page}&start_date=${startDate}&end_date=${endDate}&search=${encodedSearch}&sortBy=${sortBy}:${sortOrder}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
