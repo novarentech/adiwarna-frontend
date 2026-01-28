@@ -118,7 +118,7 @@ export default function TrackRecordPage() {
     // --- UTILITY: FORMAT TANGGAL & NO WORK ORDER ---
     // Fungsi untuk memformat tanggal YYYY-MM-DD menjadi DD MMMM YYYY
     const formatDate = (dateString: string) => {
-        const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' };
+        const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
         return new Date(dateString).toLocaleDateString('id-ID', options);
     };
 

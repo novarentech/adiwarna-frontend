@@ -59,6 +59,18 @@ export default function SuratJalanPage() {
         fetchData(search, page);
     }, [page, fetchData]);
 
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
     // Handlers
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -122,7 +134,7 @@ export default function SuratJalanPage() {
 
         const formatted = res.data.map((sj: any) => ({
             "No. Surat Jalan": `${sj.dn_no}/AWP/${sj.dn_date}`,
-            "Tanggal": sj.date,
+            "Tanggal": formatDate(sj.date),
             "Customer (Kepada)": sj.customer,
             "No. Work Order": sj.wo_no,
             "Plat Kendaraan": sj.vehicle_plate,
@@ -386,7 +398,7 @@ export default function SuratJalanPage() {
                             data.map((sj) => (
                                 <TableRow key={sj.id} className="hover:bg-gray-50 border-[#E5E7EB]">
                                     <TableCell className="py-6 font-medium pl-6">{sj.dn_no}/AWP/{sj.dn_date}</TableCell>
-                                    <TableCell>{sj.date}</TableCell>
+                                    <TableCell>{formatDate(sj.date)}</TableCell>
                                     <TableCell>{sj.customer}</TableCell>
                                     <TableCell>{sj.wo_no}</TableCell>
                                     <TableCell>{sj.vehicle_plate}</TableCell>

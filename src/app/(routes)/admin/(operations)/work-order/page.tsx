@@ -58,6 +58,18 @@ export default function WorkOrderPage() {
         fetchData();
     }, [page]);
 
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         setPage(1);
@@ -147,7 +159,7 @@ export default function WorkOrderPage() {
 
             const formatted = dataToExport.map((wo: GetAllWorkOrder) => ({
                 "No. Work Order": `${wo.work_order_no}/AWP-INS/JKT/${wo.work_order_year}`,
-                "Date Started": wo.date,
+                "Date Started": formatDate(wo.date),
                 "Worker's Name": wo.employees.join(", "),
                 "Scope of Work": wo.scope_of_work.join(", "),
                 "Customer": wo.customer,
@@ -418,7 +430,7 @@ export default function WorkOrderPage() {
                                         />
                                     </TableCell>
                                     <TableCell className="py-4"><p className="text-sm">{wo.work_order_no}/AWP-INS/JKT/{wo.work_order_year}</p></TableCell>
-                                    <TableCell className="text-center">{wo.date}</TableCell>
+                                    <TableCell className="text-center">{formatDate(wo.date)}</TableCell>
                                     {/* ini worker name */}
                                     <TableCell className="text-center whitespace-normal wrap-break-words overflow-hidden">
                                         {wo.employees.map((w, index) => (

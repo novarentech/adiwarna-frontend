@@ -60,6 +60,18 @@ export default function QuotationsPage() {
         fetchData();
     };
 
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this Quotation?")) return;
 
@@ -136,7 +148,7 @@ export default function QuotationsPage() {
 
         const formatted = dataToExport.map((q: any) => ({
             "Ref No": `${q.ref_no}/AWP-INS/${q.ref_year}`,
-            "Date": new Date(q.date).toLocaleDateString(),
+            "Date": formatDate(q.date),
             "Customer": q.customer,
             "PIC": q.pic_name,
             "Subject": q.subject,
@@ -404,7 +416,7 @@ export default function QuotationsPage() {
                                         />
                                     </TableCell>
                                     <TableCell className="py-6">{q.ref_no}/AWP-INS/{q.ref_year}</TableCell>
-                                    <TableCell>{new Date(q.date).toLocaleDateString()}</TableCell>
+                                    <TableCell>{formatDate(q.date)}</TableCell>
                                     <TableCell>{q.customer}</TableCell>
                                     <TableCell>{q.pic_name}</TableCell>
                                     <TableCell className="wrap-break-words max-w-[250px] whitespace-normal">{q.subject}</TableCell>

@@ -149,6 +149,18 @@ export default function DataEquipmentGeneral() {
     // };
 
 
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this equiment?")) return;
 
@@ -231,8 +243,8 @@ export default function DataEquipmentGeneral() {
                     item.merk_type,
                     item.serial_number,
                     item.duration,
-                    item.calibration_date,
-                    item.expired_date,
+                    formatDate(item.calibration_date),
+                    formatDate(item.expired_date),
                     item.calibration_agency,
                     item.condition,
                 ].join("\t"); // Menggunakan Tab
@@ -293,8 +305,8 @@ export default function DataEquipmentGeneral() {
                     `"${item.merk_type}"`,
                     `"${item.serial_number}"`,
                     item.duration,
-                    item.calibration_date,
-                    item.expired_date,
+                    formatDate(item.calibration_date),
+                    formatDate(item.expired_date),
                     item.calibration_agency,
                     item.condition,
                 ].join(",");
@@ -348,8 +360,8 @@ export default function DataEquipmentGeneral() {
                 "Merk/Type": item.merk_type,
                 "Serial Number": item.serial_number,
                 "Duration": item.duration,
-                "Calibration Date": item.calibration_date,
-                "Expired Date": item.expired_date,
+                "Calibration Date": formatDate(item.calibration_date),
+                "Expired Date": formatDate(item.expired_date),
                 "Agency": item.calibration_agency,
                 "Condition": item.condition,
             }));
@@ -427,8 +439,8 @@ export default function DataEquipmentGeneral() {
                                     <td>${item.description}</td>
                                     <td>${item.merk_type}</td>
                                     <td>${item.serial_number}</td>
-                                    <td>${item.calibration_date}</td>
-                                    <td>${item.expired_date}</td>
+                                    <td>${formatDate(item.calibration_date)}</td>
+                                    <td>${formatDate(item.expired_date)}</td>
                                     <td>${item.calibration_agency}</td>
                                     <td>${item.condition}</td>
                                 </tr>
@@ -474,8 +486,8 @@ export default function DataEquipmentGeneral() {
                 item.description,
                 item.merk_type,
                 item.serial_number,
-                item.calibration_date,
-                item.expired_date,
+                formatDate(item.calibration_date),
+                formatDate(item.expired_date),
                 item.calibration_agency,
                 item.condition
             ]);
@@ -707,10 +719,10 @@ export default function DataEquipmentGeneral() {
                                                 <TableCell className="text-center">{item.duration}</TableCell>
                                             )}
                                             {columns.tanggalKalibrasi && (
-                                                <TableCell className="text-center">{item.calibration_date}</TableCell>
+                                                <TableCell className="text-center">{formatDate(item.calibration_date)}</TableCell>
                                             )}
                                             {columns.tanggalExpired && (
-                                                <TableCell className="text-center">{item.expired_date}</TableCell>
+                                                <TableCell className="text-center">{formatDate(item.expired_date)}</TableCell>
                                             )}
                                             {columns.lembagaKalibrasi && (
                                                 <TableCell className="text-center capitalize">{item.calibration_agency}</TableCell>

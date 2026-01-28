@@ -86,10 +86,16 @@ export default function EquipmentProjectPage() {
     };
 
     // Fungsi helper untuk memformat tanggal YYYY-MM-DD ke DD Mon YYYY
+    // Helper untuk format tanggal
     const formatDate = (dateString: string) => {
-        const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
-        // Date akan mengasumsikan zona waktu lokal. Sesuaikan jika Anda ingin menampilkan dalam zona waktu tertentu.
-        return new Date(dateString).toLocaleDateString('en-GB', options).replace(/ /g, ' ');
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
     };
 
     // Fungsi helper untuk mendapatkan nomor urut (No.)
@@ -120,7 +126,7 @@ export default function EquipmentProjectPage() {
 
             const formatted = res.data.map((item: EquipmentProjectData, index) => ({
                 "No": getNo(index),
-                "Project Date": item.project_date,
+                "Project Date": formatDate(item.project_date),
                 "Customer": item.customer,
                 "Location": item.location,
                 "Prepared By": item.prepared_by,
@@ -381,7 +387,7 @@ export default function EquipmentProjectPage() {
                                 // Ganti key dari q.id ke project.id
                                 <TableRow key={project.id} className="hover:bg-gray-50 border-[#E5E7EB]">
                                     <TableCell className="text-center font-medium">{getNo(index)}</TableCell>
-                                    <TableCell className="py-6 text-sm">{(project.project_date)}</TableCell>
+                                    <TableCell className="py-6 text-sm">{formatDate(project.project_date)}</TableCell>
                                     <TableCell className="text-sm">{project.customer}</TableCell>
                                     <TableCell className="text-sm">{project.location}</TableCell>
                                     <TableCell className="text-sm">{project.prepared_by}</TableCell>

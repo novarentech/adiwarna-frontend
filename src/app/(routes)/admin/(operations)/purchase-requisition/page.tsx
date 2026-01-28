@@ -61,6 +61,18 @@ export default function PurchaseRequisitionPage() {
         fetchData(search, page);
     }, [page, fetchData]);
 
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
     // Search handler
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -140,7 +152,7 @@ export default function PurchaseRequisitionPage() {
 
         const formatted = res.data.map((pr: any) => ({
             "P.R. No.": `${pr.pr_no}/PR/AWP-${pr.pr_date}`,
-            "Date": pr.date,
+            "Date": formatDate(pr.date),
             "Supplier": pr.supplier,
             "Total Amount": pr.total_amount,
             "Status": pr.status,
@@ -330,7 +342,7 @@ export default function PurchaseRequisitionPage() {
                 </div>
                 {/* <h1 className="text-3xl font-normal">Daftar Purchase Requisition</h1> */}
                 <Link href={"/admin/purchase-requisition/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
-                    <FiPlus className="w-5 h-5 mr-1" /> Add New PR
+                    <FiPlus className="w-5 h-5 mr-1" /> Purchase Requisition
                 </Link>
             </div>
 
@@ -409,7 +421,7 @@ export default function PurchaseRequisitionPage() {
                                 <TableRow key={pr.id}>
                                     <TableCell className="py-6 font-medium pl-6">{pr.pr_no}/PR/AWP-{(pr.pr_date)}</TableCell>
                                     {/* <TableCell>{pr.rev_no || "-"}</TableCell> */}
-                                    <TableCell>{pr.date}</TableCell>
+                                    <TableCell>{formatDate(pr.date)}</TableCell>
                                     <TableCell>{pr.supplier}</TableCell>
                                     {/* <TableCell>{pr.place_of_delivery}</TableCell> */}
                                     <TableCell className="font-semibold">{pr.total_amount}</TableCell>

@@ -60,6 +60,18 @@ export default function DocumentTransmittalPage() {
         fetchData();
     };
 
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this Quotation?")) return;
 
@@ -144,7 +156,7 @@ export default function DocumentTransmittalPage() {
 
             const formatted = dataToExport.map((item: GetAllDocTransmittalData) => ({
                 "TA No": item.ta_no,
-                "Date": item.date,
+                "Date": formatDate(item.date),
                 "Customer": item.customer,
                 "PIC": item.pic,
             }));
@@ -416,7 +428,7 @@ export default function DocumentTransmittalPage() {
                                         />
                                     </TableCell>
                                     <TableCell className="py-4"><p className="text-sm">	{doc.ta_no}</p></TableCell>
-                                    <TableCell>{doc.date}</TableCell>
+                                    <TableCell>{formatDate(doc.date)}</TableCell>
                                     <TableCell>{doc.customer}</TableCell>
                                     <TableCell className="text-center">{doc.pic}</TableCell>
                                     <TableCell className="text-center">

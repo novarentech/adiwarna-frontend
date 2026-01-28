@@ -63,6 +63,18 @@ export default function DailyActivityReportPage() {
         fetchData();
     };
 
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
 
     return (
         <div className="w-full h-full px-4 py-4 bg-[#f4f6f9]">
@@ -123,7 +135,7 @@ export default function DailyActivityReportPage() {
                                         <TableCell className="font-medium">{da.po_no}</TableCell>
                                         <TableCell>{da.customer}</TableCell>
                                         <TableCell>{da.location}</TableCell>
-                                        <TableCell className="">{da.date}</TableCell>
+                                        <TableCell className="">{formatDate(da.date)}</TableCell>
                                         <TableCell className="">
                                             {da.prepared_name}
                                         </TableCell>

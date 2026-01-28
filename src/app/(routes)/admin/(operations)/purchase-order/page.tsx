@@ -59,6 +59,18 @@ export default function PurchaseOrderPage() {
         fetchData();
     };
 
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this Purchase Order?")) return;
 
@@ -156,11 +168,11 @@ export default function PurchaseOrderPage() {
 
         const formatted = dataToExport.map((po: any) => ({
             "PO No": `${po.po_no}/PO/AWP-INS/${po.po_year}`,
-            "Date": po.date,
+            "Date": formatDate(po.date),
             "Customer": po.customer,
             "PIC": po.pic_name,
             "PIC Phone": po.pic_phone,
-            "Required Delivery Date": handleISODateFormat(po.required_date),
+            "Required Delivery Date": formatDate(po.required_date),
         }));
 
         setExportCount(formatted.length);
@@ -415,13 +427,13 @@ export default function PurchaseOrderPage() {
                                         />
                                     </TableCell>
                                     <TableCell className="py-4"><p className="text-sm">{po.po_no}/PO/AWP-INS/{po.po_year}</p></TableCell>
-                                    <TableCell className="font-medium">{po.date}</TableCell>
+                                    <TableCell className="font-medium">{formatDate(po.date)}</TableCell>
                                     <TableCell>{po.customer}</TableCell>
                                     <TableCell>{po.pic_name}</TableCell>
                                     <TableCell className="">{po.pic_phone}</TableCell>
                                     <TableCell className="">
                                         {/* {po.required_date} */}
-                                        {handleISODateFormat(po.required_date)}
+                                        {formatDate(po.required_date)}
                                     </TableCell>
                                     <TableCell className="text-center">
                                         <div className="bg-white w-fit flex space-x-3 items-center mx-auto">

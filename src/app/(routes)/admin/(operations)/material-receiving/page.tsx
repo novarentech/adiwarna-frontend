@@ -59,9 +59,22 @@ export default function MaterialReceivingPage() {
     }, [perPage]);
 
     // 2. Efek untuk fetch data otomatis saat page berubah atau pertama kali load
+    // 2. Efek untuk fetch data otomatis saat page berubah atau pertama kali load
     useEffect(() => {
         fetchData(search, page);
     }, [page, fetchData]);
+
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
 
     // 3. Handle Search
     const handleSearch = (e: React.FormEvent) => {
@@ -110,7 +123,7 @@ export default function MaterialReceivingPage() {
         const formatted = res.data.map((item: any) => ({
             "P.O./INV./PR No.": `${item.po_no}/PR/AWP-${item.po_date}`,
             "Supplier": item.supplier,
-            "Receiving Date": item.receiving_date,
+            "Receiving Date": formatDate(item.receiving_date),
             "Order By": item.order_by,
             "Total Items": item.total_items,
             "Received By": item.received_by,
@@ -293,7 +306,7 @@ export default function MaterialReceivingPage() {
                 </div>
                 {/* <h1 className="text-3xl font-normal">Daftar Material Receiving</h1> */}
                 <Link href={"/admin/material-receiving/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75">
-                    <FiPlus className="w-5 h-5 mr-1" /> Add New Record
+                    <FiPlus className="w-5 h-5 mr-1" /> Material Receiving
                 </Link>
             </div>
 
@@ -370,7 +383,7 @@ export default function MaterialReceivingPage() {
                                 <TableRow key={item.id}>
                                     <TableCell className="py-6 pl-6">{item.po_no}/PR/AWP-{item.po_date}</TableCell>
                                     <TableCell>{item.supplier || "-"}</TableCell>
-                                    <TableCell>{item.receiving_date}</TableCell>
+                                    <TableCell>{formatDate(item.receiving_date)}</TableCell>
                                     <TableCell>
                                         <p className={`${item.order_by?.toLowerCase() === 'online' ? 'bg-[#DBEAFE] text-[#193CB8]' : 'bg-[#F3E8FF] text-[#6E11B0]'} w-fit px-4 py-1 rounded-md text-sm font-medium`}>
                                             {item.order_by}

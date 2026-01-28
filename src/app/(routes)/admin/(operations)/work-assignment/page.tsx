@@ -61,6 +61,18 @@ export default function WorkAssignmentPage() {
         fetchData();
     };
 
+    // Helper untuk format tanggal
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
 
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this Work Assignment?")) return;
@@ -141,7 +153,7 @@ export default function WorkAssignmentPage() {
         const formatted = dataToExport.map((wa: any) => ({
             "Assignment No": `${wa.assignment_no}/AWP-INS/${wa.assignment_year}`,
             "Ref WO No": `${wa.ref_no}/AWP-INS/JKT/${wa.ref_year}`,
-            "Date": wa.date,
+            "Date": formatDate(wa.date),
             "Customer": wa.customer,
             "Work Location": wa.work_location,
         }));
@@ -397,7 +409,7 @@ export default function WorkAssignmentPage() {
                                     </TableCell>
                                     <TableCell className="py-4"><p className="text-sm">{wa.assignment_no}/AWP-INS/{wa.assignment_year}</p></TableCell>
                                     <TableCell className="font-medium">	{wa.ref_no}/AWP-INS/JKT/{wa.ref_year}</TableCell>
-                                    <TableCell>	{wa.date}</TableCell>
+                                    <TableCell>	{formatDate(wa.date)}</TableCell>
                                     <TableCell>{wa.customer}</TableCell>
                                     <TableCell className="wrap-break-words max-w-[250px] whitespace-normal">{wa.work_location}</TableCell>
                                     <TableCell className="text-center">
