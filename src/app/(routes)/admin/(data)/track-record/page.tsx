@@ -146,18 +146,53 @@ export default function TrackRecordPage() {
     const [showModal, setShowModal] = useState(false);
     const [exportCount, setExportCount] = useState(0);
 
-    // --- HELPER: FORMAT DATA UNTUK EKSPOR ---
-    const getExportData = async () => {
-        try {
-            // Ambil data berdasarkan filter yang sedang aktif
-            const res = await getAll999TrackRecords(1, 999999, search, startDate, endDate);
+    // --- SELECTION STATE ---
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-            if (!res.success || !res.data) {
-                toast.error("Gagal mengambil data untuk ekspor");
-                return null;
+    // Toggle Select All (Current Page)
+    const toggleSelectAll = () => {
+        const allIdsOnPage = trackRecords.map(item => item.work_order_no);
+        const allSelected = allIdsOnPage.every(id => selectedIds.has(id));
+
+        const newSelected = new Set(selectedIds);
+        if (allSelected) {
+            allIdsOnPage.forEach(id => newSelected.delete(id));
+        } else {
+            allIdsOnPage.forEach(id => newSelected.add(id));
+        }
+        setSelectedIds(newSelected);
+    };
+
+    // Toggle Select Individual Row
+    const toggleSelectRow = (id: string) => {
+        const newSelected = new Set(selectedIds);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedIds(newSelected);
+    };
+    
+    // --- HELPER: FORMAT DATA UNTUK EKSPOR ---
+    const getExportData = async (onlySelected: boolean = false) => {
+        try {
+            let dataToExport = [];
+            
+            if (onlySelected && selectedIds.size > 0) {
+                 dataToExport = trackRecords.filter(item => selectedIds.has(item.work_order_no));
+                 
+            } else {
+                // Default: Fetch ALL data (existing logic)
+                const res = await getAll999TrackRecords(1, 999999, search, startDate, endDate);
+                if (!res.success || !res.data) {
+                    toast.error("Gagal mengambil data untuk ekspor");
+                    return null;
+                }
+                dataToExport = res.data;
             }
 
-            const formatted = res.data.map((item: any) => ({
+            const formatted = dataToExport.map((item: any) => ({
                 "No. Work Order": formatWorkOrder(item.work_order_no, item.work_order_year),
                 "Date Started": item.date_started,
                 "Worker's Name": item.workers_name,
@@ -179,8 +214,14 @@ export default function TrackRecordPage() {
     const handleCopy = async () => {
         setIsCopying(true); // Tanda bahwa proses ekspor sedang berlangsung (untuk efek loading jika diperlukan)
         try {
-            const data = await getExportData();
-            if (!data) return;
+            // Determine if we are copying selected or all
+            const isSelectedMode = selectedIds.size > 0;
+            const data = await getExportData(isSelectedMode);
+            
+            if (!data || data.length === 0) {
+                toast.warning("Tidak ada data untuk disalin");
+                return;
+            }
 
             const headers = Object.keys(data[0]);
             const rows = data.map((obj: any) =>
@@ -524,7 +565,7 @@ export default function TrackRecordPage() {
                             disabled={isCopying}
                             className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                         >
-                            Copy
+                            {selectedIds.size > 0 ? `Copy Selected (${selectedIds.size})` : "Copy All"}
                         </button>
                         <button
                             onClick={handleExportCsv}
@@ -556,13 +597,20 @@ export default function TrackRecordPage() {
 
                 {/* TABLE DATA */}
                 <div className="py-5 px-4 flex justify-between border-x">
+                    {/* ... loading logic ... */}
                     {loading ? (
                         <p>Loading track records...</p>
                     ) : (
                         <Table className="z-10">
                             <TableHeader>
                                 <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                                    <TableHead className="text-[#212529] font-bold py-6"><input type="checkbox" /></TableHead>
+                                    <TableHead className="text-[#212529] font-bold py-6">
+                                        <input 
+                                            type="checkbox" 
+                                            onChange={toggleSelectAll}
+                                            checked={trackRecords.length > 0 && trackRecords.every(item => selectedIds.has(item.work_order_no))}
+                                        />
+                                    </TableHead>
                                     {columns.noWorkOrder && (
                                         <TableHead className="text-[#212529] font-bold text-center w-20">No. Work <br /> Order</TableHead>
                                     )}
@@ -596,7 +644,13 @@ export default function TrackRecordPage() {
                                 ) : (
                                     trackRecords.map((item, index) => (
                                         <TableRow key={index} className="hover:bg-gray-50 border-[#E5E7EB]">
-                                            <TableCell className="font-medium"><input type="checkbox" /></TableCell>
+                                            <TableCell className="font-medium">
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={selectedIds.has(item.work_order_no)}
+                                                    onChange={() => toggleSelectRow(item.work_order_no)}
+                                                />
+                                            </TableCell>
                                             {columns.noWorkOrder && (
                                                 <TableCell className="py-4 text-sm">
                                                     {formatWorkOrder(item.work_order_no, item.work_order_year)}

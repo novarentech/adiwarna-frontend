@@ -80,6 +80,10 @@ export default function DocumentTransmittalPage() {
     // 
     // 
 
+    // 
+    // 
+    // 
+
     const [isCopying, setIsCopying] = useState(false);
     const [isExportingCsv, setIsExportingCsv] = useState(false);
     const [isExportingExcel, setIsExportingExcel] = useState(false);
@@ -87,17 +91,58 @@ export default function DocumentTransmittalPage() {
     const [showModal, setShowModal] = useState(false);
     const [exportCount, setExportCount] = useState(0);
 
-    const getExportData = async () => {
-        try {
-            // page besar supaya ambil semua
-            const res = await getAll999DocTrans(1, search);
+    // --- SELECTION STATE ---
+    const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
-            if (!res.success || !res.data) {
-                toast.error("Gagal mengambil data untuk ekspor");
+    // Toggle Select All (Current Page)
+    const toggleSelectAll = () => {
+        const allIdsOnPage = docTrans.map(doc => doc.id);
+        const allSelected = allIdsOnPage.every(id => selectedIds.has(id));
+
+        const newSelected = new Set(selectedIds);
+        if (allSelected) {
+            allIdsOnPage.forEach(id => newSelected.delete(id));
+        } else {
+            allIdsOnPage.forEach(id => newSelected.add(id));
+        }
+        setSelectedIds(newSelected);
+    };
+
+    // Toggle Select Individual Row
+    const toggleSelectRow = (id: number) => {
+        const newSelected = new Set(selectedIds);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedIds(newSelected);
+    };
+
+    const getExportData = async (onlySelected: boolean = false) => {
+        try {
+            let dataToExport = [];
+
+             if (onlySelected && selectedIds.size > 0) {
+                 // Filter from current page data
+                 dataToExport = docTrans.filter(doc => selectedIds.has(doc.id));
+            } else {
+                // page besar supaya ambil semua
+                const res = await getAll999DocTrans(1, search);
+
+                if (!res.success || !res.data) {
+                    toast.error("Gagal mengambil data untuk ekspor");
+                    return null;
+                }
+                dataToExport = res.data;
+            }
+
+            if (dataToExport.length === 0) {
+                toast.warning("Tidak ada data untuk diekspor");
                 return null;
             }
 
-            const formatted = res.data.map((item: GetAllDocTransmittalData) => ({
+            const formatted = dataToExport.map((item: GetAllDocTransmittalData) => ({
                 "TA No": item.ta_no,
                 "Date": item.date,
                 "Customer": item.customer,
@@ -116,7 +161,10 @@ export default function DocumentTransmittalPage() {
     const handleCopy = async () => {
         setIsCopying(true);
         try {
-            const data = await getExportData();
+            // Determine mode
+            const isSelectedMode = selectedIds.size > 0;
+            const data = await getExportData(isSelectedMode);
+
             if (!data) return;
 
             const headers = Object.keys(data[0]);
@@ -297,7 +345,7 @@ export default function DocumentTransmittalPage() {
                         disabled={isCopying}
                         className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                     >
-                        Copy
+                        {selectedIds.size > 0 ? `Copy Selected (${selectedIds.size})` : "Copy All"}
                     </button>
                     <button
                         onClick={handleExportCsv}
@@ -329,7 +377,13 @@ export default function DocumentTransmittalPage() {
                 <Table className="">
                     <TableHeader>
                         <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                            <TableHead className="text-[#212529] font-bold pl-8 py-8"><input type="checkbox" /></TableHead>
+                            <TableHead className="text-[#212529] font-bold pl-8 py-8">
+                                <input 
+                                    type="checkbox" 
+                                    onChange={toggleSelectAll}
+                                    checked={docTrans.length > 0 && docTrans.every(doc => selectedIds.has(doc.id))}
+                                />
+                            </TableHead>
                             <TableHead className="text-[#212529] font-bold">TA No.</TableHead>
                             <TableHead className="text-[#212529] font-bold">Date</TableHead>
                             <TableHead className="text-[#212529] font-bold">Customer</TableHead>
@@ -354,7 +408,13 @@ export default function DocumentTransmittalPage() {
                         ) : (
                             docTrans.map((doc) => (
                                 <TableRow key={doc.id}>
-                                    <TableCell className="font-medium pl-8"><input type="checkbox" /></TableCell>
+                                    <TableCell className="font-medium pl-8">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedIds.has(doc.id)}
+                                            onChange={() => toggleSelectRow(doc.id)}
+                                        />
+                                    </TableCell>
                                     <TableCell className="py-4"><p className="text-sm">	{doc.ta_no}</p></TableCell>
                                     <TableCell>{doc.date}</TableCell>
                                     <TableCell>{doc.customer}</TableCell>

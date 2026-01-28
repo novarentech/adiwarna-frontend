@@ -79,23 +79,66 @@ export default function WorkAssignmentPage() {
     };
 
 
+    // 
+    // 
     const [isExporting, setIsExporting] = useState(false);
     const [isExportingPdf, setIsExportingPdf] = useState(false);
     const [exportCount, setExportCount] = useState(0);
 
-    const getExportData = async () => {
+    // --- SELECTION STATE ---
+    const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+    // Toggle Select All (Current Page)
+    const toggleSelectAll = () => {
+        const allIdsOnPage = workAssignment.map(wa => wa.id);
+        const allSelected = allIdsOnPage.every(id => selectedIds.has(id));
+
+        const newSelected = new Set(selectedIds);
+        if (allSelected) {
+            allIdsOnPage.forEach(id => newSelected.delete(id));
+        } else {
+            allIdsOnPage.forEach(id => newSelected.add(id));
+        }
+        setSelectedIds(newSelected);
+    };
+
+    // Toggle Select Individual Row
+    const toggleSelectRow = (id: number) => {
+        const newSelected = new Set(selectedIds);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedIds(newSelected);
+    };
+
+    const getExportData = async (onlySelected: boolean = false) => {
         setIsExporting(true);
+        let dataToExport = [];
 
-        // ambil semua data (sesuaikan kalau backend kamu beda)
-        const res = await getAll999WorkAssignment(1, search);
+         if (onlySelected && selectedIds.size > 0) {
+             // Filter from current page data
+             dataToExport = workAssignment.filter(wa => selectedIds.has(wa.id));
+        } else {
+             // ambil semua data (sesuaikan kalau backend kamu beda)
+            const res = await getAll999WorkAssignment(1, search);
 
-        if (!res.success || !res.data) {
-            toast.error("Gagal mengambil data Work Assignment");
-            setIsExporting(false);
-            return null;
+            if (!res.success || !res.data) {
+                toast.error("Gagal mengambil data Work Assignment");
+                setIsExporting(false);
+                return null;
+            }
+            dataToExport = res.data;
         }
 
-        const formatted = res.data.map((wa: any) => ({
+        if (dataToExport.length === 0) {
+             toast.warning("Tidak ada data untuk diekspor");
+             setIsExporting(false);
+             return null;
+        }
+
+        const formatted = dataToExport.map((wa: any) => ({
             "Assignment No": `${wa.assignment_no}/AWP-INS/${wa.assignment_year}`,
             "Ref WO No": `${wa.ref_no}/AWP-INS/JKT/${wa.ref_year}`,
             "Date": wa.date,
@@ -104,11 +147,15 @@ export default function WorkAssignmentPage() {
         }));
 
         setExportCount(formatted.length);
+        setIsExporting(false);
         return formatted;
     };
 
     const handleCopy = async () => {
-        const data = await getExportData();
+        // Determine mode
+        const isSelectedMode = selectedIds.size > 0;
+        const data = await getExportData(isSelectedMode);
+
         if (!data) return;
 
         const headers = Object.keys(data[0]);
@@ -120,11 +167,12 @@ export default function WorkAssignmentPage() {
         await navigator.clipboard.writeText(content);
 
         toast.success(`Copied ${data.length} rows`);
-        setIsExporting(false);
     };
 
     const handleCSV = async () => {
-        const data = await getExportData();
+        const data = await getExportData(); // Export CSV usually exports ALL unless assumed otherwise. 
+        // For now sticking to default "Export ALL" behavior for CSV/Excel/PDF buttons to match other pages.
+        // We only change 'handleCopy' to be smart.
         if (!data) return;
 
         const headers = Object.keys(data[0]);
@@ -142,8 +190,6 @@ export default function WorkAssignmentPage() {
         link.href = url;
         link.download = `work_assignment_${Date.now()}.csv`;
         link.click();
-
-        setIsExporting(false);
     };
 
 
@@ -276,7 +322,7 @@ export default function WorkAssignmentPage() {
                         disabled={isExporting}
                         className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                     >
-                        Copy
+                         {selectedIds.size > 0 ? `Copy Selected (${selectedIds.size})` : "Copy All"}
                     </button>
                     <button
                         onClick={handleCSV}
@@ -311,7 +357,13 @@ export default function WorkAssignmentPage() {
                 <Table>
                     <TableHeader>
                         <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                            <TableHead className="text-[#212529] font-bold py-8 pl-8"><input type="checkbox" /></TableHead>
+                            <TableHead className="text-[#212529] font-bold py-8 pl-8">
+                                <input 
+                                    type="checkbox" 
+                                    onChange={toggleSelectAll}
+                                    checked={workAssignment.length > 0 && workAssignment.every(wa => selectedIds.has(wa.id))}
+                                />
+                            </TableHead>
                             <TableHead className="text-[#212529] font-bold">No.</TableHead>
                             <TableHead className="text-[#212529] font-bold">Ref. AWP WO No.</TableHead>
                             <TableHead className="text-[#212529] font-bold">Date</TableHead>
@@ -336,7 +388,13 @@ export default function WorkAssignmentPage() {
                         ) : (
                             workAssignment.map((wa) => (
                                 <TableRow key={wa.id} className="hover:bg-gray-50 border-[#E5E7EB]">
-                                    <TableCell className="font-medium pl-8"><input type="checkbox" /></TableCell>
+                                    <TableCell className="font-medium pl-8">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedIds.has(wa.id)}
+                                            onChange={() => toggleSelectRow(wa.id)}
+                                        />
+                                    </TableCell>
                                     <TableCell className="py-4"><p className="text-sm">{wa.assignment_no}/AWP-INS/{wa.assignment_year}</p></TableCell>
                                     <TableCell className="font-medium">	{wa.ref_no}/AWP-INS/JKT/{wa.ref_year}</TableCell>
                                     <TableCell>	{wa.date}</TableCell>

@@ -84,6 +84,9 @@ export default function WorkOrderPage() {
     // 
     // 
     // 
+    // 
+    // 
+    // 
     // ===== EXPORT STATE =====
     const [isCopying, setIsCopying] = useState(false);
     const [isExportingCsv, setIsExportingCsv] = useState(false);
@@ -91,16 +94,58 @@ export default function WorkOrderPage() {
     const [isExportingPdf, setIsExportingPdf] = useState(false);
     const [exportCount, setExportCount] = useState(0);
 
+    // --- SELECTION STATE ---
+    const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+    // Toggle Select All (Current Page)
+    const toggleSelectAll = () => {
+        const allIdsOnPage = workOrder.map(wo => wo.id);
+        const allSelected = allIdsOnPage.every(id => selectedIds.has(id));
+
+        const newSelected = new Set(selectedIds);
+        if (allSelected) {
+            allIdsOnPage.forEach(id => newSelected.delete(id));
+        } else {
+            allIdsOnPage.forEach(id => newSelected.add(id));
+        }
+        setSelectedIds(newSelected);
+    };
+
+    // Toggle Select Individual Row
+    const toggleSelectRow = (id: number) => {
+        const newSelected = new Set(selectedIds);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedIds(newSelected);
+    };
+
     // ===== HELPER EXPORT DATA (FULL DATA) =====
-    const getExportData = async () => {
+    const getExportData = async (onlySelected: boolean = false) => {
         try {
-            const res = await getAll999WorkOrders(1, search);
-            if (!res.success || !res.data) {
-                toast.error("Gagal mengambil data");
+            let dataToExport = [];
+
+            if (onlySelected && selectedIds.size > 0) {
+                 // Filter from current page data
+                 dataToExport = workOrder.filter(wo => selectedIds.has(wo.id));
+            } else {
+                // Default: Fetch ALL data
+                const res = await getAll999WorkOrders(1, search);
+                if (!res.success || !res.data) {
+                    toast.error("Gagal mengambil data");
+                    return null;
+                }
+                dataToExport = res.data;
+            }
+
+            if (dataToExport.length === 0) {
+                toast.warning("Tidak ada data untuk diekspor");
                 return null;
             }
 
-            const formatted = res.data.map((wo: GetAllWorkOrder) => ({
+            const formatted = dataToExport.map((wo: GetAllWorkOrder) => ({
                 "No. Work Order": `${wo.work_order_no}/AWP-INS/JKT/${wo.work_order_year}`,
                 "Date Started": wo.date,
                 "Worker's Name": wo.employees.join(", "),
@@ -121,7 +166,10 @@ export default function WorkOrderPage() {
     const handleCopy = async () => {
         setIsCopying(true);
         try {
-            const data = await getExportData();
+            // Determine mode
+            const isSelectedMode = selectedIds.size > 0;
+            const data = await getExportData(isSelectedMode);
+            
             if (!data) return;
 
             const headers = Object.keys(data[0]);
@@ -293,7 +341,7 @@ export default function WorkOrderPage() {
                         disabled={isCopying}
                         className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                     >
-                        Copy
+                        {selectedIds.size > 0 ? `Copy Selected (${selectedIds.size})` : "Copy All"}
                     </button>
                     <button
                         onClick={handleExportCsv}
@@ -329,7 +377,13 @@ export default function WorkOrderPage() {
                 <Table>
                     <TableHeader>
                         <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                            <TableHead className="text-[#212529] font-bold py-8 pl-8"><input type="checkbox" /></TableHead>
+                            <TableHead className="text-[#212529] font-bold py-8 pl-8">
+                                <input 
+                                    type="checkbox" 
+                                    onChange={toggleSelectAll}
+                                    checked={workOrder.length > 0 && workOrder.every(wo => selectedIds.has(wo.id))}
+                                />
+                            </TableHead>
                             <TableHead className="text-[#212529] font-bold text-center w-20">No. Work <br /> Order</TableHead>
                             <TableHead className="text-[#212529] font-bold text-center w-20">Date <br /> Started</TableHead>
                             <TableHead className="text-[#212529] font-bold text-center w-20">Worker's Name</TableHead>
@@ -356,7 +410,13 @@ export default function WorkOrderPage() {
                         ) : (
                             workOrder.map((wo) => (
                                 <TableRow key={wo.id}>
-                                    <TableCell className="font-medium pl-8"><input type="checkbox" /></TableCell>
+                                    <TableCell className="font-medium pl-8">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedIds.has(wo.id)}
+                                            onChange={() => toggleSelectRow(wo.id)}
+                                        />
+                                    </TableCell>
                                     <TableCell className="py-4"><p className="text-sm">{wo.work_order_no}/AWP-INS/JKT/{wo.work_order_year}</p></TableCell>
                                     <TableCell className="text-center">{wo.date}</TableCell>
                                     {/* ini worker name */}

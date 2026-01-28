@@ -94,23 +94,67 @@ export default function PurchaseOrderPage() {
     // 
     // 
     // 
+    // 
+    // 
+    // 
     const [isExporting, setIsExporting] = useState(false);
     const [exportCount, setExportCount] = useState(0);
     const [isExportingPdf, setIsExportingPdf] = useState(false);
 
-    const getExportData = async () => {
+    // --- SELECTION STATE ---
+    const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+    // Toggle Select All (Current Page)
+    const toggleSelectAll = () => {
+        const allIdsOnPage = purchaseOrder.map(po => po.id);
+        const allSelected = allIdsOnPage.every(id => selectedIds.has(id));
+
+        const newSelected = new Set(selectedIds);
+        if (allSelected) {
+            allIdsOnPage.forEach(id => newSelected.delete(id));
+        } else {
+            allIdsOnPage.forEach(id => newSelected.add(id));
+        }
+        setSelectedIds(newSelected);
+    };
+
+    // Toggle Select Individual Row
+    const toggleSelectRow = (id: number) => {
+        const newSelected = new Set(selectedIds);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedIds(newSelected);
+    };
+
+    const getExportData = async (onlySelected: boolean = false) => {
         setIsExporting(true);
+        let dataToExport = [];
 
-        // sesuaikan kalau API kamu beda
-        const res = await getAll999PurchaseOrders(1, search);
+         if (onlySelected && selectedIds.size > 0) {
+             // Filter from current page data
+             dataToExport = purchaseOrder.filter(po => selectedIds.has(po.id));
+        } else {
+             // sesuaikan kalau API kamu beda
+            const res = await getAll999PurchaseOrders(1, search);
 
-        if (!res.success || !res.data) {
-            toast.error("Gagal mengambil data Purchase Order");
-            setIsExporting(false);
-            return null;
+            if (!res.success || !res.data) {
+                toast.error("Gagal mengambil data Purchase Order");
+                setIsExporting(false);
+                return null;
+            }
+            dataToExport = res.data;
         }
 
-        const formatted = res.data.map((po: any) => ({
+        if (dataToExport.length === 0) {
+             toast.warning("Tidak ada data untuk diekspor");
+             setIsExporting(false);
+             return null;
+        }
+
+        const formatted = dataToExport.map((po: any) => ({
             "PO No": `${po.po_no}/PO/AWP-INS/${po.po_year}`,
             "Date": po.date,
             "Customer": po.customer,
@@ -120,11 +164,15 @@ export default function PurchaseOrderPage() {
         }));
 
         setExportCount(formatted.length);
+        setIsExporting(false);
         return formatted;
     };
 
     const handleCopy = async () => {
-        const data = await getExportData();
+        // Determine mode
+        const isSelectedMode = selectedIds.size > 0;
+        const data = await getExportData(isSelectedMode);
+
         if (!data) return;
 
         const headers = Object.keys(data[0]);
@@ -136,7 +184,6 @@ export default function PurchaseOrderPage() {
         await navigator.clipboard.writeText(content);
 
         toast.success(`Copied ${data.length} rows`);
-        setIsExporting(false);
     };
 
     const handleCSV = async () => {
@@ -289,7 +336,7 @@ export default function PurchaseOrderPage() {
                         disabled={isExporting}
                         className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                     >
-                        Copy
+                         {selectedIds.size > 0 ? `Copy Selected (${selectedIds.size})` : "Copy All"}
                     </button>
                     <button
                         onClick={handleCSV}
@@ -326,7 +373,13 @@ export default function PurchaseOrderPage() {
                 <Table className="">
                     <TableHeader>
                         <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                            <TableHead className="text-[#212529] font-bold py-8 pl-8"><input type="checkbox" /></TableHead>
+                            <TableHead className="text-[#212529] font-bold py-8 pl-8">
+                                <input 
+                                    type="checkbox" 
+                                    onChange={toggleSelectAll}
+                                    checked={purchaseOrder.length > 0 && purchaseOrder.every(po => selectedIds.has(po.id))}
+                                />
+                            </TableHead>
                             <TableHead className="text-[#212529] font-bold">PO No.</TableHead>
                             <TableHead className="text-[#212529] font-bold">Date</TableHead>
                             <TableHead className="text-[#212529] font-bold">Customer</TableHead>
@@ -354,7 +407,13 @@ export default function PurchaseOrderPage() {
                         ) : (
                             purchaseOrder.map((po) => (
                                 <TableRow key={po.id}>
-                                    <TableCell className="font-medium pl-8"><input type="checkbox" /></TableCell>
+                                    <TableCell className="font-medium pl-8">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedIds.has(po.id)}
+                                            onChange={() => toggleSelectRow(po.id)}
+                                        />
+                                    </TableCell>
                                     <TableCell className="py-4"><p className="text-sm">{po.po_no}/PO/AWP-INS/{po.po_year}</p></TableCell>
                                     <TableCell className="font-medium">{po.date}</TableCell>
                                     <TableCell>{po.customer}</TableCell>

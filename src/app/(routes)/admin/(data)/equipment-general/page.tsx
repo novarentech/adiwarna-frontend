@@ -167,24 +167,63 @@ export default function DataEquipmentGeneral() {
     const [showModal, setShowModal] = useState(false);
     const [rowCount, setRowCount] = useState(0);
 
+    // --- SELECTION STATE ---
+    const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+    // Toggle Select All (Current Page)
+    const toggleSelectAll = () => {
+        const allIdsOnPage = equipmentItem.map(item => item.id);
+        const allSelected = allIdsOnPage.every(id => selectedIds.has(id));
+
+        const newSelected = new Set(selectedIds);
+        if (allSelected) {
+            allIdsOnPage.forEach(id => newSelected.delete(id));
+        } else {
+            allIdsOnPage.forEach(id => newSelected.add(id));
+        }
+        setSelectedIds(newSelected);
+    };
+
+    // Toggle Select Individual Row
+    const toggleSelectRow = (id: number) => {
+        const newSelected = new Set(selectedIds);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedIds(newSelected);
+    };
+
     const handleCopy = async () => {
         setIsCopying(true);
         try {
-            const response = await getAll999EquipmentGeneral();
+            let equipmentData = [];
 
-            if (!response.success || !response.data.data) {
-                toast.error("Gagal mengambil data");
-                return;
+            // Jika ada yang dipilih, gunakan data dari halaman saat ini yang dipilih
+            if (selectedIds.size > 0) {
+                 equipmentData = equipmentItem.filter(item => selectedIds.has(item.id));
+            } else {
+                // Jika tidak ada, fetch SEMUA data dari database
+                const response = await getAll999EquipmentGeneral();
+                if (!response.success || !response.data.data) {
+                    toast.error("Gagal mengambil data");
+                    return;
+                }
+                equipmentData = response.data.data;
             }
 
-            const equipmentData = response.data.data;
+            if (equipmentData.length === 0) {
+                 toast.warning("Tidak ada data untuk disalin");
+                 return;
+            }
+
             const totalRows = equipmentData.length;
 
             // 1. Definisikan Header
             const headers = ["ID", "Description", "Merk/Type", "Serial Number", "Duration", "Calibration Date", "Expired Date", "Agency", "Condition"];
 
-            // 2. Buat baris data (Gunakan \t atau Tab agar Excel otomatis memisahkan kolom saat paste)
-            // Tips: Excel lebih suka Tab (\t) daripada Koma (,) saat proses Copy-Paste manual
+            // 2. Buat baris data
             const csvRows = equipmentData.map((item: any) => {
                 return [
                     item.id,
@@ -575,7 +614,7 @@ export default function DataEquipmentGeneral() {
                             disabled={isCopying}
                             className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                         >
-                            Copy
+                             {selectedIds.size > 0 ? `Copy Selected (${selectedIds.size})` : "Copy All"}
                         </button>
                         <button
                             onClick={handleExportCsv}
@@ -612,7 +651,13 @@ export default function DataEquipmentGeneral() {
                         <Table className="z-10">
                             <TableHeader>
                                 <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                                    <TableHead className="text-[#212529] font-bold py-6 "><input type="checkbox" /></TableHead>
+                                    <TableHead className="text-[#212529] font-bold py-6 ">
+                                        <input 
+                                            type="checkbox" 
+                                            onChange={toggleSelectAll}
+                                            checked={equipmentItem.length > 0 && equipmentItem.every(item => selectedIds.has(item.id))}
+                                        />
+                                    </TableHead>
                                     {columns.no && (<TableHead className="text-[#212529] font-bold text-center">No</TableHead>)}
                                     {columns.deskripsi && (<TableHead className="text-[#212529] font-bold text-center">Deskripsi</TableHead>)}
                                     {columns.merkType && (<TableHead className="text-[#212529] font-bold text-center">Merk/Type</TableHead>)}
@@ -636,7 +681,13 @@ export default function DataEquipmentGeneral() {
                                 ) : (
                                     (equipmentItem).map((item, index) => (
                                         <TableRow key={item.id} className="hover:bg-gray-50 border-[#E5E7EB]">
-                                            <TableCell className="font-medium"><input type="checkbox" /></TableCell>
+                                            <TableCell className="font-medium">
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={selectedIds.has(item.id)}
+                                                    onChange={() => toggleSelectRow(item.id)}
+                                                />
+                                            </TableCell>
                                             {columns.no && (
                                                 <TableCell className="py-4"><p className="text-sm">
                                                     {/* {getSequentialNumber(index)} */}

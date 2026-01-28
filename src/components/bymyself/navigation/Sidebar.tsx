@@ -140,11 +140,6 @@ export default function CoolSidebar({ collapsed, onCollapseChange }: { collapsed
             </div>
 
             <div className="flex flex-col mt-6 px-5 space-y-5">
-                <Link href={"/admin/payroll-managements"} className="flex flex-row items-center cursor-pointer">
-                    <TbReceiptFilled className={`w-5 h-5 text-white ${collapsed ? 'mx-auto' : ''}`} />
-
-                    <h1 className={`${collapsed ? "hidden" : ""} text-base ml-4`}>Payroll Managements</h1>
-                </Link>
                 <Link href={"/admin/accounts"} className="flex flex-row items-center cursor-pointer">
                     <Image src={"/icons/icon-accounts.svg"} className={`${collapsed ? 'mx-auto' : ''}`} alt="icon accounts" width={23} height={23} />
                     {/* <FaGear className={`w-5 h-5 text-white ${collapsed ? 'mx-auto' : ''}`} /> */}

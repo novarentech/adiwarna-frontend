@@ -76,27 +76,65 @@ export default function QuotationsPage() {
         fetchData();
     };
 
-    // 
-    // 
-    // 
     const [isExporting, setIsExporting] = useState(false);
     const [isExportingPdf, setIsExportingPdf] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [exportCount, setExportCount] = useState(0);
 
-    const getExportData = async () => {
+    // --- SELECTION STATE ---
+    const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+    // Toggle Select All (Current Page)
+    const toggleSelectAll = () => {
+        const allIdsOnPage = quotations.map(q => q.id);
+        const allSelected = allIdsOnPage.every(id => selectedIds.has(id));
+
+        const newSelected = new Set(selectedIds);
+        if (allSelected) {
+            allIdsOnPage.forEach(id => newSelected.delete(id));
+        } else {
+            allIdsOnPage.forEach(id => newSelected.add(id));
+        }
+        setSelectedIds(newSelected);
+    };
+
+    // Toggle Select Individual Row
+    const toggleSelectRow = (id: number) => {
+        const newSelected = new Set(selectedIds);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedIds(newSelected);
+    };
+
+    const getExportData = async (onlySelected: boolean = false) => {
         setIsExporting(true);
+        let dataToExport = [];
 
-        // contoh: page 1, search, tapi limit besar
-        const res = await getAll999Quotations(page, search); // sesuaikan API-mu
+         if (onlySelected && selectedIds.size > 0) {
+             // Filter from current page data
+             dataToExport = quotations.filter(q => selectedIds.has(q.id));
+        } else {
+            // contoh: page 1, search, tapi limit besar
+            const res = await getAll999Quotations(page, search); // sesuaikan API-mu
 
-        if (!res.success || !res.data) {
-            toast.error("Gagal mengambil data untuk export");
-            setIsExporting(false);
-            return null;
+            if (!res.success || !res.data) {
+                toast.error("Gagal mengambil data untuk export");
+                setIsExporting(false);
+                return null;
+            }
+            dataToExport = res.data;
         }
 
-        const formatted = res.data.map((q: any) => ({
+        if (dataToExport.length === 0) {
+             toast.warning("Tidak ada data untuk diekspor");
+             setIsExporting(false);
+             return null;
+        }
+
+        const formatted = dataToExport.map((q: any) => ({
             "Ref No": `${q.ref_no}/AWP-INS/${q.ref_year}`,
             "Date": new Date(q.date).toLocaleDateString(),
             "Customer": q.customer,
@@ -105,12 +143,16 @@ export default function QuotationsPage() {
         }));
 
         setExportCount(formatted.length);
+        setIsExporting(false);
         return formatted;
     };
 
 
     const handleCopy = async () => {
-        const data = await getExportData();
+        // Determine mode
+        const isSelectedMode = selectedIds.size > 0;
+        const data = await getExportData(isSelectedMode);
+
         if (!data) return;
 
         const headers = Object.keys(data[0]);
@@ -122,7 +164,6 @@ export default function QuotationsPage() {
         await navigator.clipboard.writeText(content);
 
         toast.success(`Copied ${data.length} rows`);
-        setIsExporting(false);
     };
 
     const handleCSV = async () => {
@@ -276,7 +317,7 @@ export default function QuotationsPage() {
                         disabled={isExporting}
                         className="border-[#D1D5DC] border flex items-center justify-center px-4 rounded-[4px] text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                     >
-                        Copy
+                         {selectedIds.size > 0 ? `Copy Selected (${selectedIds.size})` : "Copy All"}
                     </button>
                     <button
                         onClick={handleCSV}
@@ -324,7 +365,13 @@ export default function QuotationsPage() {
                 <Table className="">
                     <TableHeader>
                         <TableRow className="bg-[#F9FAFB] hover:bg-[#F9FAFB] border-[#E5E7EB]">
-                            <TableHead className="text-[#212529] font-bold py-8 pl-8"><input type="checkbox" /></TableHead>
+                            <TableHead className="text-[#212529] font-bold py-8 pl-8">
+                                <input 
+                                    type="checkbox" 
+                                    onChange={toggleSelectAll}
+                                    checked={quotations.length > 0 && quotations.every(q => selectedIds.has(q.id))}
+                                />
+                            </TableHead>
                             <TableHead className="text-[#212529] font-bold">Ref</TableHead>
                             <TableHead className="text-[#212529] font-bold">Date</TableHead>
                             <TableHead className="text-[#212529] font-bold">Customer</TableHead>
@@ -349,7 +396,13 @@ export default function QuotationsPage() {
                         ) : (
                             quotations.map((q) => (
                                 <TableRow key={q.id} className="hover:bg-gray-50 border-[#E5E7EB]">
-                                    <TableCell className="pl-8"><input type="checkbox" /></TableCell>
+                                    <TableCell className="pl-8">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedIds.has(q.id)}
+                                            onChange={() => toggleSelectRow(q.id)}
+                                        />
+                                    </TableCell>
                                     <TableCell className="py-6">{q.ref_no}/AWP-INS/{q.ref_year}</TableCell>
                                     <TableCell>{new Date(q.date).toLocaleDateString()}</TableCell>
                                     <TableCell>{q.customer}</TableCell>
