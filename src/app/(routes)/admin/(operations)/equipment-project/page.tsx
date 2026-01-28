@@ -295,7 +295,7 @@ export default function EquipmentProjectPage() {
                     <h1 className="text-3xl font-normal">Equipment Project  </h1>
                 </div>
                 {/* create quotations button */}
-                <Link href={"/admin/equipment-project/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75 transition-all shadow-sm"><FiPlus className="w-5 h-5 mr-1" /> Add Document Transmittal</Link>
+                <Link href={"/admin/equipment-project/create"} className="bg-[#31C6D4] text-white px-5 h-12 flex justify-center items-center rounded-sm hover:contrast-75 transition-all shadow-sm"><FiPlus className="w-5 h-5 mr-1" /> Add Equipment Project</Link>
             </div>
 
             {/* Search & Export Container */}
