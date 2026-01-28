@@ -298,15 +298,16 @@ export default function CreateQuotationsPage() {
                     </div>
 
                     <div className="mt-12">
+                        {/* input table */}
                         <table className="w-full border-separate border-spacing-y-4 border-spacing-x-4">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Qty</th>
-                                    <th>Unit</th>
-                                    <th>Description</th>
-                                    <th>Unit Rate</th>
-                                    <th></th>
+                                    <th className="w-[5%]">No</th>
+                                    <th className="w-[10%]">Qty</th>
+                                    <th className="w-[10%]">Unit</th>
+                                    <th className="w-[50%]">Description</th>
+                                    <th className="w-[20%]">Unit Rate</th>
+                                    <th className="w-[5%]"></th>
                                 </tr>
                             </thead>
                             <tbody>
