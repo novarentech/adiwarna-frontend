@@ -4,7 +4,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import CoolNavigationBar from "@/components/bymyself/navigation/NavigationBar";
 import CoolSidebar from "@/components/bymyself/navigation/Sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 export default function LayoutAdmin({
@@ -14,12 +14,24 @@ export default function LayoutAdmin({
 }>) {
     const [collapsed, setCollapsed] = useState(false);
 
-    // Fungsi untuk mengubah state collapsed
-    // const handleCollapseChange = () => {
-    //     setTimeout(() => {
-    //         setCollapsed(prev => !prev);
-    //     }, 50);
-    // };
+    // Initialize collapsed state based on checking window width (client-side only)
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setCollapsed(true);
+            } else {
+                setCollapsed(false);
+            }
+        }
+
+        // Run once on mount
+        handleResize();
+
+        // Optional: Listen for resize if you want dynamic behaviour
+        // window.addEventListener('resize', handleResize);
+        // return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const handleCollapseChange = () => {
         setCollapsed(prev => !prev);
     };

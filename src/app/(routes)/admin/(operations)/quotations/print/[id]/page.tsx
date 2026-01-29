@@ -88,7 +88,7 @@ export default function QuotationPrintPage({ params }: { params: Promise<{ id: s
             <div className="print-wrapper no-scrollbar   mx-auto bg-white shadow-lg w-[210mm] min-h-[297mm] p-[15mm] flex flex-col print:w-full print:p-0">
                 
                 {/* --- BAGIAN KONTEN (ATAS) --- */}
-                <div className="flex-grow">
+                <div className="grow">
                     {/* Header Section */}
                     <header className="mb-4">
                         <table className="w-full">
