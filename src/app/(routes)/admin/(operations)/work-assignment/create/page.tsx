@@ -385,8 +385,8 @@ export default function CreateWorkAssignmentPage() {
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="mobilization" className="font-bold">Mobilization</label>
                                 <div className="flex">
-                                    <input type="date" id="mobilization" required value={formData.mobilization}
-                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Mobilization " />
+                                    <input type="text" id="mobilization" required value={formData.mobilization}
+                                        onChange={handleFormChange} maxLength={255} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Mobilization " />
                                 </div>
                             </div>
                             {/* position authorized by */}

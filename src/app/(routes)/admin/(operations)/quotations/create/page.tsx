@@ -1,5 +1,5 @@
 "use client";
-import { Customer, getCustomers, getCustomersAllForDropdown } from "@/lib/customer";
+import { Customer, getCustomersAllForDropdown } from "@/lib/customer";
 import {
     AdiwarnaPayload,
     ClientPayload,
@@ -509,9 +509,17 @@ export default function CreateQuotationsPage() {
                                         id="valid_until"
                                         required
                                         className="border border-[#AAAAAA] rounded-sm h-9 px-2 flex-1"
-                                        type="date"
+                                        type="number"
                                         value={formData.valid_until}
-                                        onChange={handleFormChange}
+                                        placeholder="Add Days"
+                                        min={1}
+                                        max={1000}
+                                        onChange={(e) => {
+                                            const value = Number(e.target.value);
+                                            if (value <= 1000) {
+                                                handleFormChange(e);
+                                            }
+                                        }}  
                                     />
                                     <p className="ml-3 font-bold">Days</p>
                                 </div>

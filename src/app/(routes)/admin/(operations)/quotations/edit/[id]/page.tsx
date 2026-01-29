@@ -63,9 +63,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
             pic_name: data.pic_name,
             pic_phone: data.pic_phone,
             top: data.top.replace(" days", ""),
-            valid_until: data.valid_until.includes("T")
-                ? data.valid_until.split("T")[0]
-                : data.valid_until,
+            valid_until: data.valid_until,
             clause: data.clause,
             workday: data.workday,
             auth_name: data.auth_name,
@@ -564,9 +562,17 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                         id="valid_until"
                                         required
                                         className="border border-[#AAAAAA] rounded-sm h-9 px-2 flex-1"
-                                        type="date"
+                                        type="number"
                                         value={formData.valid_until}
-                                        onChange={handleFormChange}
+                                        placeholder="Add Days"
+                                        min={1}
+                                        max={1000}
+                                        onChange={(e) => {
+                                            const value = Number(e.target.value);
+                                            if (value <= 1000) {
+                                                handleFormChange(e);
+                                            }
+                                        }}  
                                     />
                                     <p className="ml-3 font-bold">Days</p>
                                 </div>
