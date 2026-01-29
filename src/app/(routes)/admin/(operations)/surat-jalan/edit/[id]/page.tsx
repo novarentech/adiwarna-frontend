@@ -32,6 +32,11 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [selectedCustomerAddress, setSelectedCustomerAddress] = useState("");
 
+    // State untuk isOther
+    const [isOther, setIsOther] = useState(false);
+    const [customName, setCustomName] = useState("");
+    const [customAddress, setCustomAddress] = useState("");
+
     // 1. State Header (Disesuaikan namanya dengan Create Page)
     const [formData, setFormData] = useState({
         dn_no: "",
@@ -64,10 +69,21 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
             const res = await getDeliveryNoteById(Number(id));
             if (res.success && res.data) {
                 const d = res.data;
+
+                // Cek isOther dari response atau logika manual (jika customer_id null)
+                // asumsikan API mengembalikan isOther, name, address jika manual
+                const isManual = d.isOther || (d.customer_id === null && d.name);
+
+                setIsOther(!!isManual);
+                if (isManual) {
+                   setCustomName(d.name || "");
+                   setCustomAddress(d.address || "");
+                }
+
                 setFormData({
-                    dn_no: d.dn_no, // Menggunakan dn_no sesuai response API
+                    dn_no: d.dn_no,
                     date: d.date,
-                    customer_id: d.customer_id.toString(),
+                    customer_id: d.customer_id ? d.customer_id.toString() : "",
                     wo_no: d.wo_no,
                     delivered_with: d.delivered_with || "",
                     vehicle_plate: d.vehicle_plate,
@@ -77,8 +93,12 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                     notes: d.notes || ""
                 });
 
-                // Set alamat dari object customer yang di-fetch
-                setSelectedCustomerAddress(d.customer?.address || "");
+                // Set alamat dari object customer yang di-fetch atau custom
+                if (isManual) {
+                     setSelectedCustomerAddress(d.address || "");
+                } else {
+                     setSelectedCustomerAddress(d.customer?.address || "");
+                }
 
                 // Map items
                 const mappedItems = d.items.map((item: GetbyIdDeliveryNoteItemDetails) => ({
@@ -134,7 +154,11 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
 
         const payload: UpdateDeliveryNoteRequest = {
             ...formData,
-            items: items
+            items: items,
+            isOther: isOther,
+            customer_id: isOther ? null : formData.customer_id,
+            name: isOther ? customName : null,
+            address: isOther ? customAddress : null,
         };
 
         const res = await updateDeliveryNote(Number(id), payload);
@@ -175,28 +199,56 @@ export default function SuratJalanEditPage({ params }: { params: Promise<{ id: s
                         {/* Left Side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="customer_id" className="text-sm font-bold">Kepada (Customer/Shipper)</label>
-                                <select
-                                    id="customer_id"
-                                    className="w-full border rounded-sm h-10 px-2 bg-white border-[#AAAAAA]"
-                                    value={formData.customer_id}
-                                    onChange={handleCustomerChange}
-                                    required
-                                >
-                                    <option value="" hidden>---Choose Customer's Name---</option>
-                                    {customers.map(c => (
-                                        <option key={c.id} value={c.id}>{c.name}</option>
-                                    ))}
-                                </select>
+                                <div className="flex flex-row justify-between items-center">
+                                    <label htmlFor="customer_id" className="text-sm font-bold">Kepada (Customer/Shipper)</label>
+                                    <div className="flex items-center space-x-2">
+                                        <input 
+                                            type="checkbox" 
+                                            id="isOther" 
+                                            checked={isOther} 
+                                            onChange={(e) => setIsOther(e.target.checked)} 
+                                            className="w-4 h-4 cursor-pointer"
+                                        />
+                                        <label htmlFor="isOther" className="text-sm cursor-pointer select-none">Other / Manual Input</label>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex">
+                                    {isOther ? (
+                                        <input 
+                                            type="text" 
+                                            required 
+                                            value={customName} 
+                                            onChange={(e) => setCustomName(e.target.value)} 
+                                            className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" 
+                                            placeholder="Enter Customer Name"
+                                        />
+                                    ) : (
+                                        <select
+                                            id="customer_id"
+                                            className="w-full border rounded-sm h-10 px-2 bg-white border-[#AAAAAA]"
+                                            value={formData.customer_id}
+                                            onChange={handleCustomerChange}
+                                            required
+                                        >
+                                            <option value="" hidden>---Choose Customer's Name---</option>
+                                            {customers.map(c => (
+                                                <option key={c.id} value={c.id}>{c.name}</option>
+                                            ))}
+                                        </select>
+                                    )}
+                                </div>
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="customer_address" className="text-sm font-bold">Address</label>
                                 <textarea
                                     id="customer_address"
                                     required
-                                    value={selectedCustomerAddress}
-                                    disabled
-                                    className="w-full h-[110px] border p-2 rounded-sm bg-[#e9ecef] border-[#AAAAAA] resize-none"
+                                    value={isOther ? customAddress : selectedCustomerAddress}
+                                    onChange={(e) => isOther ? setCustomAddress(e.target.value) : handleInputChange(e)}
+                                    disabled={!isOther}
+                                    className={`w-full h-[110px] border p-2 rounded-sm border-[#AAAAAA] resize-none ${!isOther ? 'bg-[#e9ecef]' : 'bg-white'}`}
+                                    placeholder={isOther ? "Enter Address..." : ""}
                                 />
                             </div>
                             <div className="flex flex-col space-y-4 mt-[37px]">

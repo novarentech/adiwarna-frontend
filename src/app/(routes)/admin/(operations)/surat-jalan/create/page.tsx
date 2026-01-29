@@ -16,7 +16,7 @@ import { CreateDeliveryNote, CreateDeliveryNoteRequest, CreateDeliveryNoteItem }
 import { FiPlus } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Customer, getCustomerById, getCustomersAllForDropdown } from "@/lib/customer";
+import { Customer, getCustomersAllForDropdown } from "@/lib/customer";
 
 export default function SuratJalanCreatePage() {
     const router = useRouter();
@@ -24,6 +24,11 @@ export default function SuratJalanCreatePage() {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedCustomerAddress, setSelectedCustomerAddress] = useState("");
+
+    // State untuk isOther
+    const [isOther, setIsOther] = useState(false);
+    const [customName, setCustomName] = useState("");
+    const [customAddress, setCustomAddress] = useState("");
 
 
     // 1. State untuk Header Form
@@ -98,7 +103,11 @@ export default function SuratJalanCreatePage() {
 
         const payload: CreateDeliveryNoteRequest = {
             ...formData,
-            items: items
+            items: items,
+            isOther: isOther,
+            customer_id: isOther ? null : formData.customer_id,
+            name: isOther ? customName : null,
+            address: isOther ? customAddress : null,
         };
 
         const res = await CreateDeliveryNote(payload);
@@ -140,29 +149,60 @@ export default function SuratJalanCreatePage() {
                         {/* left side */}
                         <div className="space-y-4">
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="customer_id" className="text-sm font-bold">Kepada (Customer/Shipper)</label>
+                                <div className="flex flex-row justify-between items-center">
+                                    <label htmlFor="customer_id" className="text-sm font-bold">Kepada (Customer/Shipper)</label>
+                                    <div className="flex items-center space-x-2">
+                                        <input 
+                                            type="checkbox" 
+                                            id="isOther" 
+                                            checked={isOther} 
+                                            onChange={(e) => setIsOther(e.target.checked)} 
+                                            className="w-4 h-4 cursor-pointer"
+                                        />
+                                        <label htmlFor="isOther" className="text-sm cursor-pointer select-none">Other / Manual Input</label>
+                                    </div>
+                                </div>
                                 {/* <input id="customer" required value={formData.customer} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" /> */}
 
                                 {/* ini nanti fetch dari customerr */}
                                 <div className="flex">
-                                    <select
-                                        id="customer_id"
-                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-10 px-2"
-                                        value={formData.customer_id}
-                                        onChange={handleCustomerChange}
-                                        required
-                                    >
-                                        <option value="" hidden>---Choose Customer's Name---</option>
-                                        {customers.map(c => (
-                                            <option key={c.id} value={c.id}>{c.name}</option>
-                                        ))}
-                                    </select>
+                                    {isOther ? (
+                                        <input 
+                                            type="text" 
+                                            required 
+                                            value={customName} 
+                                            onChange={(e) => setCustomName(e.target.value)} 
+                                            className="w-full h-10 border px-2 rounded-sm border-[#AAAAAA]" 
+                                            placeholder="Enter Customer Name"
+                                        />
+                                    ) : (
+                                        <select
+                                            id="customer_id"
+                                            className="flex-1 border border-[#AAAAAA] rounded-sm h-10 px-2"
+                                            value={formData.customer_id}
+                                            onChange={handleCustomerChange}
+                                            required
+                                        >
+                                            <option value="" hidden>---Choose Customer's Name---</option>
+                                            {customers.map(c => (
+                                                <option key={c.id} value={c.id}>{c.name}</option>
+                                            ))}
+                                        </select>
+                                    )}
                                 </div>
 
                             </div>
                             <div className="flex flex-col space-y-4">
                                 <label htmlFor="customer_address" className="text-sm font-bold">Address</label>
-                                <textarea id="customer_address" required value={selectedCustomerAddress} onChange={handleInputChange} disabled className="w-full h-[110px] border p-2 rounded-sm bg-[#e9ecef] border-[#AAAAAA] resize-none" />
+                                <textarea 
+                                    id="customer_address" 
+                                    required 
+                                    value={isOther ? customAddress : selectedCustomerAddress} 
+                                    onChange={(e) => isOther ? setCustomAddress(e.target.value) : handleInputChange(e)} 
+                                    disabled={!isOther} 
+                                    className={`w-full h-[110px] border p-2 rounded-sm border-[#AAAAAA] resize-none ${!isOther ? 'bg-[#e9ecef]' : 'bg-white'}`} 
+                                    placeholder={isOther ? "Enter Address..." : ""}
+                                />
                             </div>
                             <div className="flex flex-col space-y-4 mt-[37px]">
                                 <label htmlFor="status" className="text-sm font-bold">Status Pengiriman</label>

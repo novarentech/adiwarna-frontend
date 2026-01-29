@@ -29,7 +29,10 @@ export interface PaginationMeta {
 export interface CreateDeliveryNoteRequest {
     dn_no: string;
     date: string; // format: YYYY-MM-DD
-    customer_id: string;
+    customer_id?: string | null;
+    isOther?: boolean;
+    name?: string | null;
+    address?: string | null;
     // customer_address: string;
     wo_no: string;
     delivered_with: string; // kendaraan yang digunakan untuk pengiriman
@@ -58,13 +61,16 @@ export interface GetbyIdDeliveryNoteDetails {
     dn_no: string;
     dn_date: string;
     date: string; // format: YYYY-MM-DD
-    customer_id: number;
+    customer_id: number | null;
+    isOther?: boolean;
+    name?: string | null;
+    address?: string | null;
     customer: {
         id: number;
         name: string;
         customer_no: string;
         address: string;
-    }
+    } | null;
     customer_address: string;
     wo_no: string;
     delivered_with: string | null; // kendaraan pengirim, bisa null jika tidak disebutkan
@@ -89,7 +95,10 @@ export interface GetbyIdDeliveryNoteItemDetails {
 export interface UpdateDeliveryNoteRequest {
     dn_no: string;
     date: string; // format: YYYY-MM-DD
-    customer_id: string;
+    customer_id?: string | null;
+    isOther?: boolean;
+    name?: string | null;
+    address?: string | null;
     // customer_address: string;
     wo_no: string;
     delivered_with: string; // kendaraan yang digunakan untuk pengiriman

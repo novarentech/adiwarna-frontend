@@ -62,7 +62,21 @@ export default function SuratJalanPage() {
     // Helper untuk format tanggal
     const formatDate = (dateString: string) => {
         if (!dateString) return "-";
-        const date = new Date(dateString);
+        
+        let date = new Date(dateString);
+
+        const ddmmyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        const match = dateString.match(ddmmyyyyRegex);
+        
+        if (match) {
+             const day = parseInt(match[1], 10);
+             const month = parseInt(match[2], 10) - 1; // Month index 0-11
+             const year = parseInt(match[3], 10);
+             date = new Date(year, month, day);
+        }
+
+        if (isNaN(date.getTime())) return "Invalid Date";
+
         return date.toLocaleDateString('id-ID', {
             weekday: 'long',
             day: 'numeric',
