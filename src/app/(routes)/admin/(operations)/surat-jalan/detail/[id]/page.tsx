@@ -85,11 +85,11 @@ export default function SuratJalanDetailPage({ params }: { params: Promise<{ id:
                     <div className="space-y-6">
                         <div className="flex flex-col space-y-2">
                             <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Kepada (Customer/Shipper)</label>
-                            <p className="p-3 bg-gray-50 border rounded-sm font-medium">{data.customer.name}</p>
+                            <p className="p-3 bg-gray-50 border rounded-sm font-medium">{data.customer?.name || data.name || "-"}</p>
                         </div>
                         <div className="flex flex-col space-y-2">
                             <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Address</label>
-                            <p className="p-3 bg-gray-50 border rounded-sm min-h-[110px] whitespace-pre-wrap text-sm text-gray-700">{data.customer.address}</p>
+                            <p className="p-3 bg-gray-50 border rounded-sm min-h-[110px] whitespace-pre-wrap text-sm text-gray-700">{data.customer?.address || data.address || "-"}</p>
                         </div>
                     </div>
 

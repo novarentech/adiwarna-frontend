@@ -116,11 +116,11 @@ export default function DeliveryNotePrintPage({ params }: { params: Promise<{ id
                                 <tbody>
                                     <tr>
                                         <td className="w-16 font-semibold align-top">Kepada</td>
-                                        <td className="align-top">: <b>{data.customer.name}</b></td>
+                                        <td className="align-top">: <b>{data.customer?.name || data.name || "-"}</b></td>
                                     </tr>
                                     <tr>
                                         <td className="font-semibold align-top">Alamat</td>
-                                        <td className="align-top">: <span className="whitespace-pre-line">{data.customer.address}</span></td>
+                                        <td className="align-top">: <span className="whitespace-pre-line">{data.customer?.address || data.address || "-"}</span></td>
                                     </tr>
                                     <tr>
                                         <td className="font-semibold align-top pt-2">Attn</td>
