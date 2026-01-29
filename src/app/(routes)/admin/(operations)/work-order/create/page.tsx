@@ -214,6 +214,7 @@ export default function CreateWorkOrderPage() {
                                         placeholder="year"
                                         value={formData.work_order_year}
                                         onChange={(e) => setFormData({ ...formData, work_order_year: Number(e.target.value) })}
+                                        required
                                     />
                                 </div>
                             </div>
@@ -230,6 +231,7 @@ export default function CreateWorkOrderPage() {
                                         className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         value={formData.date}
                                         onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                        required
                                     />
                                 </div>
                             </div>

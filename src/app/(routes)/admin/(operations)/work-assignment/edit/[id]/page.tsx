@@ -204,10 +204,10 @@ export default function EditWorkAssignmentPage({
                                 {/* nomor */}
                                 <label htmlFor="assignment_no" className="font-bold">No.</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="assignment_no" value={formData.assignment_no}
+                                    <input type="text" id="assignment_no" required value={formData.assignment_no}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add number" />
                                     <p className="mx-4 font-bold">/AWP-INS/</p>
-                                    <input type="text" id="assignment_year" value={formData.assignment_year}
+                                    <input type="text" id="assignment_year" required value={formData.assignment_year}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="year" />
                                 </div>
                             </div>
@@ -218,7 +218,7 @@ export default function EditWorkAssignmentPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="date" className="font-bold">Date</label>
                                 <div className="flex">
-                                    <input type="date" id="date" value={formData.date}
+                                    <input type="date" id="date" required value={formData.date}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                 </div>
                             </div>
@@ -247,6 +247,7 @@ export default function EditWorkAssignmentPage({
                                         <td>
                                             <input
                                                 type="text"
+                                                required
                                                 value={row.details}
                                                 onChange={(e) =>
                                                     updateRowDataWorker(index, "details", e.target.value)
@@ -260,6 +261,7 @@ export default function EditWorkAssignmentPage({
                                         <td>
                                             <input
                                                 type="text"
+                                                required
                                                 value={row.position}
                                                 onChange={(e) =>
                                                     updateRowDataWorker(index, "position", e.target.value)
@@ -303,7 +305,7 @@ export default function EditWorkAssignmentPage({
                                 {/* Ref. AWP WO No. */}
                                 <label htmlFor="ref_no" className="font-bold">Ref. AWP WO No.</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="ref_no" value={formData.ref_no}
+                                    <input type="text" id="ref_no" required value={formData.ref_no}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                     <p className="mx-2 font-bold">/AWP-INS/JKT/</p>
                                 </div>
@@ -315,7 +317,7 @@ export default function EditWorkAssignmentPage({
                                 {/* year */}
                                 <label htmlFor="ref_year" className="font-bold text-transparent">.</label>
                                 <div className="flex items-center">
-                                    <input type="text" id="ref_year" value={formData.ref_year}
+                                    <input type="text" id="ref_year" required value={formData.ref_year}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Year" />
                                 </div>
                             </div>
@@ -326,7 +328,7 @@ export default function EditWorkAssignmentPage({
                                 <label htmlFor="ref_po_no_instruction" className="font-bold  ">Ref. PO No./Instruction</label>
                                 <div className="flex items-center">
                                     {/* ini nanti fetch dari customerr */}
-                                    <input type="text" id="ref_po_no_instruction" value={formData.ref_po_no_instruction}
+                                    <input type="text" id="ref_po_no_instruction" required value={formData.ref_po_no_instruction}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Ref. PO No./Instruction" />
                                 </div>
                             </div>
@@ -338,7 +340,7 @@ export default function EditWorkAssignmentPage({
                     <div className="flex flex-col space-y-1 my-3">
                         <label htmlFor="customer" className="font-bold">Customer</label>
                         <div className="flex">
-                            <select id="customer_id"
+                            <select id="customer_id" required
                                 value={formData.customer_id}
                                 onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2">
                                 <option value="" className="font-light" hidden>---Choose Customer's Name---</option>
@@ -361,7 +363,7 @@ export default function EditWorkAssignmentPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="worklocation" className="font-bold">Work Location</label>
                                 <div className="flex">
-                                    <select id="customer_location_id"
+                                    <select id="customer_location_id" required
                                         value={formData.customer_location_id}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2">
                                         <option value="" className="font-light" hidden>---Choose work location---</option>
@@ -377,7 +379,7 @@ export default function EditWorkAssignmentPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="scope" className="font-bold">Scope of Work</label>
                                 <div className="flex">
-                                    <input type="text" id="scope" value={formData.scope}
+                                    <input type="text" id="scope" required value={formData.scope}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Scope of Work" />
                                 </div>
                             </div>
@@ -385,7 +387,7 @@ export default function EditWorkAssignmentPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="auth_name" className="font-bold">Authorized By</label>
                                 <div className="flex">
-                                    <input type="text" id="auth_name" value={formData.auth_name}
+                                    <input type="text" id="auth_name" required value={formData.auth_name}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan nama" />
                                 </div>
                             </div>
@@ -396,7 +398,7 @@ export default function EditWorkAssignmentPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="estimation" className="font-bold">Estimate Duration</label>
                                 <div className="flex">
-                                    <input type="text" value={formData.estimation}
+                                    <input type="text" value={formData.estimation} required
                                         onChange={handleFormChange} id="estimation" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add estimate duration (days)" />
                                 </div>
                             </div>
@@ -404,7 +406,7 @@ export default function EditWorkAssignmentPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="mobilization" className="font-bold">Mobilization</label>
                                 <div className="flex">
-                                    <input type="date" id="mobilization" value={formData.mobilization}
+                                    <input type="date" id="mobilization" required value={formData.mobilization}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Mobilization " />
                                 </div>
                             </div>
@@ -412,7 +414,7 @@ export default function EditWorkAssignmentPage({
                             <div className="flex flex-col space-y-1">
                                 <label htmlFor="auth_pos" className="font-bold">Position</label>
                                 <div className="flex">
-                                    <input type="text" id="auth_pos" value={formData.auth_pos}
+                                    <input type="text" id="auth_pos" required value={formData.auth_pos}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Postion " />
                                 </div>
                             </div>

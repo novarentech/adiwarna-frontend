@@ -296,6 +296,7 @@ export default function EditWorkOrderPage({ params }: { params: Promise<{ id: st
                                         placeholder="year"
                                         value={formData.work_order_year}
                                         onChange={(e) => setFormData({ ...formData, work_order_year: Number(e.target.value) })}
+                                        required
                                     />
                                 </div>
                             </div>

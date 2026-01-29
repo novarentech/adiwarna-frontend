@@ -310,6 +310,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                     value={formData.customer_id}
                                     onChange={handleFormChange}
                                     className="border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
+                                    required
                                 >
                                     <option value="" className="font-light" hidden>---Pilih Customer---</option>
                                     {customers.map(customer => (
@@ -326,6 +327,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                     value={formData.project_date}
                                     onChange={(e) => setFormData(prev => ({ ...prev, project_date: e.target.value }))}
                                     className="border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
+                                    required
                                 />
                                 <p className="text-sm text-gray-500">Format: mm/dd/yyyy</p>
                             </div>
@@ -337,6 +339,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                     onChange={handleFormChange}
                                     className="border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
                                     placeholder="Prepared By Name"
+                                    required
                                 />
                             </div>
                         </div>
@@ -351,6 +354,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                     onChange={handleFormChange}
                                     disabled={!formData.customer_id || customersLocation.length === 0}
                                     className={`border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8] ${!formData.customer_id ? 'bg-gray-100 text-gray-500' : ''}`}
+                                    required
                                 >
                                     <option value="" className="font-light" hidden>---Pilih Customer Dulu---</option>
                                     {customersLocation.map(location => (
@@ -368,6 +372,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                                     onChange={handleFormChange}
                                     className="border border-[#AAAAAA] rounded-sm h-10 px-2 focus:outline-none focus:ring-1 focus:ring-[#17A2B8]"
                                     placeholder="Verified By Name"
+                                    required
                                 />
                             </div>
                         </div>

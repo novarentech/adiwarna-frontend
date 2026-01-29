@@ -213,6 +213,7 @@ export default function CreateQuotationsPage() {
                                     <input
                                         type="text"
                                         id="ref_no"
+                                        required
                                         value={formData.ref_no}
                                         onChange={handleFormChange}
                                         className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
@@ -222,6 +223,7 @@ export default function CreateQuotationsPage() {
                                     <input
                                         type="text"
                                         id="ref_year"
+                                        required
                                         value={formData.ref_year}
                                         onChange={handleFormChange}
                                         className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
@@ -234,6 +236,7 @@ export default function CreateQuotationsPage() {
                                 <label className="font-bold">Customer</label>
                                 <select
                                     id="customer_id"
+                                    required
                                     value={formData.customer_id}
                                     onChange={handleFormChange}
                                     className="flex-1 border border-[#AAAAAA] rounded-sm h-9 py-1.5 px-2 mt-1 block "
@@ -251,6 +254,7 @@ export default function CreateQuotationsPage() {
                                 <label className="font-bold">Subject</label>
                                 <input
                                     id="subject"
+                                    required
                                     value={formData.subject}
                                     onChange={handleFormChange}
                                     className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
@@ -265,6 +269,7 @@ export default function CreateQuotationsPage() {
                                 <input
                                     type="date"
                                     id="date"
+                                    required
                                     value={formData.date}
                                     onChange={handleFormChange}
                                     className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
@@ -276,6 +281,7 @@ export default function CreateQuotationsPage() {
                                 <input
                                     type="text"
                                     id="pic_name"
+                                    required
                                     value={formData.pic_name}
                                     onChange={handleFormChange}
                                     className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
@@ -288,6 +294,7 @@ export default function CreateQuotationsPage() {
                                 <input
                                     type="text"
                                     id="pic_phone"
+                                    required
                                     value={formData.pic_phone}
                                     onChange={handleFormChange}
                                     className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
@@ -318,6 +325,7 @@ export default function CreateQuotationsPage() {
                                         <td>
                                             <input
                                                 type="number"
+                                                required
                                                 value={row.qty}
                                                 onChange={(e) => updateRowScope(index, "qty", e.target.value)}
                                                 className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full"
@@ -326,6 +334,7 @@ export default function CreateQuotationsPage() {
 
                                         <td>
                                             <input
+                                                required
                                                 value={row.unit}
                                                 onChange={(e) => updateRowScope(index, "unit", e.target.value)}
                                                 className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full"
@@ -335,6 +344,7 @@ export default function CreateQuotationsPage() {
                                         <td>
                                             <input
                                                 type="text"
+                                                required
                                                 value={row.description}
                                                 onChange={(e) =>
                                                     updateRowScope(index, "description", e.target.value)
@@ -346,6 +356,7 @@ export default function CreateQuotationsPage() {
                                         <td>
                                             <input
                                                 type="number"
+                                                required
                                                 value={row.unitRate}
                                                 onChange={(e) =>
                                                     updateRowScope(index, "unitRate", e.target.value)
@@ -394,6 +405,7 @@ export default function CreateQuotationsPage() {
 
                                     <td>
                                         <textarea
+                                            required
                                             value={row.details}
                                             onChange={(e) =>
                                                 updateRowAdiwarna(index, "details", e.target.value)
@@ -442,6 +454,7 @@ export default function CreateQuotationsPage() {
 
                                     <td>
                                         <textarea
+                                            required
                                             value={row.details}
                                             onChange={(e) =>
                                                 updateRowClient(index, "details", e.target.value)
@@ -479,6 +492,7 @@ export default function CreateQuotationsPage() {
                                 <div className="flex flex-row mt-1 items-center">
                                     <input
                                         id="top"
+                                        required
                                         className="border border-[#AAAAAA] rounded-sm h-9 px-2 flex-1"
                                         type="text"
                                         value={formData.top}
@@ -493,6 +507,7 @@ export default function CreateQuotationsPage() {
                                 <div className="flex flex-row mt-1 items-center">
                                     <input
                                         id="valid_until"
+                                        required
                                         className="border border-[#AAAAAA] rounded-sm h-9 px-2 flex-1"
                                         type="date"
                                         value={formData.valid_until}
@@ -507,6 +522,7 @@ export default function CreateQuotationsPage() {
                             <label className="font-bold">Clause</label>
                             <input
                                 id="clause"
+                                required
                                 className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                 value={formData.clause}
                                 onChange={handleFormChange}
@@ -517,6 +533,7 @@ export default function CreateQuotationsPage() {
                             <label className="font-bold">Workday</label>
                             <input
                                 id="workday"
+                                required
                                 className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                 value={formData.workday}
                                 onChange={handleFormChange}
@@ -528,6 +545,7 @@ export default function CreateQuotationsPage() {
                                 <label className="font-bold">Authorized By</label>
                                 <input
                                     id="auth_name"
+                                    required
                                     className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                     value={formData.auth_name}
                                     onChange={handleFormChange}
@@ -538,6 +556,7 @@ export default function CreateQuotationsPage() {
                                 <label className="font-bold">Position</label>
                                 <input
                                     id="auth_position"
+                                    required
                                     className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-full mt-1"
                                     value={formData.auth_position}
                                     onChange={handleFormChange}
@@ -550,6 +569,7 @@ export default function CreateQuotationsPage() {
                             <div className="flex flex-row items-center space-x-2">
                                 <input
                                     id="discount"
+                                    required
                                     className="border border-[#AAAAAA] rounded-sm h-9 px-2 w-1/4 mt-1"
                                     value={formData.discount}
                                     onChange={handleFormChange}
