@@ -12,7 +12,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { LuEye, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
 import * as XLSX from "xlsx";
@@ -23,6 +22,7 @@ import autoTable from "jspdf-autotable";
 import { GetAllDeliveryNote, GetAllDeliveryNoteResponse, GetAllDeliveryNoteData, deleteDeliveryNote, GetAll999DeliveryNote } from "@/lib/delivery-notes";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Eye } from "lucide-react";
 
 export default function SuratJalanPage() {
     const [search, setSearch] = useState("");
@@ -430,12 +430,12 @@ export default function SuratJalanPage() {
                                             <Link href={`/admin/surat-jalan/edit/${sj.id}`}>
                                                 <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>
-                                            <Link href={`/admin/surat-jalan/print/${sj.id}`}>
-                                                <LuPrinter className="w-5 h-5 text-[#4A5565] hover:opacity-70" />
-                                            </Link>
                                             <button onClick={() => handleDelete(sj.id)}>
                                                 <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
                                             </button>
+                                            <Link href={`/admin/surat-jalan/print/${sj.id}`}>
+                                                <Eye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
+                                            </Link>
                                         </div>
                                     </TableCell>
                                 </TableRow>

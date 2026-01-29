@@ -12,7 +12,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { LuEye, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
 
@@ -23,6 +22,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Eye } from "lucide-react";
 
 export default function PurchaseRequisitionPage() {
     const [search, setSearch] = useState("");
@@ -438,12 +438,12 @@ export default function PurchaseRequisitionPage() {
                                             <Link href={`/admin/purchase-requisition/edit/${pr.id}`} title="Edit">
                                                 <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>
-                                            <Link href={`/admin/purchase-requisition/print/${pr.id}`} title="Print">
-                                                <LuPrinter className="w-5 h-5 text-[#4A5565] hover:opacity-70" />
-                                            </Link>
                                             <button title="Delete" onClick={() => handleDelete(pr.id)}>
                                                 <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
                                             </button>
+                                             <Link href={`/admin/purchase-requisition/print/${pr.id}`} title="Print">
+                                                <Eye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
+                                            </Link>
                                         </div>
                                     </TableCell>
                                 </TableRow>

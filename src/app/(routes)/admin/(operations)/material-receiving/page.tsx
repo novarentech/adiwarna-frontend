@@ -13,7 +13,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { LuEye, LuPrinter } from "react-icons/lu";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { AllMaterialReceivingData, deleteMaterialReceiving, GetAll999MaterialReceiving, GetAllMaterialReceiving, GetAllMaterialReceivingReportResponse } from "@/lib/material-receiving";
@@ -25,6 +24,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Eye } from "lucide-react";
 
 export default function MaterialReceivingPage() {
     const [search, setSearch] = useState("");
@@ -399,8 +399,10 @@ export default function MaterialReceivingPage() {
                                     <TableCell>
                                         <div className="flex flex-row items-center justify-center gap-x-5">
                                             <Link href={`/admin/material-receiving/edit/${item.id}`} className="cursor-pointer hover:opacity-70"><LiaEdit className="w-6 h-6 text-[#00A63E]" /></Link>
-                                            <Link href={`/admin/material-receiving/print/${item.id}`} className="cursor-pointer hover:opacity-70"><LuPrinter className="w-5 h-5 text-[#4A5565]" /></Link>
                                             <button onClick={() => handleDelete(item.id)} className="cursor-pointer hover:opacity-70 text-[#E7000B]"><RiDeleteBinLine className="w-5 h-5" /></button>
+                                            <Link href={`/admin/material-receiving/print/${item.id}`} className="cursor-pointer hover:opacity-70">
+                                                <Eye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
+                                            </Link>
                                         </div>
                                     </TableCell>
                                 </TableRow>
