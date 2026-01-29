@@ -418,10 +418,9 @@ export default function WorkAssignmentPage() {
                                                 {/* <MdEdit className="w-7 h-7" /> */}
                                                 <LiaEdit className="w-6 h-6 text-[#00A63E] hover:opacity-70" />
                                             </Link>
-                                            <div>
-                                                {/* <FaTrash className="w-5 h-5 text-red-500" onClick={() => handleDelete(wa.id)} /> */}
+                                            <button onClick={() => handleDelete(wa.id)}>
                                                 <RiDeleteBinLine className="w-5 h-5 text-[#E7000B] hover:opacity-70" />
-                                            </div>
+                                            </button>
                                             <Link href={`/admin/work-assignment/print/${wa.id}`}>
                                                 {/* <IoMdEye className="w-7 h-7 text-[#31C6D4]" /> */}
                                                 <LuEye className="w-5 h-5 text-[#155DFC] hover:opacity-70" />
