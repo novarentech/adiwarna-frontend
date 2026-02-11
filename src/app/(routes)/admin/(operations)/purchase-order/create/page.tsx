@@ -42,6 +42,7 @@ export default function CreatePurchaseOrderPage() {
         purchase_requisition_no: "",
         purchase_requisition_year: "",
         discount: "",
+        isTax: true,
         req_name: "",
         req_pos: "",
         app_name: "",
@@ -71,11 +72,14 @@ export default function CreatePurchaseOrderPage() {
 
 
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { id, value } = e.target;
+        const { id, value, type } = e.target;
+        const checked = (e.target as HTMLInputElement).checked;
         
         if (id === "date") {
             const year = new Date(value).getFullYear().toString();
             setFormData(prev => ({ ...prev, [id]: value, po_year: year }));
+        } else if (type === "checkbox") {
+            setFormData(prev => ({ ...prev, [id]: checked }));
         } else {
              setFormData(prev => ({ ...prev, [id]: value }));
         }
@@ -125,6 +129,7 @@ export default function CreatePurchaseOrderPage() {
             purchase_requisition_no: formData.purchase_requisition_no,
             purchase_requisition_year: parseInt(formData.purchase_requisition_year),
             discount: parseFloat(formData.discount) || 0,
+            isTax: formData.isTax,
             req_name: formData.req_name,
             req_pos: formData.req_pos,
             app_name: formData.app_name,
@@ -491,10 +496,22 @@ export default function CreatePurchaseOrderPage() {
                         {/* Dicount */}
                         <div className="flex flex-col space-y-1">
                             <label htmlFor="discount" className="font-bold">Discount <span className="text-red-500">*</span></label>
-                            <div className="flex">
+                            <div className="flex items-center">
                                 <input type="text" id="discount" required value={formData.discount}
                                     onChange={handleFormChange} className="w-2/6 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                 <p className="my-auto ml-2">{"(%)"}</p>
+
+                                {/* Checklist PPN */}
+                                <div className="flex items-center ml-8 space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        id="isTax"
+                                        checked={formData.isTax}
+                                        onChange={handleFormChange}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <label htmlFor="isTax" className="font-bold">PPN 11%</label>
+                                </div>
                             </div>
                         </div>
                     </div>

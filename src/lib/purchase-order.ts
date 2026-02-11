@@ -43,6 +43,7 @@ export interface CreatePurchaseOrderPayload {
     purchase_requisition_no: string;
     purchase_requisition_year: number;
     discount: number;
+    isTax: boolean;
     req_name: string;
     req_pos: string;
     app_name: string;
@@ -76,6 +77,7 @@ export interface UpdatePurchaseOrderPayload {
     purchase_requisition_no: string;
     purchase_requisition_year: number;
     discount: number;
+    isTax?: boolean;
     req_name: string;
     req_pos: string;
     app_name: string;
