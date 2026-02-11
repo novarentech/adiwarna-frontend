@@ -57,6 +57,7 @@ export default function EditPurchaseOrderPage({
         app_pos: "",
         auth_name: "",
         auth_pos: "",
+        isTax: true,
     });
 
     const [rowsScope, setRowsScope] = useState<RowDataScope[]>([]);
@@ -103,7 +104,8 @@ export default function EditPurchaseOrderPage({
                 app_name: po.app_name,
                 app_pos: po.app_pos,
                 auth_name: po.auth_name,
-                auth_pos: po.auth_pos
+                auth_pos: po.auth_pos,
+                isTax: po.isTax ?? true,
             });
 
             // SET CUSTOMER DETAIL
@@ -127,8 +129,14 @@ export default function EditPurchaseOrderPage({
 
     // HANDLE CHANGE FORM INPUTS
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { id, value } = e.target;
-        setFormData(prev => ({ ...prev, [id]: value }));
+        const { id, value, type } = e.target;
+        const checked = (e.target as HTMLInputElement).checked;
+
+        if (type === "checkbox") {
+            setFormData(prev => ({ ...prev, [id]: checked }));
+        } else {
+            setFormData(prev => ({ ...prev, [id]: value }));
+        }
     };
 
     // SCOPE TABLE ACTIONS
@@ -181,6 +189,7 @@ export default function EditPurchaseOrderPage({
             app_pos: formData.app_pos,
             auth_name: formData.auth_name,
             auth_pos: formData.auth_pos,
+            isTax: formData.isTax,
             items,
         };
 
@@ -540,6 +549,18 @@ export default function EditPurchaseOrderPage({
                                 <input type="text" id="discount" required value={formData.discount}
                                     onChange={handleFormChange} className="w-2/6 border border-[#AAAAAA] rounded-sm h-9 px-2" />
                                 <p className="my-auto ml-2">{"(%)"}</p>
+
+                                {/* Checklist PPN */}
+                                <div className="flex items-center ml-8 space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        id="isTax"
+                                        checked={formData.isTax}
+                                        onChange={handleFormChange}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <label htmlFor="isTax" className="font-bold">PPN 11%</label>
+                                </div>
                             </div>
                         </div>
                     </div>

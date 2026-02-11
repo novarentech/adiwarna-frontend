@@ -132,6 +132,7 @@ export interface PurchaseOrderDetail {
     purchase_requisition_year: number | null;
 
     discount: string | number | null;
+    isTax: boolean | null;
 
     req_name: string | null;
     req_pos: string | null;
