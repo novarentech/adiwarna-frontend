@@ -176,7 +176,7 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
                 <form onSubmit={handleSubmit} className="flex flex-col w-full h-fit">
                     <div className="w-full grid grid-cols-3 gap-x-8">
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="po_no" className="text-sm">P.O. / INV. / PR No.</label>
+                            <label htmlFor="po_no" className="text-sm">P.O. / INV. / PR No. <span className="text-red-500">*</span></label>
                             <div className="w-full flex flex-row items-center">
                                 {/* po_no */}
                                 <input id="po_no" required value={formData.po_no} onChange={handleInputChange} type="text" className="w-2/6 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="e.g., 037" />
@@ -209,7 +209,7 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
                             <input id="supplier" value={formData.supplier} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Supplier name" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="receiving_date" className="text-sm">Receiving Date</label>
+                            <label htmlFor="receiving_date" className="text-sm">Receiving Date <span className="text-red-500">*</span></label>
                             <input id="receiving_date" required value={formData.receiving_date} onChange={handleInputChange} type="date" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
                         </div>
                     </div>
@@ -286,11 +286,11 @@ export default function EditMaterialReceivingPage({ params }: { params: Promise<
 
                     <div className="w-full grid grid-cols-2 gap-x-8 gap-y-4 mt-6">
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="received_by" className="text-sm">Received By</label>
+                            <label htmlFor="received_by" className="text-sm">Received By <span className="text-red-500">*</span></label>
                             <input id="received_by" type="text" required value={formData.received_by} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name/Position" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="acknowledge_by" className="text-sm">Acknowledge by</label>
+                            <label htmlFor="acknowledge_by" className="text-sm">Acknowledge by <span className="text-red-500">*</span></label>
                             <input id="acknowledge_by" type="text" required value={formData.acknowledge_by} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name/Position" />
                         </div>
                         {/* receivedbyposition */}

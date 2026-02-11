@@ -83,25 +83,25 @@ export default function EditEmployeePage({
                 <form onSubmit={handleEditEmployee} className="flex flex-col">
                     {/* no */}
                     <div className="flex flex-col space-y-1">
-                        <label htmlFor="customer-num" className="font-bold">No</label>
+                        <label htmlFor="customer-num" className="font-bold">No <span className="text-red-500">*</span></label>
                         <div className="flex">
-                            <input value={employeeNo}
+                            <input value={employeeNo} required
                                 onChange={(e) => setEmployeeNo(e.target.value)} type="text" id="customer-num" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="add employee number" />
                         </div>
                     </div>
                     {/* Name */}
                     <div className="flex flex-col space-y-1 mt-4">
-                        <label htmlFor="employee-name" className="font-bold">Name</label>
+                        <label htmlFor="employee-name" className="font-bold">Name <span className="text-red-500">*</span></label>
                         <div className="flex">
-                            <input value={employeeName}
+                            <input value={employeeName} required
                                 onChange={(e) => setEmployeeName(e.target.value)} type="text" id="employee-name" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add employee name" />
                         </div>
                     </div>
                     {/* Position */}
                     <div className="flex flex-col space-y-1 mt-4">
-                        <label htmlFor="employee-position" className="font-bold">Position</label>
+                        <label htmlFor="employee-position" className="font-bold">Position <span className="text-red-500">*</span></label>
                         <div className="flex">
-                            <input value={employeePosition}
+                            <input value={employeePosition} required
                                 onChange={(e) => setEmployeePosition(e.target.value)} type="text" id="employee-position" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add employee position" />
                         </div>
                     </div>

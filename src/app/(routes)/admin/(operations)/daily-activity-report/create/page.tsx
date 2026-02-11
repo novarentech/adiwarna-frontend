@@ -179,20 +179,20 @@ export default function CreateDailyActivityReport() {
                         <div className="flex flex-col space-y-4">
                             {/* Ref. AWP W.O. No. */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="po_no" className="font-bold">Ref. AWP W.O. No.</label>
+                                <label htmlFor="po_no" className="font-bold">Ref. AWP W.O. No. <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
-                                    <input type="text" id="po_no" value={formData.po_no}
+                                    <input type="text" id="po_no" required value={formData.po_no}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Number" />
                                     <p className="mx-4 font-bold">/AWP-INS/</p>
-                                    <input type="text" id="po_year" value={formData.po_year}
+                                    <input type="text" id="po_year" required value={formData.po_year}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="year" />
                                 </div>
                             </div>
                             {/* customer */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="customer" className="font-bold">Customer</label>
+                                <label htmlFor="customer" className="font-bold">Customer <span className="text-red-500">*</span></label>
                                 <div className="flex">
-                                    <select id="customer_id" value={formData.customer_id}
+                                    <select id="customer_id" required value={formData.customer_id}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2">
                                         <option value="" className="font-light" hidden>---Choose Customer's Name---</option>
                                         {customers.map(customer => (
@@ -205,10 +205,10 @@ export default function CreateDailyActivityReport() {
                             </div>
                             {/* customer address */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="location" className="font-bold">Location / Jobsite</label>
+                                <label htmlFor="location" className="font-bold">Location / Jobsite <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     {/* ini nanti value nya otomatis ambil dari customer */}
-                                    <input type="text" id="location" value={formData.location}
+                                    <input type="text" id="location" required value={formData.location}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2 " />
                                 </div>
                             </div>
@@ -217,9 +217,9 @@ export default function CreateDailyActivityReport() {
                         <div className="flex flex-col space-y-4">
                             {/* Service Contract No./ PO No. */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="ref_no" className="font-bold">Service Contract No./ PO No.</label>
+                                <label htmlFor="ref_no" className="font-bold">Service Contract No./ PO No. <span className="text-red-500">*</span></label>
                                 <div className="flex">
-                                    <input type="text" id="ref_no" value={formData.ref_no}
+                                    <input type="text" id="ref_no" required value={formData.ref_no}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
                                 </div>
                             </div>
@@ -227,9 +227,9 @@ export default function CreateDailyActivityReport() {
                                 {/* date */}
                                 <div className="flex flex-col space-y-1">
                                     {/* year */}
-                                    <label htmlFor="date" className="font-bold">Date</label>
+                                    <label htmlFor="date" className="font-bold">Date <span className="text-red-500">*</span></label>
                                     <div className="flex items-center">
-                                        <input type="date" id="date" value={formData.date}
+                                        <input type="date" id="date" required value={formData.date}
                                             onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
                                     </div>
                                 </div>
@@ -243,7 +243,7 @@ export default function CreateDailyActivityReport() {
                             <thead>
                                 <tr className="space-x-1">
                                     <th className="w-[5%]">No</th>
-                                    <th className="w-[90%] text-left">Team Member</th>
+                                    <th className="w-[90%] text-left">Team Member <span className="text-red-500">*</span></th>
                                     <th className="w-[5%]"></th>
                                 </tr>
                             </thead>
@@ -259,6 +259,7 @@ export default function CreateDailyActivityReport() {
                                                 onChange={(e) =>
                                                     updateRowDataTeamMember(index, "employee_id", e.target.value)
                                                 }
+                                                required
                                                 className="border rounded-sm min-h-12 px-2 w-full p-2">
                                                 <option value="" className="">---Choose team member---</option>
                                                 {employees.map(e => (
@@ -295,18 +296,18 @@ export default function CreateDailyActivityReport() {
                     <div className="flex flex-col space-y-4 mt-6 w-4/6 mx-auto">
                         {/* ffrom */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="time_from" className="font-bold">From</label>
+                            <label htmlFor="time_from" className="font-bold">From <span className="text-red-500">*</span></label>
                             <div className="flex">
-                                <input type="time" name="from-duration" id="time_from" value={formData.time_from}
+                                <input type="time" name="from-duration" id="time_from" required value={formData.time_from}
                                     onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="hh:mm" />
                             </div>
                         </div>
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* to */}
-                                <label htmlFor="time_to" className="font-bold">to</label>
+                                <label htmlFor="time_to" className="font-bold">to <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
-                                    <input type="time" id="time_to" value={formData.time_to}
+                                    <input type="time" id="time_to" required value={formData.time_to}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" />
                                 </div>
                             </div>
@@ -320,8 +321,8 @@ export default function CreateDailyActivityReport() {
                             <thead>
                                 <tr className="space-x-1">
                                     <th className="w-[5%]">No</th>
-                                    <th className="w-[45%] text-left">Work Description</th>
-                                    <th className="w-[45%] text-left">Equipment No</th>
+                                    <th className="w-[45%] text-left">Work Description <span className="text-red-500">*</span></th>
+                                    <th className="w-[45%] text-left">Equipment No <span className="text-red-500">*</span></th>
                                     <th className="w-[5%]"></th>
                                 </tr>
                             </thead>
@@ -386,17 +387,17 @@ export default function CreateDailyActivityReport() {
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* TA No. */}
-                                <label htmlFor="prepared_name" className="font-bold">Prepared By</label>
+                                <label htmlFor="prepared_name" className="font-bold">Prepared By <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
-                                    <input type="text" id="prepared_name" value={formData.prepared_name}
+                                    <input type="text" id="prepared_name" required value={formData.prepared_name}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter name" />
                                 </div>
                             </div>
                             <div className="flex flex-col space-y-1">
                                 {/* TA No. */}
-                                <label htmlFor="acknowledge_name" className="font-bold">Acknowledged By</label>
+                                <label htmlFor="acknowledge_name" className="font-bold">Acknowledged By <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
-                                    <input type="text" id="acknowledge_name" value={formData.acknowledge_name}
+                                    <input type="text" id="acknowledge_name" required value={formData.acknowledge_name}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter name" />
                                 </div>
                             </div>
@@ -406,17 +407,17 @@ export default function CreateDailyActivityReport() {
                             {/* position */}
                             <div className="flex flex-col space-y-1">
                                 {/* position prepared by */}
-                                <label htmlFor="prepared_pos" className="font-bold">Position</label>
+                                <label htmlFor="prepared_pos" className="font-bold">Position <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
-                                    <input type="text" id="prepared_pos" value={formData.prepared_pos}
+                                    <input type="text" id="prepared_pos" required value={formData.prepared_pos}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter position" />
                                 </div>
                             </div>
                             <div className="flex flex-col space-y-1">
                                 {/* position aknowledge by */}
-                                <label htmlFor="acknowledge_pos" className="font-bold">Position</label>
+                                <label htmlFor="acknowledge_pos" className="font-bold">Position <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
-                                    <input type="text" id="acknowledge_pos" value={formData.acknowledge_pos}
+                                    <input type="text" id="acknowledge_pos" required value={formData.acknowledge_pos}
                                         onChange={handleFormChange} className="flex-1 border rounded-sm h-9 px-2" placeholder="Enter position" />
                                 </div>
                             </div>

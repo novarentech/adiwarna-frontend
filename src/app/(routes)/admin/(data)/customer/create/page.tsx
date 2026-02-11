@@ -86,17 +86,17 @@ export default function CreateCustomerPage() {
                 <form onSubmit={handleCreateCustomer} className="flex flex-col">
                     {/* no */}
                     <div className="flex flex-col space-y-1">
-                        <label htmlFor="customer-num" className="font-bold">No</label>
+                        <label htmlFor="customer-num" className="font-bold">No <span className="text-red-500">*</span></label>
                         <div className="flex">
-                            <input type="text" id="customer-num" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={customerNo}
+                            <input required type="text" id="customer-num" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={customerNo}
                                 onChange={(e) => setCustomerNo(e.target.value)} placeholder="add customer number" />
                         </div>
                     </div>
                     {/* Name */}
                     <div className="flex flex-col space-y-1 mt-4">
-                        <label htmlFor="customer-name" className="font-bold">Name</label>
+                        <label htmlFor="customer-name" className="font-bold">Name <span className="text-red-500">*</span></label>
                         <div className="flex">
-                            <input type="text" id="customer-name" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={name}
+                            <input required type="text" id="customer-name" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={name}
                                 onChange={(e) => setName(e.target.value)} placeholder="Add customer name" />
                         </div>
                     </div>
@@ -150,17 +150,17 @@ export default function CreateCustomerPage() {
                     <div className="mt-12 flex-col space-y-4">
                         {/* telephone */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="telephone" className="font-bold">Telephone</label>
+                            <label htmlFor="telephone" className="font-bold">Telephone <span className="text-red-500">*</span></label>
                             <div className="flex">
-                                <input type="text" id="telephone" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={phone}
+                                <input required type="text" id="telephone" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={phone}
                                     onChange={(e) => setPhone(e.target.value)} placeholder="Add telephone" />
                             </div>
                         </div>
                         {/* office address */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="office-address" className="font-bold">office address</label>
+                            <label htmlFor="office-address" className="font-bold">office address <span className="text-red-500">*</span></label>
                             <div className="flex">
-                                <input type="text" id="office-address" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={address}
+                                <input required type="text" id="office-address" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" value={address}
                                     onChange={(e) => setAddress(e.target.value)} placeholder="Add office address" />
                             </div>
                         </div>

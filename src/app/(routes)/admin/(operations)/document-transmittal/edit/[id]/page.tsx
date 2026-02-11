@@ -230,7 +230,7 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
                         <div className="flex flex-col space-y-4">
                             {/* Name */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="name" className="font-bold">Name</label>
+                                <label htmlFor="name" className="font-bold">Name <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input
                                         type="text"
@@ -250,7 +250,7 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* TA No. */}
-                                <label htmlFor="ta_no" className="font-bold">TA No.</label>
+                                <label htmlFor="ta_no" className="font-bold">TA No. <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input
                                         type="text"
@@ -268,7 +268,7 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
                             {/* date */}
                             <div className="flex flex-col space-y-1">
                                 {/* date */}
-                                <label htmlFor="date" className="font-bold">Date</label>
+                                <label htmlFor="date" className="font-bold">Date <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input
                                         type="date"
@@ -292,7 +292,7 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
                         <div className="flex flex-col space-y-4">
                             {/* customer */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="customer_id" className="font-bold">Customer</label>
+                                <label htmlFor="customer_id" className="font-bold">Customer <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <select
                                         id="customer_id"
@@ -327,7 +327,7 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
                         <div className="flex flex-col space-y-4">
                             {/* PIC */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="pic_name" className="font-bold">Person in Charge (PIC)</label>
+                                <label htmlFor="pic_name" className="font-bold">Person in Charge (PIC) <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input
                                         type="text"
@@ -343,7 +343,7 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
 
                             {/* Customer's District */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="customer_district" className="font-bold">Customer's District</label>
+                                <label htmlFor="customer_district" className="font-bold">Customer's District <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input
                                         type="text"
@@ -364,7 +364,7 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
                     <div className="flex flex-col space-y-4">
                         {/* Report Type */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="report_type" className="font-bold">Report Type</label>
+                            <label htmlFor="report_type" className="font-bold">Report Type <span className="text-red-500">*</span></label>
                             <div className="flex items-center">
                                 <input
                                     type="text"
@@ -385,8 +385,8 @@ export default function EditDocTransmittalPage({ params }: { params: EditDocTran
                             <thead>
                                 <tr className="space-x-1">
                                     <th className="w-[5%]">No</th>
-                                    <th className="w-[60%] text-left">WO</th>
-                                    <th className="w-[30%] text-left">Location</th>
+                                    <th className="w-[60%] text-left">WO <span className="text-red-500">*</span></th>
+                                    <th className="w-[30%] text-left">Location <span className="text-red-500">*</span></th>
                                     <th className="w-[5%]"></th>
                                 </tr>
                             </thead>

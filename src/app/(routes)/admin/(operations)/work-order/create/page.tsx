@@ -195,7 +195,7 @@ export default function CreateWorkOrderPage() {
                             {/* REF */}
                             <div className="flex flex-col space-y-1">
                                 {/* nomor */}
-                                <label htmlFor="no-wo-order" className="font-bold">No. Work Order</label>
+                                <label htmlFor="no-wo-order" className="font-bold">No. Work Order <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input
                                         type="text"
@@ -210,11 +210,12 @@ export default function CreateWorkOrderPage() {
                                     <input
                                         type="number"
                                         id="year"
-                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2 bg-gray-100 cursor-not-allowed"
                                         placeholder="year"
                                         value={formData.work_order_year}
                                         onChange={(e) => setFormData({ ...formData, work_order_year: Number(e.target.value) })}
                                         required
+                                        disabled
                                     />
                                 </div>
                             </div>
@@ -223,14 +224,18 @@ export default function CreateWorkOrderPage() {
                         <div className="flex flex-col space-y-4">
                             {/* Date */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="date" className="font-bold">Date</label>
+                                <label htmlFor="date" className="font-bold">Date <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input
                                         type="date"
                                         id="date"
                                         className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
                                         value={formData.date}
-                                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                        onChange={(e) => {
+                                            const newDate = e.target.value;
+                                            const newYear = newDate ? new Date(newDate).getFullYear() : new Date().getFullYear();
+                                            setFormData({ ...formData, date: newDate, work_order_year: newYear });
+                                        }}
                                         required
                                     />
                                 </div>
@@ -245,7 +250,7 @@ export default function CreateWorkOrderPage() {
                         <table className="w-full border-separate border-spacing-y-4 border-spacing-x-4">
                             <thead>
                                 <tr className="space-x-1">
-                                    <th className="w-[45%] text-left">Worker's Name</th>
+                                    <th className="w-[45%] text-left">Worker's Name <span className="text-red-500">*</span></th>
                                     <th className="w-[45%] text-left">Position</th>
                                     <th className="w-[5%]"></th>
                                 </tr>
@@ -308,7 +313,7 @@ export default function CreateWorkOrderPage() {
 
                     {/* Customer Section */}
                     <div className="flex flex-col space-y-1 my-3">
-                        <label htmlFor="customer" className="font-bold">Customer</label>
+                        <label htmlFor="customer" className="font-bold">Customer <span className="text-red-500">*</span></label>
                         <div className="flex">
                             <select
                                 className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
@@ -328,7 +333,7 @@ export default function CreateWorkOrderPage() {
 
                     {/* Work Location - Loop based on selected Customer */}
                     <div className="flex flex-col space-y-1 my-3">
-                        <label htmlFor="work-location" className="font-bold">Work Location</label>
+                        <label htmlFor="work-location" className="font-bold">Work Location <span className="text-red-500">*</span></label>
                         <div className="flex">
                             <select
                                 className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
@@ -366,7 +371,7 @@ export default function CreateWorkOrderPage() {
                     <hr className="border-b my-6" />
 
                     {/* Scope of Work */}
-                    <h2 className="font-bold">Scope</h2>
+                    <h2 className="font-bold">Scope <span className="text-red-500">*</span></h2>
 
                     <div className="flex flex-col space-y-0.5 mt-2">
                         {[

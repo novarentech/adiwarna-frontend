@@ -148,7 +148,7 @@ export default function CreatePurchaseRequisitionPage() {
                         <div className="space-y-4">
                             <div className="flex flex-row space-x-4">
                                 <div className="flex-1 flex flex-col space-y-4">
-                                    <label htmlFor="pr_no" className="text-sm font-bold">P.R. No.</label>
+                                    <label htmlFor="pr_no" className="text-sm font-bold">P.R. No. <span className="text-red-500">*</span></label>
                                     <div className="w-full flex flex-row items-center">
                                         <input id="pr_no" type="text" required value={formData.pr_no} onChange={handleInputChange} className="w-2/6 h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="e.g 037" />
                                         <p className="w-2/6 text-center mx-2">/PR/AWP - </p>
@@ -189,7 +189,7 @@ export default function CreatePurchaseRequisitionPage() {
                                 <input id="place_of_delivery" type="text" required value={"AWP HO"} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm bg-[#e9ecef] border-[#D1D5DC]" disabled />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="date" className="text-sm font-bold">Date</label>
+                                <label htmlFor="date" className="text-sm font-bold">Date <span className="text-red-500">*</span></label>
                                 <input id="date" required value={formData.date} onChange={handleInputChange} type="date" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" />
                             </div>
                         </div>
@@ -200,7 +200,7 @@ export default function CreatePurchaseRequisitionPage() {
                                 <input id="po_no_cash" type="text" value={formData.po_no_cash} onChange={handleInputChange} className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Fill in -> Null" />
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <label htmlFor="supplier" className="text-sm font-bold">Supplier</label>
+                                <label htmlFor="supplier" className="text-sm font-bold">Supplier <span className="text-red-500">*</span></label>
                                 <input id="supplier" required value={formData.supplier} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC] capitalize" placeholder="online" />
                             </div>
                             <div className="flex flex-col space-y-4">
@@ -300,23 +300,23 @@ export default function CreatePurchaseRequisitionPage() {
 
                     <div className="w-full grid grid-cols-2 gap-x-8 gap-y-4 mt-6">
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="requested_by" className="text-sm font-bold">Requested by</label>
+                            <label htmlFor="requested_by" className="text-sm font-bold">Requested by <span className="text-red-500">*</span></label>
                             <input id="requested_by" required value={formData.requested_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="requested_position" className="text-sm font-bold">Position</label>
+                            <label htmlFor="requested_position" className="text-sm font-bold">Position <span className="text-red-500">*</span></label>
                             <input id="requested_position" required value={formData.requested_position} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Position" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="approved_by" className="text-sm font-bold">Approved by</label>
+                            <label htmlFor="approved_by" className="text-sm font-bold">Approved by <span className="text-red-500">*</span></label>
                             <input id="approved_by" required value={formData.approved_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name/Position" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="approved_position" className="text-sm font-bold">Position</label>
+                            <label htmlFor="approved_position" className="text-sm font-bold">Position <span className="text-red-500">*</span></label>
                             <input id="approved_position" required value={formData.approved_position} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Position" />
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <label htmlFor="authorized_by" className="text-sm font-bold">Approved by</label>
+                            <label htmlFor="authorized_by" className="text-sm font-bold">Approved by <span className="text-red-500">*</span></label>
                             <input id="authorized_by" required value={formData.authorized_by} onChange={handleInputChange} type="text" className="w-full h-10 border px-2 rounded-sm border-[#D1D5DC]" placeholder="Name" />
                         </div>
                     </div>

@@ -234,7 +234,7 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* REF */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="po-no" className="font-bold">PO No.</label>
+                                <label htmlFor="po-no" className="font-bold">PO No. <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input type="text" id="po_no" required value={formData.po_no}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add number" />
@@ -248,7 +248,7 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* Date */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="date" className="font-bold">Date</label>
+                                <label htmlFor="date" className="font-bold">Date <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="date" id="date" required value={formData.date}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
@@ -264,7 +264,7 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* customer */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="customer" className="font-bold">Customer</label>
+                                <label htmlFor="customer" className="font-bold">Customer <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <select id="customer_id" required value={formData.customer_id}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2">
@@ -296,7 +296,7 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* PIC */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="pic_name" className="font-bold">Person in Charge (PIC)</label>
+                                <label htmlFor="pic_name" className="font-bold">Person in Charge (PIC) <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="pic_name" required value={formData.pic_name}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add PIC'S name" />
@@ -304,7 +304,7 @@ export default function EditPurchaseOrderPage({
                             </div>
                             {/* PIC phone */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="pic-phone" className="font-bold">PIC's Phone number</label>
+                                <label htmlFor="pic-phone" className="font-bold">PIC's Phone number <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="pic_phone" required value={formData.pic_phone}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add PIC'S telephone number" />
@@ -319,7 +319,7 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* required delivery date */}
-                                <label htmlFor="required_date" className="font-bold">Required Delivery Date</label>
+                                <label htmlFor="required_date" className="font-bold">Required Delivery Date <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input type="date" id="required_date" required value={formData.required_date}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
@@ -330,7 +330,7 @@ export default function EditPurchaseOrderPage({
                             {/* quotation */}
                             <div className="flex flex-col space-y-1">
                                 {/* terms of payment */}
-                                <label htmlFor="term-of-payment" className="font-bold">Terms of Payment</label>
+                                <label htmlFor="term-of-payment" className="font-bold">Terms of Payment <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input type="text" id="top_dp" required value={formData.top_dp}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="50" />
@@ -355,7 +355,7 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* Quotation Ref. */}
-                                <label htmlFor="quotation-ref" className="font-bold">Quotation Ref.</label>
+                                <label htmlFor="quotation-ref" className="font-bold">Quotation Ref. <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input type="text" id="quotation_ref" required value={formData.quotation_ref}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
@@ -365,7 +365,7 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* PR no */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="pr-no" className="font-bold">PR No.</label>
+                                <label htmlFor="pr-no" className="font-bold">PR No. <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input type="text" id="purchase_requisition_no" required value={formData.purchase_requisition_no}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="50" />
@@ -478,7 +478,7 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* REQ BY */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="req_name" className="font-bold">Requested By</label>
+                                <label htmlFor="req_name" className="font-bold">Requested By <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input type="text" id="req_name" required value={formData.req_name}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan nama anda" />
@@ -486,7 +486,7 @@ export default function EditPurchaseOrderPage({
                             </div>
                             {/* approved */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="app_name" className="font-bold">Approved By</label>
+                                <label htmlFor="app_name" className="font-bold">Approved By <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="app_name" required value={formData.app_name}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan nama" />
@@ -494,7 +494,7 @@ export default function EditPurchaseOrderPage({
                             </div>
                             {/* author */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="auth_name" className="font-bold">Authorized By</label>
+                                <label htmlFor="auth_name" className="font-bold">Authorized By <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="auth_name" required value={formData.auth_name}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan nama" />
@@ -505,7 +505,7 @@ export default function EditPurchaseOrderPage({
                         <div className="flex flex-col space-y-4">
                             {/* Position request by */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="req_pos" className="font-bold">Position</label>
+                                <label htmlFor="req_pos" className="font-bold">Position <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="req_pos" required value={formData.req_pos}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan Posisi Anda" />
@@ -513,7 +513,7 @@ export default function EditPurchaseOrderPage({
                             </div>
                             {/* position approved by */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="app_pos" className="font-bold">Person in Charge (PIC)</label>
+                                <label htmlFor="app_pos" className="font-bold">Person in Charge (PIC) <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="app_pos" required value={formData.app_pos}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
@@ -521,7 +521,7 @@ export default function EditPurchaseOrderPage({
                             </div>
                             {/* position authorized by */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="auth_pos" className="font-bold">Position</label>
+                                <label htmlFor="auth_pos" className="font-bold">Position <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="auth_pos" required value={formData.auth_pos}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan Posisi " />
@@ -535,7 +535,7 @@ export default function EditPurchaseOrderPage({
                     <div className=" flex-col space-y-4">
                         {/* Dicount */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="discount" className="font-bold">Discount</label>
+                            <label htmlFor="discount" className="font-bold">Discount <span className="text-red-500">*</span></label>
                             <div className="flex">
                                 <input type="text" id="discount" required value={formData.discount}
                                     onChange={handleFormChange} className="w-2/6 border border-[#AAAAAA] rounded-sm h-9 px-2" />

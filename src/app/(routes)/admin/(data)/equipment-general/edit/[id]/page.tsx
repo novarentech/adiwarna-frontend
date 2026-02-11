@@ -166,7 +166,7 @@ export default function EditEquipmentGeneral() {
 
                     {/* Deskripsi */}
                     <div className="flex flex-col space-y-1">
-                        <label htmlFor="description" className="font-bold">Deskripsi</label>
+                        <label htmlFor="description" className="font-bold">Deskripsi <span className="text-red-500">*</span></label>
                         <input
                             type="text"
                             id="description"
@@ -195,7 +195,7 @@ export default function EditEquipmentGeneral() {
 
                     {/* Serial Number */}
                     <div className="flex flex-col space-y-1 mt-4">
-                        <label htmlFor="serial_number" className="font-bold">Serial Number</label>
+                        <label htmlFor="serial_number" className="font-bold">Serial Number <span className="text-red-500">*</span></label>
                         <input
                             type="text"
                             id="serial_number"
@@ -212,7 +212,7 @@ export default function EditEquipmentGeneral() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                         {/* Tanggal Kalibrasi */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="calibration_date" className="font-bold">Tanggal Kalibrasi</label>
+                            <label htmlFor="calibration_date" className="font-bold">Tanggal Kalibrasi <span className="text-red-500">*</span></label>
                             <input
                                 type="date"
                                 id="calibration_date"
@@ -226,7 +226,7 @@ export default function EditEquipmentGeneral() {
 
                         {/* Durasi */}
                         <div className="flex flex-col space-y-1">
-                            <label htmlFor="duration_months" className="font-bold">Durasi (Kalibrasi Berikutnya)</label>
+                            <label htmlFor="duration_months" className="font-bold">Durasi (Kalibrasi Berikutnya) <span className="text-red-500">*</span></label>
                             <select
                                 id="duration_months"
                                 name="duration_months"
@@ -245,7 +245,7 @@ export default function EditEquipmentGeneral() {
 
                     {/* Lembaga Kalibrasi */}
                     <div className="flex flex-col space-y-1 mt-4">
-                        <label htmlFor="calibration_agency" className="font-bold">Lembaga Kalibrasi</label>
+                        <label htmlFor="calibration_agency" className="font-bold">Lembaga Kalibrasi <span className="text-red-500">*</span></label>
                         <select
                             id="calibration_agency"
                             name="calibration_agency"
@@ -262,7 +262,7 @@ export default function EditEquipmentGeneral() {
 
                     {/* Kondisi */}
                     <div className="flex flex-col space-y-1 mt-4">
-                        <label htmlFor="condition" className="font-bold">Kondisi</label>
+                        <label htmlFor="condition" className="font-bold">Kondisi <span className="text-red-500">*</span></label>
                         <select
                             id="condition"
                             name="condition"

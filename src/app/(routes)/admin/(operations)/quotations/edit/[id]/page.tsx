@@ -133,7 +133,13 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
     // Form handler
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
-        setFormData(prev => ({ ...prev, [id]: value }));
+        
+        if (id === "date") {
+            const year = new Date(value).getFullYear().toString();
+            setFormData(prev => ({ ...prev, [id]: value, ref_year: year }));
+        } else {
+            setFormData(prev => ({ ...prev, [id]: value }));
+        }
     };
 
     // -----------------------------
@@ -262,7 +268,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                     <div className="grid grid-cols-2 space-x-4">
                         <div className="flex flex-col space-y-4">
                             <div>
-                                <label className="font-bold">Ref.</label>
+                                <label className="font-bold">Ref. <span className="text-red-500">*</span></label>
                                 <div className="flex items-center mt-1">
                                     <input
                                         type="text"
@@ -278,16 +284,17 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                                         type="text"
                                         id="ref_year"
                                         required
+                                        disabled
                                         value={formData.ref_year}
                                         onChange={handleFormChange}
-                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2"
+                                        className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2 bg-gray-100 cursor-not-allowed"
                                         placeholder="Year"
                                     />
                                 </div>
                             </div>
 
                             <div className="flex flex-col">
-                                <label className="font-bold">Customer</label>
+                                <label className="font-bold">Customer <span className="text-red-500">*</span></label>
                                 <select
                                     id="customer_id"
                                     required
@@ -305,7 +312,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                             </div>
 
                             <div>
-                                <label className="font-bold">Subject</label>
+                                <label className="font-bold">Subject <span className="text-red-500">*</span></label>
                                 <input
                                     id="subject"
                                     required
@@ -319,7 +326,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
 
                         <div className="flex flex-col space-y-4">
                             <div>
-                                <label className="font-bold">Date</label>
+                                <label className="font-bold">Date <span className="text-red-500">*</span></label>
                                 <input
                                     type="date"
                                     id="date"
@@ -331,7 +338,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                             </div>
 
                             <div>
-                                <label className="font-bold">Person in Charge (PIC)</label>
+                                <label className="font-bold">Person in Charge (PIC) <span className="text-red-500">*</span></label>
                                 <input
                                     type="text"
                                     id="pic_name"
@@ -344,7 +351,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                             </div>
 
                             <div>
-                                <label className="font-bold">PIC's Phone Number</label>
+                                <label className="font-bold">PIC's Phone Number <span className="text-red-500">*</span></label>
                                 <input
                                     type="text"
                                     id="pic_phone"
@@ -541,7 +548,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                     <div className="mt-10 space-y-4">
                         <div className="grid grid-cols-2">
                             <div className="flex flex-col">
-                                <label className="font-bold">Terms of Payment</label>
+                                <label className="font-bold">Terms of Payment <span className="text-red-500">*</span></label>
                                 <div className="flex flex-row mt-1 items-center">
                                     <input
                                         id="top"
@@ -556,7 +563,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                             </div>
 
                             <div className="flex flex-col">
-                                <label className="font-bold">Quotation Valid</label>
+                                <label className="font-bold">Quotation Valid <span className="text-red-500">*</span></label>
                                 <div className="flex flex-row mt-1 items-center">
                                     <input
                                         id="valid_until"
@@ -580,7 +587,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                         </div>
 
                         <div>
-                            <label className="font-bold">Clause</label>
+                            <label className="font-bold">Clause <span className="text-red-500">*</span></label>
                             <input
                                 id="clause"
                                 required
@@ -591,7 +598,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                         </div>
 
                         <div>
-                            <label className="font-bold">Workday</label>
+                            <label className="font-bold">Workday <span className="text-red-500">*</span></label>
                             <input
                                 id="workday"
                                 required
@@ -603,7 +610,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="font-bold">Authorized By</label>
+                                <label className="font-bold">Authorized By <span className="text-red-500">*</span></label>
                                 <input
                                     id="auth_name"
                                     required
@@ -614,7 +621,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                             </div>
 
                             <div>
-                                <label className="font-bold">Position</label>
+                                <label className="font-bold">Position <span className="text-red-500">*</span></label>
                                 <input
                                     id="auth_position"
                                     required
@@ -626,7 +633,7 @@ export default function EditQuotationsPage({ params }: { params: Promise<{ id: s
                         </div>
 
                         <div className="flex flex-col">
-                            <label className="font-bold">Discount</label>
+                            <label className="font-bold">Discount <span className="text-red-500">*</span></label>
                             <div className="flex flex-row items-center space-x-2">
                                 <input
                                     id="discount"

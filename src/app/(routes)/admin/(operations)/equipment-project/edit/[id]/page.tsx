@@ -305,7 +305,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                         <div className="flex flex-col space-y-4">
                             {/* Customer */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="customer_id" className="font-bold">Customer</label>
+                                <label htmlFor="customer_id" className="font-bold">Customer <span className="text-red-500">*</span></label>
                                 <select id="customer_id"
                                     value={formData.customer_id}
                                     onChange={handleFormChange}
@@ -322,7 +322,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                             </div>
                             {/* Project Date */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="project_date" className="font-bold">Project Date</label>
+                                <label htmlFor="project_date" className="font-bold">Project Date <span className="text-red-500">*</span></label>
                                 <input type="date" id="project_date"
                                     value={formData.project_date}
                                     onChange={(e) => setFormData(prev => ({ ...prev, project_date: e.target.value }))}
@@ -333,7 +333,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                             </div>
                             {/* Prepared By */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="prepared_by" className="font-bold">Prepared By</label>
+                                <label htmlFor="prepared_by" className="font-bold">Prepared By <span className="text-red-500">*</span></label>
                                 <input type="text" id="prepared_by"
                                     value={formData.prepared_by}
                                     onChange={handleFormChange}
@@ -348,7 +348,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                         <div className="flex flex-col space-y-4">
                             {/* Work Location */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="customer_location_id" className="font-bold">Work Location</label>
+                                <label htmlFor="customer_location_id" className="font-bold">Work Location <span className="text-red-500">*</span></label>
                                 <select id="customer_location_id"
                                     value={formData.customer_location_id}
                                     onChange={handleFormChange}
@@ -366,7 +366,7 @@ export default function EditEquipmentProjectPage({ params }: { params: EditEquip
                             </div>
                             {/* Verified By */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="verified_by" className="font-bold">Verified By</label>
+                                <label htmlFor="verified_by" className="font-bold">Verified By <span className="text-red-500">*</span></label>
                                 <input type="text" id="verified_by"
                                     value={formData.verified_by}
                                     onChange={handleFormChange}

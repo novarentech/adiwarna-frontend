@@ -56,7 +56,13 @@ export default function CreateWorkAssignmentPage() {
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
     ) => {
         const { id, value } = e.target;
-        setFormData(prev => ({ ...prev, [id]: value }));
+        
+        if (id === "date") {
+            const year = new Date(value).getFullYear().toString();
+            setFormData(prev => ({ ...prev, [id]: value, assignment_year: year }));
+        } else {
+            setFormData(prev => ({ ...prev, [id]: value }));
+        }
     };
 
 
@@ -181,13 +187,13 @@ export default function CreateWorkAssignmentPage() {
                             {/* REF */}
                             <div className="flex flex-col space-y-1">
                                 {/* nomor */}
-                                <label htmlFor="assignment_no" className="font-bold">No.</label>
+                                <label htmlFor="assignment_no" className="font-bold">No. <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input type="text" id="assignment_no" required value={formData.assignment_no}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add number" />
                                     <p className="mx-4 font-bold">/AWP-INS/</p>
-                                    <input type="text" id="assignment_year" required value={formData.assignment_year}
-                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="year" />
+                                    <input type="text" id="assignment_year" required disabled value={formData.assignment_year}
+                                        onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2 bg-gray-100 cursor-not-allowed" placeholder="year" />
                                 </div>
                             </div>
                         </div>
@@ -195,7 +201,7 @@ export default function CreateWorkAssignmentPage() {
                         <div className="flex flex-col space-y-4">
                             {/* Date */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="date" className="font-bold">Date</label>
+                                <label htmlFor="date" className="font-bold">Date <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="date" id="date" required value={formData.date}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
@@ -213,8 +219,8 @@ export default function CreateWorkAssignmentPage() {
                             <thead>
                                 <tr className="space-x-1">
                                     <th className="w-[5%]">No</th>
-                                    <th className="w-[45%] text-left">Worker's Name</th>
-                                    <th className="w-[45%] text-left">Position</th>
+                                    <th className="w-[45%] text-left">Worker's Name <span className="text-red-500">*</span></th>
+                                    <th className="w-[45%] text-left">Position <span className="text-red-500">*</span></th>
                                     <th className="w-[5%]"></th>
                                 </tr>
                             </thead>
@@ -282,7 +288,7 @@ export default function CreateWorkAssignmentPage() {
                         <div className="flex flex-col space-y-4">
                             <div className="flex flex-col space-y-1">
                                 {/* Ref. AWP WO No. */}
-                                <label htmlFor="ref_no" className="font-bold">Ref. AWP WO No.</label>
+                                <label htmlFor="ref_no" className="font-bold">Ref. AWP WO No. <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     <input type="text" id="ref_no" required value={formData.ref_no}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" />
@@ -304,7 +310,7 @@ export default function CreateWorkAssignmentPage() {
                         <div className="flex flex-col space-y-4">
                             {/* Ref. PO No./Instruction */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="ref_po_no_instruction" className="font-bold  ">Ref. PO No./Instruction</label>
+                                <label htmlFor="ref_po_no_instruction" className="font-bold  ">Ref. PO No./Instruction <span className="text-red-500">*</span></label>
                                 <div className="flex items-center">
                                     {/* ini nanti fetch dari customerr */}
                                     <input type="text" id="ref_po_no_instruction" required value={formData.ref_po_no_instruction}
@@ -317,7 +323,7 @@ export default function CreateWorkAssignmentPage() {
 
                     {/* customer */}
                     <div className="flex flex-col space-y-1 my-3">
-                        <label htmlFor="customer" className="font-bold">Customer</label>
+                        <label htmlFor="customer" className="font-bold">Customer <span className="text-red-500">*</span></label>
                         <div className="flex">
                             <select id="customer_id" required
                                 value={formData.customer_id}
@@ -340,7 +346,7 @@ export default function CreateWorkAssignmentPage() {
                         <div className="flex flex-col space-y-4">
                             {/* Work Location */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="worklocation" className="font-bold">Work Location</label>
+                                <label htmlFor="worklocation" className="font-bold">Work Location <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <select id="customer_location_id" required
                                         value={formData.customer_location_id}
@@ -356,7 +362,7 @@ export default function CreateWorkAssignmentPage() {
                             </div>
                             {/* scope of work */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="scope" className="font-bold">Scope of Work</label>
+                                <label htmlFor="scope" className="font-bold">Scope of Work <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="scope" required value={formData.scope}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Scope of Work" />
@@ -364,7 +370,7 @@ export default function CreateWorkAssignmentPage() {
                             </div>
                             {/* author */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="auth_name" className="font-bold">Authorized By</label>
+                                <label htmlFor="auth_name" className="font-bold">Authorized By <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="auth_name" required value={formData.auth_name}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Masukkan nama" />
@@ -375,7 +381,7 @@ export default function CreateWorkAssignmentPage() {
                         <div className="flex flex-col space-y-4">
                             {/* Estimate Duration */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="estimation" className="font-bold">Estimate Duration</label>
+                                <label htmlFor="estimation" className="font-bold">Estimate Duration <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" required value={formData.estimation}
                                         onChange={handleFormChange} id="estimation" className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add estimate duration (days)" />
@@ -383,7 +389,7 @@ export default function CreateWorkAssignmentPage() {
                             </div>
                             {/* Mobilization */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="mobilization" className="font-bold">Mobilization</label>
+                                <label htmlFor="mobilization" className="font-bold">Mobilization <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="mobilization" required value={formData.mobilization}
                                         onChange={handleFormChange} maxLength={255} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Mobilization " />
@@ -391,7 +397,7 @@ export default function CreateWorkAssignmentPage() {
                             </div>
                             {/* position authorized by */}
                             <div className="flex flex-col space-y-1">
-                                <label htmlFor="auth_pos" className="font-bold">Position</label>
+                                <label htmlFor="auth_pos" className="font-bold">Position <span className="text-red-500">*</span></label>
                                 <div className="flex">
                                     <input type="text" id="auth_pos" required value={formData.auth_pos}
                                         onChange={handleFormChange} className="flex-1 border border-[#AAAAAA] rounded-sm h-9 px-2" placeholder="Add Postion " />

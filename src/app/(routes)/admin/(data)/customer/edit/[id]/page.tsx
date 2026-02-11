@@ -138,9 +138,10 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                 <form onSubmit={handleEditCustomer} className="flex flex-col">
                     {/* customer number */}
                     <div className="flex flex-col space-y-1">
-                        <label htmlFor="customer-num" className="font-bold">No</label>
+                        <label htmlFor="customer-num" className="font-bold">No <span className="text-red-500">*</span></label>
                         <div className="flex">
                             <input
+                                required
                                 type="text"
                                 id="customer-num"
                                 value={customerNo}
@@ -153,9 +154,10 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
 
                     {/* customer name */}
                     <div className="flex flex-col space-y-1 mt-4">
-                        <label htmlFor="customer-name" className="font-bold">Name</label>
+                        <label htmlFor="customer-name" className="font-bold">Name <span className="text-red-500">*</span></label>
                         <div className="flex">
                             <input
+                                required
                                 type="text"
                                 id="customer-name"
                                 value={customerName}
@@ -211,9 +213,10 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
 
                     {/* telephone */}
                     <div className="mt-12 flex-col space-y-4">
-                        <label htmlFor="telephone" className="font-bold">Telephone</label>
+                        <label htmlFor="telephone" className="font-bold">Telephone <span className="text-red-500">*</span></label>
                         <div className="flex">
                             <input
+                                required
                                 type="text"
                                 id="telephone"
                                 value={telephone}
@@ -224,9 +227,10 @@ export default function EditCustomerPage({ params }: { params: EditCustomerParam
                         </div>
 
                         {/* office address */}
-                        <label htmlFor="office-address" className="font-bold">Office Address</label>
+                        <label htmlFor="office-address" className="font-bold">Office Address <span className="text-red-500">*</span></label>
                         <div className="flex">
                             <input
+                                required
                                 type="text"
                                 id="office-address"
                                 value={address}
