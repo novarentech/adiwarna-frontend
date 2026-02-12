@@ -26,7 +26,7 @@ export default function PurchaseOrderPrintPage({ params }: { params: Promise<{ i
     const subtotal = data.items.reduce((acc: number, item: any) => acc + (parseFloat(item.quantity) * parseFloat(item.rate)), 0);
     const discountAmount = subtotal * (Number(data.discount) / 100);
     const netTotal = subtotal - discountAmount;
-    const vat = netTotal * 0.11;
+    const vat = data.isTax ? netTotal * 0.11 : 0;
     const grandTotal = netTotal + vat;
 
     const formatIDR = (val: number) => "Rp" + val.toLocaleString("id-ID", { minimumFractionDigits: 0 });
@@ -229,10 +229,12 @@ export default function PurchaseOrderPrintPage({ params }: { params: Promise<{ i
                                         <td colSpan={5} className="p-1 border border-black">Net Total</td>
                                         <td className="p-1 border border-black">{formatIDR(netTotal)}</td>
                                     </tr>
-                                    <tr>
-                                        <td colSpan={5} className="p-1 border border-black text-[8pt]">VAT 11%</td>
-                                        <td className="p-1 border border-black">{formatIDR(vat)}</td>
-                                    </tr>
+                                    {data.isTax && (
+                                        <tr>
+                                            <td colSpan={5} className="p-1 border border-black text-[8pt]">VAT 11%</td>
+                                            <td className="p-1 border border-black">{formatIDR(vat)}</td>
+                                        </tr>
+                                    )}
                                     <tr className="font-black text-[11pt] border-t-2 border-black">
                                         <td colSpan={5} className="p-1 border border-black uppercase">Total</td>
                                         <td className="p-1 border border-black">{formatIDR(grandTotal)}</td>
